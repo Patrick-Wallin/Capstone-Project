@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "68346749354",
+    "firebase_url": "https://college-information.firebaseio.com",
+    "project_id": "college-information",
+    "storage_bucket": "college-information.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68346749354:android:3a1f8f60bb1b3bea",
+        "android_client_info": {
+          "package_name": "com.patrickwallin.projects.collegeinformation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "68346749354-ju3fp0ukre03igthi8vmj7np9emgcuqe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq3nnNf_1LrJil8-fPaoNRD2Ss9RRX5JU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

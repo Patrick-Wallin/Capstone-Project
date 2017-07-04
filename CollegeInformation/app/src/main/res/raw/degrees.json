@@ -1,0 +1,28 @@
+{
+  "degree": [
+    {
+      "id": "-1",
+      "title": "Any"
+    },
+    {
+      "id": "0",
+      "title": "Non-degree"
+    },
+    {
+      "id": "1",
+      "title": "Certificate"
+    },
+    {
+      "id": "2",
+      "title": "Associate"
+    },
+    {
+      "id": "3",
+      "title": "Bachelor's"
+    },
+    {
+      "id": "4",
+      "title": "Master's"
+    }
+  ]
+}

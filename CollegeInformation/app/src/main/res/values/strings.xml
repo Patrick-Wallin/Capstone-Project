@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">College Information</string>
+
+    <string name="latest_year_data">2014</string>
+    <string name="url_data_gov">https://api.data.gov/ed/collegescorecard/</string>
+    <string name="endpoint_get_all_data">v1/schools</string>
+    <string name="query_page_number">_page=</string>
+    <string name="fields_for_names">fields=id,school.name,school.city,school.state,school.zip,location.lat,location.lon,school.region_id,school.degrees_awarded.highest,school.state_fips</string>
+    <!-- https://api.data.gov/ed/collegescorecard/v1/schools?_page=386&_sort=school.name:asc&api_key=8Kf2QRVxErc7cAJnMDsBngV7AogpKhF7RY4PBBFD&fields=school.name,school.city,school.state,school.zip -->
+    <string name="fields_for_results">fields=id,school.name,school.city,school.state,school.zip,location.lat,location.lon,school.school_url,2014.admissions.sat_scores.25th_percentile.critical_reading,2014.admissions.sat_scores.75th_percentile.critical_reading,2014.admissions.sat_scores.25th_percentile.math,2014.admissions.sat_scores.75th_percentile.math,2014.admissions.sat_scores.25th_percentile.writing,2014.admissions.sat_scores.75th_percentile.writing,2014.admissions.act_scores.25th_percentile.cumulative,2014.admissions.act_scores.75th_percentile.cumulative,2014.cost.tuition.in_state,2014.cost.tuition.out_of_state,2014.aid.pell_grant_rate,2014.aid.federal_loan_rate</string>
+    <string name="fields_for_getting_total_records">fields=id</string>
+    <string name="number_per_page">_per_page=100</string>
+    <string name="limit_number_per_page">100</string>
+
+    <string name="url_data_nearbycolleges">https://www.nearbycolleges.info/api/</string>
+    <string name="url_specific_school_nearbycolleges">https://www.nearbycolleges.info/api/schools/{unitid}</string>
+    <string name="url_query_all_colleges">autocomplete?q=&amp;limit=100000000</string>
+    <string name="api_key_for_nearbycolleges">88ae0f34-84d6-4e6d-b3c6-a0877fdb1bce</string>
+
+    <string name="query_api_key">api_key=</string>
+    <string name="api_key">8Kf2QRVxErc7cAJnMDsBngV7AogpKhF7RY4PBBFD</string>
+
+    <string name="query_school_name">school.name</string>
+    <string name="query_school_degrees">school.degrees_awarded.highest</string>
+
+
+    <string name="degree_certificate">Certificate</string>
+    <string name="degree_associate">Associate</string>
+    <string name="degree_bachelors">Bachelor\'s</string>
+    <string name="degree_graduate">Master\'s</string>
+    <string name="degree_certificate_value">1</string>
+    <string name="degree_associate_value">2</string>
+    <string name="degree_bachelors_value">3</string>
+    <string name="degree_graduate_value">4</string>
+    <!-- Degrees - End -->
+
+    <string name="action_search">Search</string>
+    <string name="title_activity_search_locations_states">SearchLocationsStatesActivity</string>
+
+</resources>

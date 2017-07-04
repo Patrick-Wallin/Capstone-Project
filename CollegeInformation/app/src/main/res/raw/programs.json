@@ -1,0 +1,204 @@
+{
+  "program": [
+    {
+	 "id": "-1"
+	 "title": "Any"
+	 "url_name": ""
+	},
+    {
+	 "id": "1"
+	 "title": "Agriculture, Agriculture Operations, and Related Sciences"
+	 "url_name": "academics.program_percentage.agriculture"
+	},
+    {
+	 "id": "2"
+	 "title": "Natural Resources and Conservation"
+	 "url_name": "academics.program_percentage.resources"
+	},
+    {
+	 "id": "3"
+	 "title": "Architecture and Related Services"
+	 "url_name": "academics.program_percentage.architecture"
+	},
+    {
+	 "id": "4"
+	 "title": "Area, Ethnic, Cultural, Gender, and Group Studies"
+	 "url_name": "academics.program_percentage.ethnic_cultural_gender"
+	},
+    {
+	 "id": "5"
+	 "title": "Communication, Journalism, and Related Programs"
+	 "url_name": "academics.program_percentage.communication"
+	},
+    {
+	 "id": "6"
+	 "title": "Communications Technologies/Technicians and Support Services"
+	 "url_name": "academics.program_percentage.communications_technology"
+	},
+    {
+	 "id": "7"
+	 "title": "Computer and Information Sciences and Support Services"
+	 "url_name": "academics.program_percentage.computer"
+	},
+	{
+	 "id": "8"
+	 "title": "Personal and Culinary Services"
+	 "url_name": "academics.program_percentage.personal_culinary"
+	},
+	{
+	 "id": "9"
+	 "title": "Education"
+	 "url_name": "academics.program_percentage.education"
+	},
+	{
+	 "id": "9"
+	 "title": "Engineering"
+	 "url_name": "academics.program_percentage.engineering"
+	},
+	{
+	 "id": "10"
+	 "title": "Engineering Technologies and Engineering-Related Fields"
+	 "url_name": "academics.program_percentage.engineering_technology"
+	},
+	{
+	 "id": "11"
+	 "title": "Foreign Languages, Literatures, and Linguistics"
+	 "url_name": "academics.program_percentage.language"
+	},
+	{
+	 "id": "12"
+	 "title": "Family and Consumer Sciences/Human Sciences"
+	 "url_name": "academics.program_percentage.family_consumer_science"
+	},
+	{
+	 "id": "13"
+	 "title": "Legal Professions and Studies"
+	 "url_name": "academics.program_percentage.legal"
+	},
+	{
+	 "id": "14"
+	 "title": "Legal Professions and Studies"
+	 "url_name": "academics.program_percentage.legal"
+	},
+	{
+	 "id": "15"
+	 "title": "English Language and Literature/Letters"
+	 "url_name": "academics.program_percentage.english"
+	},
+	{
+	 "id": "16"
+	 "title": "Liberal Arts and Sciences, General Studies and Humanities"
+	 "url_name": "academics.program_percentage.humanities"
+	},
+	{
+	 "id": "17"
+	 "title": "Library Science"
+	 "url_name": "academics.program_percentage.library"
+	},
+	{
+	 "id": "18"
+	 "title": "Biological and Biomedical Sciences"
+	 "url_name": "academics.program_percentage.biological"
+	},
+	{
+	 "id": "19"
+	 "title": "Mathematics and Statistics"
+	 "url_name": "academics.program_percentage.mathematics"
+	},
+	{
+	 "id": "20"
+	 "title": "Military Technologies and Applied Sciences"
+	 "url_name": "academics.program_percentage.military"
+	},
+	{
+	 "id": "21"
+	 "title": "Multi/Interdisciplinary Studies"
+	 "url_name": "academics.program_percentage.multidiscipline"
+	},
+	{
+	 "id": "22"
+	 "title": "Parks, Recreation, Leisure, and Fitness Studies"
+	 "url_name": "academics.program_percentage.parks_recreation_fitness"
+	},
+	{
+	 "id": "23"
+	 "title": "Philosophy and Religious Studies"
+	 "url_name": "academics.program_percentage.philosophy_religious"
+	},
+	{
+	 "id": "24"
+	 "title": "Theology and Religious Vocations"
+	 "url_name": "academics.program_percentage.theology_religious_vocation"
+	},
+	{
+	 "id": "25"
+	 "title": "Physical Sciences"
+	 "url_name": "academics.program_percentage.physical_science"
+	},
+	{
+	 "id": "26"
+	 "title": "Science Technologies/Technicians"
+	 "url_name": "academics.program_percentage.science_technology"
+	},
+	{
+	 "id": "27"
+	 "title": "Psychology"
+	 "url_name": "academics.program_percentage.psychology"
+	},
+	{
+	 "id": "28"
+	 "title": "Homeland Security, Law Enforcement, Firefighting and Related Protective Services"
+	 "url_name": "academics.program_percentage.security_law_enforcement"
+	},
+	{
+	 "id": "29"
+	 "title": "Public Administration and Social Service Professions"
+	 "url_name": "academics.program_percentage.public_administration_social_service"
+	},
+	{
+	 "id": "30"
+	 "title": "Social Sciences"
+	 "url_name": "academics.program_percentage.social_science"
+	},
+	{
+	 "id": "31"
+	 "title": "Construction Trades"
+	 "url_name": "academics.program_percentage.construction"
+	},
+	{
+	 "id": "32"
+	 "title": "Mechanic and Repair Technologies/Technicians"
+	 "url_name": "academics.program_percentage.mechanic_repair_technology"
+	},
+	{
+	 "id": "33"
+	 "title": "Precision Production"
+	 "url_name": "academics.program_percentage.precision_production"
+	},
+	{
+	 "id": "34"
+	 "title": "Transportation and Materials Moving"
+	 "url_name": "academics.program_percentage.transportation"
+	},
+	{
+	 "id": "35"
+	 "title": "Visual and Performing Arts"
+	 "url_name": "academics.program_percentage.visual_performing"
+	},
+	{
+	 "id": "36"
+	 "title": "Health Professions and Related Programs"
+	 "url_name": "academics.program_percentage.health"
+	},
+	{
+	 "id": "37"
+	 "title": "Business, Management, Marketing, and Related Support Services"
+	 "url_name": "academics.program_percentage.business_marketing"
+	},
+	{
+	 "id": "38"
+	 "title": "History"
+	 "url_name": "academics.program_percentage.history"
+	}
+  ]
+ }

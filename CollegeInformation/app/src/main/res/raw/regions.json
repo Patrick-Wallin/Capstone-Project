@@ -1,0 +1,54 @@
+{
+  "region": [
+    {
+      "id": "0",
+      "name": "U.S. Service Schools",
+      "description": "U.S. Service Schools"
+    },
+    {
+      "id": "1",
+      "name": "New England",
+      "description": "New England (CT, ME, MA, NH, RI, VT)"
+    },
+    {
+      "id": "2",
+      "name": "Mid East",
+      "description": "Mid East (DE, DC, MD, NJ, NY, PA)"
+    },
+    {
+      "id": "3",
+      "name": "Great Lakes",
+      "description": "Great Lakes (IL, IN, MI, OH, WI)"
+    },
+    {
+      "id": "4",
+      "name": "Plains",
+      "description": "Plains (IA, KS, MN, MO, NE, ND, SD)"
+    },
+    {
+      "id": "5",
+      "name": "Southeast",
+      "description": "Southeast (AL, AR, FL, GA, KY, LA, MS, NC, SC, TN, VA, WV)"
+    },
+    {
+      "id": "6",
+      "name": "Southwest",
+      "description": "Southwest (AZ, NM, OK, TX)"
+    },
+    {
+      "id": "7",
+      "name": "Rocky Mountains",
+      "description": "Rocky Mountains (CO, ID, MT, UT, WY)"
+    },
+    {
+      "id": "8",
+      "name": "Far West",
+      "description": "Far West (AK, CA, HI, NV, OR, WA)"
+    },
+    {
+      "id": "9",
+      "name": "Outlying Areas",
+      "description": "Outlying Areas (AS, FM, GU, MH, MP, PR, PW, VI)"
+    }
+  ]
+}

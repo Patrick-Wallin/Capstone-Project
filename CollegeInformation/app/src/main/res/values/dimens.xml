@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="start_offset">16dp</dimen>
+    <dimen name="end_offset">16dp</dimen>
+    <dimen name="divider_size">1dp</dimen>
+    <dimen name="activity_main_layout_margin">16dp</dimen>
+    <dimen name="activity_horizontal_linear_layout_manager_sample_recyclerViewWidth">80dp</dimen>
+    <dimen name="list_item_sample_text_padding">8dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+</resources>
