@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             Timber.plant(new Timber.DebugTree());
         }
 
+
         mAuth = FirebaseAuth.getInstance();
 
         AndroidNetworking.initialize(getApplicationContext());
@@ -178,66 +179,69 @@ public class MainActivity extends AppCompatActivity {
         */
 
 
+        if(mAuth != null) {
+            mAuth.signInAnonymously()
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.e("MainActivity", "signInAnonymously:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                //Toast.makeText(MainActivity.this, "Name: " + user.getEmail(), Toast.LENGTH_LONG).show();
 
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.e("MainActivity", "signInAnonymously:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            //Toast.makeText(MainActivity.this, "Name: " + user.getEmail(), Toast.LENGTH_LONG).show();
+                                //Toast.makeText(MainActivity.this, "Authentication Success.", Toast.LENGTH_SHORT).show();
 
-                            //Toast.makeText(MainActivity.this, "Authentication Success.", Toast.LENGTH_SHORT).show();
-
-                            //FetchSearchQueryInputTask fetchSearchQueryInputTask = new FetchSearchQueryInputTask(MainActivity.this);
-                            //fetchSearchQueryInputTask.execute();
-
-
-                            try {
-                                final File jsonFile = File.createTempFile("jsonFromStorage","json");
-                                NetworkUtils networkUtils = new NetworkUtils(MainActivity.this);
-                                StorageReference storageReference = networkUtils.getStorageReference(VersionContract.VersionEntry.TABLE_NAME);
-                                com.google.firebase.storage.FileDownloadTask taskDownloadFile = storageReference.getFile(jsonFile);
-                                synchronized (taskDownloadFile) {
-                                    taskDownloadFile.addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                        @Override
-                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                            List<VersionData> versionDataList = OpenJsonUtils.getVersionDataFromJson(jsonFile);
-
-                                            FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this, mSplashLoadingTextView, versionDataList);
-                                            fetchVersionsTask.execute();
+                                //FetchSearchQueryInputTask fetchSearchQueryInputTask = new FetchSearchQueryInputTask(MainActivity.this);
+                                //fetchSearchQueryInputTask.execute();
 
 
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_LONG);
-                                        }
-                                    });
+                                try {
+                                    final File jsonFile = File.createTempFile("jsonFromStorage", "json");
+                                    NetworkUtils networkUtils = new NetworkUtils(MainActivity.this);
+                                    StorageReference storageReference = networkUtils.getStorageReference(VersionContract.VersionEntry.TABLE_NAME);
+                                    com.google.firebase.storage.FileDownloadTask taskDownloadFile = storageReference.getFile(jsonFile);
+                                    synchronized (taskDownloadFile) {
+                                        taskDownloadFile.addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                List<VersionData> versionDataList = OpenJsonUtils.getVersionDataFromJson(jsonFile);
+
+                                                FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this, mSplashLoadingTextView, versionDataList);
+                                                fetchVersionsTask.execute();
+
+
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_LONG);
+                                            }
+                                        });
+                                    }
+
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
 
 
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                //FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this,mSplashLoadingTextView);
+                                //fetchVersionsTask.execute();
+                            } else {
+                                Log.e("MainActivity", "signInAnonymously:failure", task.getException());
+
+                                Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+
+                                mSplashLoadingTextView.setText("Authentication by Firebase failed.");
                             }
-
-
-                            //FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this,mSplashLoadingTextView);
-                            //fetchVersionsTask.execute();
-                        } else {
-                            Log.e("MainActivity", "signInAnonymously:failure", task.getException());
-
-                            Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-
-                            mSplashLoadingTextView.setText("Authentication by Firebase failed.");
                         }
-                    }
 
-                });
+                    });
 
-        // [END signin_anonymously]
+            // [END signin_anonymously]
+        }else {
+            mSplashLoadingTextView.setText("Authentication by Firebase failed.");
+        }
 
 
     }
