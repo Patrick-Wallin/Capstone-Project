@@ -25,12 +25,13 @@ import java.text.NumberFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by piwal on 7/1/2017.
  */
 
-public class ResultDetailActivityFragment extends Fragment implements OnDataSelectionChangeListener {
+public class ResultDetailActivityFragment extends Fragment {
     @Nullable
     @BindView(R.id.college_image_view) ImageView mCollegeImageView;
     @Nullable
@@ -75,6 +76,16 @@ public class ResultDetailActivityFragment extends Fragment implements OnDataSele
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+        if(getResources().getBoolean(R.bool.is_this_tablet) && !getResources().getBoolean(R.bool.is_this_portrait)) {
+            if(mContext instanceof ResultsActivity) {
+                ((ResultsActivity) mContext).setDataSelectionChangeListener(new OnDataSelectionChangeListener() {
+                    @Override
+                    public void OnDataSelectionChanged(Bundle bundle) {
+                        mFavoriteCollegeData = Parcels.unwrap(bundle.getParcelable("resultdetailinfo"));
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -89,6 +100,7 @@ public class ResultDetailActivityFragment extends Fragment implements OnDataSele
         if(bundleResult != null) {
             mFavoriteCollegeData = Parcels.unwrap(bundleResult.getParcelable("resultdetailinfo"));
         }
+
     }
 
     @Nullable
@@ -188,10 +200,4 @@ public class ResultDetailActivityFragment extends Fragment implements OnDataSele
     }
 
 
-    @Override
-    public void OnDataSelectionChanged(Bundle bundle) {
-        if(bundle != null) {
-            mFavoriteCollegeData = Parcels.unwrap(bundle.getParcelable("resultdetailinfo"));
-        }
-    }
 }

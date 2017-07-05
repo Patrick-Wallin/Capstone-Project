@@ -3,16 +3,29 @@ package com.patrickwallin.projects.collegeinformation;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import timber.log.Timber;
 
 /**
  * Created by piwal on 6/27/2017.
  */
 
 public class ResultsActivity extends AppCompatActivity implements OnResultOptionSelectionChangeListener {
+    private OnDataSelectionChangeListener listener;
+
+    public ResultsActivity() {
+        this.listener = null;
+    }
+
+    public void setDataSelectionChangeListener(OnDataSelectionChangeListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +69,16 @@ public class ResultsActivity extends AppCompatActivity implements OnResultOption
             intentResultDetailActivity.putExtras(bundle);
             this.startActivity(intentResultDetailActivity);
         }else {
-            OnDataSelectionChangeListener listener = (OnDataSelectionChangeListener) this;
             listener.OnDataSelectionChanged(bundle);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            ResultDetailActivityFragment fragment = (ResultDetailActivityFragment)fragmentManager.findFragmentById(R.id.results_detail_fragment);
 
-            //FragmentManager fragmentManager = getSupportFragmentManager();
-            //ResultDetailActivityFragment currentFragment = (ResultDetailActivityFragment)fragmentManager.findFragmentById(R.id.results_detail_fragment);
-
-            //currentFragment.setArguments(bundle);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .detach(fragment)
+                    .attach(fragment)
+                    .commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.results_detail_fragment,currentFragment).commit();
         }
     }
 }
