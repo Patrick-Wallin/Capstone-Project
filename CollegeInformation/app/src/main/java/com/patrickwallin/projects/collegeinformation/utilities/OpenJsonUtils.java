@@ -1,8 +1,5 @@
 package com.patrickwallin.projects.collegeinformation.utilities;
 
-import com.androidnetworking.AndroidNetworking;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.patrickwallin.projects.collegeinformation.data.DegreesData;
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeData;
@@ -11,7 +8,6 @@ import com.patrickwallin.projects.collegeinformation.data.ProgramData;
 import com.patrickwallin.projects.collegeinformation.data.RegionData;
 import com.patrickwallin.projects.collegeinformation.data.StateData;
 import com.patrickwallin.projects.collegeinformation.data.VersionData;
-import com.patrickwallin.projects.collegeinformation.objectsforgson.NameDataFromFirebase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
