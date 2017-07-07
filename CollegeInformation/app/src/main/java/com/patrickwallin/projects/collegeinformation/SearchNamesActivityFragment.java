@@ -147,7 +147,6 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
             final int currentVersion = versionDataList.get(0).getVersionNumber();
             final int priorVersion = versionDataList.get(0).getPriorVersionNumber();
             if(currentVersion != priorVersion) {
-
                 try {
                     final File jsonFile = File.createTempFile(mContext.getResources().getString(R.string.temp_file_name), mContext.getResources().getString(R.string.json_ext));
                     NetworkUtils networkUtils = new NetworkUtils(mContext);
@@ -156,6 +155,7 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             returnString("Loading data... Please wait.");
+                            Snackbar.make(getView().findViewById(R.id.root_search_names), "Loading data...", Snackbar.LENGTH_INDEFINITE).show();
                             List<NameData> nameDataList = OpenJsonUtils.getNameDataFromJson(jsonFile);
                             mContext.getContentResolver().delete(NameContract.NameEntry.CONTENT_URI, null, null);
                             if (nameDataList != null && !nameDataList.isEmpty()) {
@@ -196,14 +196,17 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+
         super.onActivityCreated(savedInstanceState);
-        checkVersion();
+
 
     }
 
     @Override
     public void onResume() {
+
         super.onResume();
+        checkVersion();
     }
 
     @Override
@@ -246,7 +249,8 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
     @Override
     public void returnString(String message) {
         //if(mSnackbar == null)
-            Snackbar.make(getView().findViewById(R.id.root_search_names), message, Snackbar.LENGTH_INDEFINITE).show();
+        View view = getView().findViewById(R.id.root_search_names);
+            Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE).show();
         //mSnackbar.show();
        // else
        //     mSnackbar.setText(message);
@@ -256,8 +260,8 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
 
     @Override
     public void closeScreen() {
-        if(mSnackbar != null && mSnackbar.isShown()) {
-            mSnackbar.dismiss();
-        }
+        //if(mSnackbar != null && mSnackbar.isShown()) {
+         //   mSnackbar.dismiss();
+        //}
     }
 }

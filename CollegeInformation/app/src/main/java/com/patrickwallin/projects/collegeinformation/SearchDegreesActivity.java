@@ -26,7 +26,7 @@ public class SearchDegreesActivity extends AppCompatActivity  {
 
         if(savedInstanceState == null) {
             SearchDegreesActivityFragment searchDegreesActivityFragment = new SearchDegreesActivityFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.activity_search_degrees_page_container,searchDegreesActivityFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.activity_search_degrees_page_container,searchDegreesActivityFragment).commit();
         }
     }
 
