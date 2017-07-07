@@ -48,16 +48,24 @@ public class ResultsActivity extends AppCompatActivity implements OnResultOption
        //     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
       //  }
 
-        //if(savedInstanceState == null) {
-        //if (findViewById(R.id.activity_result_page_container) != null) {
+        if(savedInstanceState == null) {
+            //if (findViewById(R.id.activity_result_page_container) != null) {
             ResultsActivityFragment resultsActivityFragment = new ResultsActivityFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.activity_result_page_container,resultsActivityFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.activity_result_page_container, resultsActivityFragment).commit();
+        }else {
+
+        }
         //}else {
         //    ResultsActivityFragment resultsActivityFragment = new ResultsActivityFragment();
         //    getSupportFragmentManager().beginTransaction().replace(R.id.results_fragment,resultsActivityFragment).commit();
          //   ResultDetailActivityFragment resultDetailActivityFragment = new ResultDetailActivityFragment();
          //   getSupportFragmentManager().beginTransaction().replace(R.id.results_detail_fragment,resultDetailActivityFragment).commit();
         //}
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -83,8 +91,10 @@ public class ResultsActivity extends AppCompatActivity implements OnResultOption
                 View navigationBar = findViewById(android.R.id.navigationBarBackground);
 
                 List<Pair<View, String>> pairs = new ArrayList<>();
-                pairs.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
-                pairs.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+                if(statusBar != null)
+                    pairs.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+                if(navigationBar != null)
+                    pairs.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
                 pairs.add(Pair.create((View)imageView, imageView.getTransitionName()));
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, pairs.toArray(new Pair[pairs.size()]));

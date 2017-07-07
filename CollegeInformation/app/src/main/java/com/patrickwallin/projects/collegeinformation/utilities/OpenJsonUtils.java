@@ -1,6 +1,9 @@
 package com.patrickwallin.projects.collegeinformation.utilities;
 
 import com.androidnetworking.AndroidNetworking;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 import com.patrickwallin.projects.collegeinformation.data.DegreesData;
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeData;
 import com.patrickwallin.projects.collegeinformation.data.NameData;
@@ -8,6 +11,7 @@ import com.patrickwallin.projects.collegeinformation.data.ProgramData;
 import com.patrickwallin.projects.collegeinformation.data.RegionData;
 import com.patrickwallin.projects.collegeinformation.data.StateData;
 import com.patrickwallin.projects.collegeinformation.data.VersionData;
+import com.patrickwallin.projects.collegeinformation.objectsforgson.NameDataFromFirebase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +21,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +69,7 @@ public class OpenJsonUtils {
                                 if(arrayVersions.get(i) instanceof JSONObject) {
                                     JSONObject jsonObject = (JSONObject) arrayVersions.get(i);
                                     if(jsonObject.has("name") && jsonObject.has("version")) {
-                                        VersionData versionData = new VersionData(0, jsonObject.getString("name"), jsonObject.getInt("version"));
+                                        VersionData versionData = new VersionData(0, jsonObject.getString("name"), jsonObject.getInt("version"),-1);
                                         parsedVersionsData.add(versionData);
                                     }
                                 }
@@ -335,8 +341,62 @@ public class OpenJsonUtils {
     }
 
     public static List<NameData> getNameDataFromJson(File fileName) {
-        List<NameData> nameDataList = null;
+        List<NameData> nameDataList = new ArrayList<NameData>();
 
+        try {
+            FileReader reader = new FileReader(fileName);
+            JsonReader jsonReader = new JsonReader(reader);
+
+            Gson gson = new GsonBuilder().create();
+
+            // Read file in stream mode
+            jsonReader.beginObject();
+            while (jsonReader.hasNext()) {
+                String strname = jsonReader.nextName();
+                if(strname.equalsIgnoreCase("name")) {
+                    jsonReader.beginArray();
+
+                    int id = 0;
+
+                    while (jsonReader.hasNext()) {
+                        jsonReader.beginObject();
+                        NameData nd = new NameData();
+
+                        while (jsonReader.hasNext()) {
+                            String name = jsonReader.nextName();
+                            if(name.equals("id")) {
+                                nd.setId(jsonReader.nextInt());
+                            } else if (name.equals("name")) {
+                                nd.setName(jsonReader.nextString());
+                            }else if (name.equals("city")) {
+                                nd.setCity(jsonReader.nextString());
+                            }else if(name.equals("state")) {
+                                nd.setState(jsonReader.nextString());
+                            }else if(name.equals("zip")) {
+                                nd.setZip(String.valueOf(jsonReader.nextInt()));
+                            }else
+                                jsonReader.skipValue();
+                        }
+
+                        nameDataList.add(nd);
+
+                        jsonReader.endObject();
+                    }
+                    jsonReader.endArray();
+                }
+            }
+            jsonReader.close();
+            reader.close();
+
+
+        } catch (FileNotFoundException ex) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+        }
+
+
+        /*
         try {
             StringBuilder result = new StringBuilder();
             Scanner sc = new Scanner(fileName);
@@ -350,6 +410,7 @@ public class OpenJsonUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        */
 
 
         return nameDataList;
@@ -358,6 +419,8 @@ public class OpenJsonUtils {
     public static List<NameData> getNameDataFromJson(String nameJson) {
         List<NameData> parsedNameData = new ArrayList<>();
 
+        //Gson gson = new Gson();
+        //NameDataFromFirebase json = gson.fromJson(nameJson, NameDataFromFirebase.class);
         try {
             JSONObject jsonNameData = new JSONObject(nameJson);
             if(jsonNameData != null) {

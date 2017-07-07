@@ -43,7 +43,7 @@ import timber.log.Timber;
 public class FetchVersionsTask extends AsyncTask<Void, Void, List<VersionData>> {
     Context mContext;
     TextView mSplashLoadingTextView;
-    List<VersionData> mVersionDataList;
+    List<VersionData> mVersionDataListFromFirebase;
 
     private List<String> VERSION_LIST_TABLE = new ArrayList<String>();
     private List<Integer> VERSION_LIST_ID = new ArrayList<Integer>();
@@ -51,7 +51,7 @@ public class FetchVersionsTask extends AsyncTask<Void, Void, List<VersionData>> 
     public FetchVersionsTask(Context context, TextView splashLoadingTextView, List<VersionData> versionDataList) {
         mContext = context;
         mSplashLoadingTextView = splashLoadingTextView;
-        mVersionDataList = versionDataList;
+        mVersionDataListFromFirebase = versionDataList;
 
         VERSION_LIST_TABLE.add(DegreeContract.PATH_DEGREES);
         VERSION_LIST_TABLE.add(ProgramContract.PATH_PROGRAMS);
@@ -94,7 +94,7 @@ public class FetchVersionsTask extends AsyncTask<Void, Void, List<VersionData>> 
 
             if(VERSION_LIST_TABLE.size() > 0) {
                 for(int i = 0; i < VERSION_LIST_TABLE.size(); i++) {
-                    lVersionDataResult.add(new VersionData(VERSION_LIST_ID.get(i),VERSION_LIST_TABLE.get(i),0));
+                    lVersionDataResult.add(new VersionData(VERSION_LIST_ID.get(i),VERSION_LIST_TABLE.get(i),0,0));
                     ContentValues contentValues = lVersionDataResult.get(lVersionDataResult.size()-1).getVersionContentValues();
                     mContext.getContentResolver().insert(VersionContract.VersionEntry.CONTENT_URI,contentValues);
                 }
@@ -102,18 +102,22 @@ public class FetchVersionsTask extends AsyncTask<Void, Void, List<VersionData>> 
         }
 
 
-        if(mVersionDataList != null && !mVersionDataList.isEmpty() && versionDatas != null && !versionDatas.isEmpty()) {
+        if(mVersionDataListFromFirebase != null && !mVersionDataListFromFirebase.isEmpty() && versionDatas != null && !versionDatas.isEmpty()) {
             // compare version and if it is difference, then download other json!
 
             //mSplashLoadingTextView.setText("Loading 1 of " + String.valueOf(versionDatas.size()) + " data");
 
             for(int i = 0; i < versionDatas.size(); i++) {
-                for(int x = 0; x < mVersionDataList.size(); x++) {
+                for(int x = 0; x < mVersionDataListFromFirebase.size(); x++) {
                     //mSplashLoadingTextView.setText("Loading " + String.valueOf(x+1) + " of " + String.valueOf(versionDatas.size()) + " data.");
-                    if(versionDatas.get(i).getTableName().equalsIgnoreCase(mVersionDataList.get(x).getTableName())) {
-                        if(versionDatas.get(i).getVersionNumber() != mVersionDataList.get(x).getVersionNumber()) {
+                    if(versionDatas.get(i).getTableName().equalsIgnoreCase(mVersionDataListFromFirebase.get(x).getTableName())) {
+                        if(versionDatas.get(i).getVersionNumber() != mVersionDataListFromFirebase.get(x).getVersionNumber()) {
+                            // need to update it!
+                            ContentValues cv = versionDatas.get(i).getVersionContentValues();
+                            cv.put(VersionContract.VersionEntry.COLUMN_VERSION_NUMBER, mVersionDataListFromFirebase.get(x).getVersionNumber());
+                            mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, cv, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + versionDatas.get(i).getId(),null);
                             //new FetchRecordIntoTableTask(mContext,versionDatas.get(i).getTableName(),versionDatas.get(i).getVersionNumber()).execute();
-                            new FirebaseStorageProcessor(mContext,versionDatas.get(i).getTableName(),mVersionDataList.get(x).getVersionNumber(),mSplashLoadingTextView).execute();
+                            //new FirebaseStorageProcessor(mContext,versionDatas.get(i).getTableName(),mVersionDataList.get(x).getVersionNumber(),mSplashLoadingTextView).execute();
                         }
                         break;
                     }

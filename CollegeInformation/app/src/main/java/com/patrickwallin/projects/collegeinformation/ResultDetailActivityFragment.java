@@ -188,7 +188,17 @@ public class ResultDetailActivityFragment extends Fragment {
             mLikesImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    //if(mLikesImageView.getTag().toString().trim().isEmpty())
+                    if(mLikesImageView.getTag().toString().trim().equalsIgnoreCase(mContext.getString(R.string.not_favorite_college))) {
+                        mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_red_24dp));
+                        mLikesImageView.setTag(mContext.getString(R.string.favorite_college));
+                    }else {
+                        mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_black_24dp));
+                        mLikesImageView.setTag(mContext.getString(R.string.not_favorite_college));
+                    }
+                        //mLikesImageView.getColorFilter()
+                    //int color = Color.parseColor("#ff0000");
+                    //mLikesImageView.setColorFilter(color);
                 }
             });
 

@@ -65,7 +65,7 @@ public class FirebaseStorageProcessor {
 
     public void execute() {
         try {
-            final File jsonFile = File.createTempFile("jsonFromStorage", "json");
+            final File jsonFile = File.createTempFile(mContext.getResources().getString(R.string.temp_file_name), mContext.getResources().getString(R.string.json_ext));
             NetworkUtils networkUtils = new NetworkUtils(mContext);
             StorageReference storageReference = networkUtils.getStorageReference(mTableName);
             com.google.firebase.storage.FileDownloadTask taskDownloadFile = storageReference.getFile(jsonFile);
@@ -88,7 +88,7 @@ public class FirebaseStorageProcessor {
                                     mContext.getContentResolver().insert(DegreeContract.DegreeEntry.CONTENT_URI, degreesDataList.get(i).getDegreesContentValues());
                                 }
                             }
-                            VersionData versionData = new VersionData(VersionContract.VERSION_ID_DEGREES, DegreeContract.PATH_DEGREES, mVersionNumber);
+                            VersionData versionData = new VersionData(VersionContract.VERSION_ID_DEGREES, DegreeContract.PATH_DEGREES, mVersionNumber,mVersionNumber);
                             ContentValues contentValues = versionData.getVersionContentValues();
                             mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_DEGREES, null);
                         } else {
@@ -107,7 +107,7 @@ public class FirebaseStorageProcessor {
                                         mContext.getContentResolver().insert(ProgramContract.ProgramEntry.CONTENT_URI, programDataList.get(i).getProgramContentValues());
                                     }
                                 }
-                                VersionData versionData = new VersionData(VersionContract.VERSION_ID_PROGRAMS, ProgramContract.PATH_PROGRAMS, mVersionNumber);
+                                VersionData versionData = new VersionData(VersionContract.VERSION_ID_PROGRAMS, ProgramContract.PATH_PROGRAMS, mVersionNumber,mVersionNumber);
                                 ContentValues contentValues = versionData.getVersionContentValues();
                                 mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_PROGRAMS, null);
 
@@ -126,7 +126,7 @@ public class FirebaseStorageProcessor {
                                             mContext.getContentResolver().insert(StatesContract.StateEntry.CONTENT_URI, stateDataList.get(i).getStateContentValues());
                                         }
                                     }
-                                    VersionData versionData = new VersionData(VersionContract.VERSION_ID_STATES, StatesContract.PATH_STATES, mVersionNumber);
+                                    VersionData versionData = new VersionData(VersionContract.VERSION_ID_STATES, StatesContract.PATH_STATES, mVersionNumber,mVersionNumber);
                                     ContentValues contentValues = versionData.getVersionContentValues();
                                     mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_STATES, null);
 
@@ -145,7 +145,7 @@ public class FirebaseStorageProcessor {
                                                 mContext.getContentResolver().insert(RegionsContract.RegionEntry.CONTENT_URI, regionDataList.get(i).getRegionContentValues());
                                             }
                                         }
-                                        VersionData versionData = new VersionData(VersionContract.VERSION_ID_REGIONS, RegionsContract.PATH_REGIONS, mVersionNumber);
+                                        VersionData versionData = new VersionData(VersionContract.VERSION_ID_REGIONS, RegionsContract.PATH_REGIONS, mVersionNumber,mVersionNumber);
                                         ContentValues contentValues = versionData.getVersionContentValues();
                                         mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_REGIONS, null);
 
@@ -178,7 +178,7 @@ public class FirebaseStorageProcessor {
                                                 Timber.i("Time length for processing FirebaseStorageProcessor (%s): %s", mTableName, di.getMinAndSecElaspedTime());
                                             }
 
-                                            VersionData versionData = new VersionData(VersionContract.VERSION_ID_NAMES, NameContract.PATH_NAMES, mVersionNumber);
+                                            VersionData versionData = new VersionData(VersionContract.VERSION_ID_NAMES, NameContract.PATH_NAMES, mVersionNumber,mVersionNumber);
                                             ContentValues contentValues = versionData.getVersionContentValues();
                                             mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_NAMES, null);
 

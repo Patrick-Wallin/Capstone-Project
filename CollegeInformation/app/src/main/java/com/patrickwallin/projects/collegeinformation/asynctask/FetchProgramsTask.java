@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import com.patrickwallin.projects.collegeinformation.adapter.ProgramsAdapter;
 import com.patrickwallin.projects.collegeinformation.data.ProgramContract;
 import com.patrickwallin.projects.collegeinformation.data.ProgramData;
+import com.patrickwallin.projects.collegeinformation.utilities.AsyncListener;
 import com.patrickwallin.projects.collegeinformation.utilities.CursorAndDataConverter;
 
 import java.util.List;
@@ -18,10 +19,12 @@ import java.util.List;
 public class FetchProgramsTask extends AsyncTask<Void, Void, List<ProgramData>> {
     private Context mContext;
     private ProgramsAdapter mProgramsAdapter;
+    private AsyncListener listener;
 
-    public FetchProgramsTask(Context context, ProgramsAdapter programsAdapter) {
+    public FetchProgramsTask(Context context, ProgramsAdapter programsAdapter, AsyncListener listener) {
         mContext = context;
         mProgramsAdapter = programsAdapter;
+        this.listener = listener;
     }
     @Override
     protected List<ProgramData> doInBackground(Void... params) {
@@ -33,6 +36,7 @@ public class FetchProgramsTask extends AsyncTask<Void, Void, List<ProgramData>> 
                 null,
                 null,
                 null);
+
         if(programCursor != null && programCursor.moveToFirst())
             return CursorAndDataConverter.getProgramDataFromCursor(programCursor);
 
@@ -42,6 +46,7 @@ public class FetchProgramsTask extends AsyncTask<Void, Void, List<ProgramData>> 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        listener.returnString("Loading data... Please wait.");
     }
 
     @Override
@@ -49,5 +54,6 @@ public class FetchProgramsTask extends AsyncTask<Void, Void, List<ProgramData>> 
         if(programDatas != null) {
             mProgramsAdapter.setProgramData(programDatas);
         }
+        listener.closeScreen();
     }
 }

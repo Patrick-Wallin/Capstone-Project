@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,8 +56,7 @@ public class DegreesAdapter extends RecyclerView.Adapter<SearchDegreesViewHolder
             holder.mNameTextView.setTag(degreesData.getId());
 
             if(mSelectedPosition == position) {
-                holder.mSearchDegreeCardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary,null));
-
+                holder.mSearchDegreeCardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 holder.mNameTextView.setTextColor(Color.WHITE);
                 SearchQueryInputData searchQueryInputData = new SearchQueryInputData(FetchSearchQueryInputTask.SEARCH_QUERY_DEGREES_ID,"degrees",String.valueOf(degreesData.getId()));
                 mContext.getContentResolver().update(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,searchQueryInputData.getSearchQueryInputContentValues(),

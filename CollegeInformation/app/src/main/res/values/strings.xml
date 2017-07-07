@@ -7,6 +7,9 @@
 
     <string name="find_college_button_caption">Find College</string>
 
+    <string name="not_favorite_college">no</string>
+    <string name="favorite_college">yes</string>
+
     <string name="latest_year_data">2014</string>
     <string name="url_data_gov">https://api.data.gov/ed/collegescorecard/</string>
     <string name="endpoint_get_all_data">v1/schools</string>

@@ -3,6 +3,7 @@ package com.patrickwallin.projects.collegeinformation.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +49,8 @@ public class ProgramsAdapter extends RecyclerView.Adapter<SearchProgramsViewHold
             holder.mTitleTextView.setText(programData.getTitle());
             if(mSelectedPosition == position) {
                 holder.itemView.setSelected(true);
-                holder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary,null));
+
+                holder.itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 holder.mTitleTextView.setTextColor(Color.WHITE);
                 SearchQueryInputData searchQueryInputData = new SearchQueryInputData(1,"programs",String.valueOf(programData.getId()));
                 mContext.getContentResolver().update(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,searchQueryInputData.getSearchQueryInputContentValues(),

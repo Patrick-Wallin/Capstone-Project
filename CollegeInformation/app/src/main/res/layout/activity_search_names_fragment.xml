@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_search_names"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.patrickwallin.projects.collegeinformation.SearchNamesActivity">
@@ -12,5 +14,5 @@
         android:id="@+id/names_recycler_view" />
 
 
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>
 

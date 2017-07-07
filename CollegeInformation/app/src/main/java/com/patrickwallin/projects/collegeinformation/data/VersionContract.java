@@ -32,10 +32,12 @@ public class VersionContract {
         public static final String COLUMN_VERSION_ID = "version_id";
         public static final String COLUMN_VERSION_TABLE_NAME = "version_table_name";
         public static final String COLUMN_VERSION_NUMBER = "version_number";
+        public static final String COLUMN_PRIOR_VERSION_NUMBER = "prior_version_number";
 
         public static final int COL_VERSION_ID = 1;
         public static final int COL_VERSION_TABLE_NAME = 2;
         public static final int COL_VERSION_NUMBER = 3;
+        public static final int COL_PRIOR_VERSION_NUMBER = 4;
     }
 
     public static String getCreateTableStatement() {
@@ -51,6 +53,8 @@ public class VersionContract {
         createTableTableStatement.append(VersionEntry.COLUMN_VERSION_TABLE_NAME);
         createTableTableStatement.append(" TEXT NOT NULL, ");
         createTableTableStatement.append(VersionEntry.COLUMN_VERSION_NUMBER);
+        createTableTableStatement.append(" INTEGER NOT NULL, ");
+        createTableTableStatement.append(VersionEntry.COLUMN_PRIOR_VERSION_NUMBER);
         createTableTableStatement.append(" INTEGER NOT NULL ");
         createTableTableStatement.append(")");
 
@@ -63,6 +67,25 @@ public class VersionContract {
         Cursor cursor = context.getContentResolver().query(
                 VersionEntry.CONTENT_URI,
                 null, null, null, null);
+        if(cursor != null) {
+            while (cursor.moveToNext()) {
+                VersionData versionData = new VersionData(cursor);
+                lVersionData.add(versionData);
+            }
+            cursor.close();
+        }
+
+        return lVersionData;
+    }
+
+    public static List<VersionData> getVersionData(Context context, int whichVersionData) {
+        List<VersionData> lVersionData = new ArrayList<VersionData>();
+
+        String WHERE = VersionEntry.COLUMN_VERSION_ID + " = " + whichVersionData;
+
+        Cursor cursor = context.getContentResolver().query(
+                VersionEntry.CONTENT_URI,
+                null, WHERE, null, null);
         if(cursor != null) {
             while (cursor.moveToNext()) {
                 VersionData versionData = new VersionData(cursor);

@@ -54,7 +54,6 @@ public class MainSearchPageAdapter extends RecyclerView.Adapter<MainSearchPageVi
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     OnSearchOptionSelectionChangeListener listener = (OnSearchOptionSelectionChangeListener) mContext;
                     listener.OnSelectionChanged(mainSearchPage.getImageId());
 

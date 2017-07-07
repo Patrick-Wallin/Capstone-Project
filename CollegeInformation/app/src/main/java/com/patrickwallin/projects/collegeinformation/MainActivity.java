@@ -74,7 +74,48 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        signInAnonymously();
+        //signInAnonymously();
+
+        try {
+            final File jsonFile = File.createTempFile(getResources().getString(R.string.temp_file_name), getResources().getString(R.string.json_ext));
+            NetworkUtils networkUtils = new NetworkUtils(MainActivity.this);
+            StorageReference storageReference = networkUtils.getStorageReference(VersionContract.VersionEntry.TABLE_NAME);
+            storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    List<VersionData> versionDataList = OpenJsonUtils.getVersionDataFromJson(jsonFile);
+                    FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this, mSplashLoadingTextView, versionDataList);
+                    fetchVersionsTask.execute();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    mSplashLoadingTextView.setText(e.getMessage());
+                }
+            });
+
+            /*
+            com.google.firebase.storage.FileDownloadTask taskDownloadFile = storageReference.getFile(jsonFile);
+            synchronized (taskDownloadFile) {
+                taskDownloadFile.addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        List<VersionData> versionDataList = OpenJsonUtils.getVersionDataFromJson(jsonFile);
+                        FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this, mSplashLoadingTextView, versionDataList);
+                        fetchVersionsTask.execute();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        mSplashLoadingTextView.setText(e.getMessage());
+                    }
+                });
+            }
+            */
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void signInAnonymously() {

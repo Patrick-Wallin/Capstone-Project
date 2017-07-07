@@ -61,6 +61,11 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(savedInstanceState == null) {
+
+        }else {
+
+        }
        // if(!getResources().getBoolean(R.bool.is_this_tablet)){
        //     getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
       //  }

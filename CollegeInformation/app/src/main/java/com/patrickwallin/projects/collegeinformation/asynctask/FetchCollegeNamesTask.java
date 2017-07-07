@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import com.patrickwallin.projects.collegeinformation.adapter.NamesAdapter;
 import com.patrickwallin.projects.collegeinformation.data.NameContract;
 import com.patrickwallin.projects.collegeinformation.data.NameData;
+import com.patrickwallin.projects.collegeinformation.utilities.AsyncListener;
 import com.patrickwallin.projects.collegeinformation.utilities.CursorAndDataConverter;
 
 import java.util.List;
@@ -18,10 +19,12 @@ import java.util.List;
 public class FetchCollegeNamesTask extends AsyncTask<Void, Void, List<NameData>> {
     private Context mContext;
     private NamesAdapter mNamesAdapter;
+    private AsyncListener listener;
 
-    public FetchCollegeNamesTask(Context context, NamesAdapter namesAdapter) {
+    public FetchCollegeNamesTask(Context context, NamesAdapter namesAdapter, AsyncListener listener) {
         mContext = context;
         mNamesAdapter = namesAdapter;
+        this.listener = listener;
     }
 
     @Override
@@ -42,7 +45,9 @@ public class FetchCollegeNamesTask extends AsyncTask<Void, Void, List<NameData>>
 
     @Override
     protected void onPreExecute() {
+
         super.onPreExecute();
+        listener.returnString("Loading data... Please wait.");
     }
 
     @Override
@@ -50,5 +55,7 @@ public class FetchCollegeNamesTask extends AsyncTask<Void, Void, List<NameData>>
         if(nameDatas != null) {
             mNamesAdapter.setNameData(nameDatas);
         }
+
+        listener.closeScreen();
     }
 }
