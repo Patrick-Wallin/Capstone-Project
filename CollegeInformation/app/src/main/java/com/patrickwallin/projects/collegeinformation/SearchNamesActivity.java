@@ -24,7 +24,7 @@ public class SearchNamesActivity extends AppCompatActivity {
 
         if(savedInstanceState == null) {
             SearchNamesActivityFragment searchNamesActivityFragment = new SearchNamesActivityFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.activity_search_names_page_container,searchNamesActivityFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.activity_search_names_page_container,searchNamesActivityFragment).commit();
         }
     }
 

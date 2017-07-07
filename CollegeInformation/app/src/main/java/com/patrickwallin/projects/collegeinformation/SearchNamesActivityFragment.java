@@ -147,6 +147,7 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
             final int currentVersion = versionDataList.get(0).getVersionNumber();
             final int priorVersion = versionDataList.get(0).getPriorVersionNumber();
             if(currentVersion != priorVersion) {
+
                 try {
                     final File jsonFile = File.createTempFile(mContext.getResources().getString(R.string.temp_file_name), mContext.getResources().getString(R.string.json_ext));
                     NetworkUtils networkUtils = new NetworkUtils(mContext);
@@ -197,6 +198,12 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         checkVersion();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -238,12 +245,13 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
 
     @Override
     public void returnString(String message) {
-        if(mSnackbar == null)
-            mSnackbar = Snackbar.make(getView().findViewById(R.id.root_search_names), message, Snackbar.LENGTH_INDEFINITE);
-        else
-            mSnackbar.setText(message);
-        if(!mSnackbar.isShown())
-            mSnackbar.show();
+        //if(mSnackbar == null)
+            Snackbar.make(getView().findViewById(R.id.root_search_names), message, Snackbar.LENGTH_INDEFINITE).show();
+        //mSnackbar.show();
+       // else
+       //     mSnackbar.setText(message);
+       // if(!mSnackbar.isShown())
+        //    mSnackbar.show();
     }
 
     @Override
