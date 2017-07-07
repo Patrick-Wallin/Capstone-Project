@@ -45,7 +45,7 @@ public class FavoriteCollegeAdapter extends RecyclerView.Adapter<FavoriteCollege
     }
 
     @Override
-    public void onBindViewHolder(FavoriteCollegeViewHolder holder, int position) {
+    public void onBindViewHolder(final FavoriteCollegeViewHolder holder, final int position) {
         if(mFavoriteCollegeData != null && position >= 0) {
             final FavoriteCollegeData favoriteCollegeData = mFavoriteCollegeData.get(position);
             holder.mCollegeNameTextView.setText(favoriteCollegeData.getName());
@@ -60,6 +60,10 @@ public class FavoriteCollegeAdapter extends RecyclerView.Adapter<FavoriteCollege
                         .load(R.drawable.no_image_available_building)
                         .into(holder.mCollegeImageView);
             }
+
+            String transitionPhotoName = mContext.getResources().getString(R.string.transition_photo).trim() + String.valueOf(favoriteCollegeData.getId()).trim();
+            holder.mCollegeImageView.setTransitionName(transitionPhotoName);
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -71,7 +75,7 @@ public class FavoriteCollegeAdapter extends RecyclerView.Adapter<FavoriteCollege
                     //mContext.startActivity(intentResultDetailActivity);
 
                     OnResultOptionSelectionChangeListener listener = (OnResultOptionSelectionChangeListener) mContext;
-                    listener.OnSelectionChanged(bundleResult);
+                    listener.OnSelectionChanged(bundleResult,holder.mCollegeImageView);
                 }
             });
             /*

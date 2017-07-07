@@ -1,7 +1,9 @@
 package com.patrickwallin.projects.collegeinformation;
 
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,11 +15,18 @@ public class ResultDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result_detail);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
+          //  setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //}
+
+        //ActivityCompat.postponeEnterTransition(this);
+
+       // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //ActivityCompat.postponeEnterTransition(ResultDetailActivity.this);
+       // }
 
         if(savedInstanceState == null) {
             ResultDetailActivityFragment resultDetailActivityFragment = new ResultDetailActivityFragment();

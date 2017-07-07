@@ -5,8 +5,10 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,9 +61,9 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+       // if(!getResources().getBoolean(R.bool.is_this_tablet)){
+       //     getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      //  }
     }
 
     @Nullable
@@ -71,10 +73,19 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
 
         ButterKnife.bind(this,rootView);
 
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        //LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        //llm.setOrientation(LinearLayoutManager.VERTICAL);
+        if(!getResources().getBoolean(R.bool.is_this_tablet)) {
+            StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            // GridLayoutManager sglm = new GridLayoutManager(mContext, 2);
+            results_recycler_view.setLayoutManager(sglm);
+        }else {
+            StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+            // GridLayoutManager sglm = new GridLayoutManager(mContext, 2);
+            results_recycler_view.setLayoutManager(sglm);
 
-        results_recycler_view.setLayoutManager(llm);
+        }
+        //results_recycler_view.setLayoutManager(llm);
         results_recycler_view.setHasFixedSize(true);
 
         setUpData();

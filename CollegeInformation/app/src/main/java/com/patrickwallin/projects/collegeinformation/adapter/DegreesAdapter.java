@@ -54,7 +54,8 @@ public class DegreesAdapter extends RecyclerView.Adapter<SearchDegreesViewHolder
             holder.mNameTextView.setTag(degreesData.getId());
 
             if(mSelectedPosition == position) {
-                holder.mSearchDegreeCardView.setCardBackgroundColor(Color.BLUE);
+                holder.mSearchDegreeCardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary,null));
+
                 holder.mNameTextView.setTextColor(Color.WHITE);
                 SearchQueryInputData searchQueryInputData = new SearchQueryInputData(FetchSearchQueryInputTask.SEARCH_QUERY_DEGREES_ID,"degrees",String.valueOf(degreesData.getId()));
                 mContext.getContentResolver().update(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,searchQueryInputData.getSearchQueryInputContentValues(),

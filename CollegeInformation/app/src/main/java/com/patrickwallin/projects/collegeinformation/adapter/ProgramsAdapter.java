@@ -48,7 +48,7 @@ public class ProgramsAdapter extends RecyclerView.Adapter<SearchProgramsViewHold
             holder.mTitleTextView.setText(programData.getTitle());
             if(mSelectedPosition == position) {
                 holder.itemView.setSelected(true);
-                holder.itemView.setBackgroundColor(Color.BLUE);
+                holder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary,null));
                 holder.mTitleTextView.setTextColor(Color.WHITE);
                 SearchQueryInputData searchQueryInputData = new SearchQueryInputData(1,"programs",String.valueOf(programData.getId()));
                 mContext.getContentResolver().update(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,searchQueryInputData.getSearchQueryInputContentValues(),

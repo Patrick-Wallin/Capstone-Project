@@ -3,6 +3,7 @@ package com.patrickwallin.projects.collegeinformation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -64,9 +66,9 @@ public class MainSearchActivityFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
+          //  getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //}
     }
 
     @Nullable
@@ -76,15 +78,36 @@ public class MainSearchActivityFragment extends Fragment {
         Log.i("Test","OnCreateView Of MainSearchActivityFragment");
         ButterKnife.bind(this,rootView);
 
-        if(getResources().getBoolean(R.bool.is_this_tablet) && !getResources().getBoolean(R.bool.is_this_portrait)){
-            LinearLayoutManager llm = new LinearLayoutManager(mContext);
-            Drawable dividerDrawable = ContextCompat.getDrawable(mContext, R.drawable.divider_line);
-            RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecoration(dividerDrawable);
-            search_recycler_view.addItemDecoration(dividerItemDecoration);
-            search_recycler_view.setLayoutManager(llm);
+        //if(getResources().getBoolean(R.bool.is_this_tablet) && !getResources().getBoolean(R.bool.is_this_portrait)){
+        if(getResources().getBoolean(R.bool.is_this_tablet)){
+            //if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+              //  GridLayoutManager sglm = new GridLayoutManager(mContext, 4);
+                //search_recycler_view.setLayoutManager(sglm);
+            //}else {
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                GridLayoutManager sglm = new GridLayoutManager(mContext, 4);
+                search_recycler_view.setLayoutManager(sglm);
+            }else {
+                GridLayoutManager sglm = new GridLayoutManager(mContext, 1);
+                search_recycler_view.setLayoutManager(sglm);
+            }
+            /*
+                LinearLayoutManager llm = new LinearLayoutManager(mContext);
+                Drawable dividerDrawable = ContextCompat.getDrawable(mContext, R.drawable.divider_line);
+                RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecoration(dividerDrawable);
+                search_recycler_view.addItemDecoration(dividerItemDecoration);
+                search_recycler_view.setLayoutManager(llm);
+                */
+            //}
         }else {
-            GridLayoutManager sglm = new GridLayoutManager(mContext, 2);
-            search_recycler_view.setLayoutManager(sglm);
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                GridLayoutManager sglm = new GridLayoutManager(mContext, 4);
+                search_recycler_view.setLayoutManager(sglm);
+            }else {
+                GridLayoutManager sglm = new GridLayoutManager(mContext, 2);
+                search_recycler_view.setLayoutManager(sglm);
+            }
+
         }
 
         search_recycler_view.setHasFixedSize(true);

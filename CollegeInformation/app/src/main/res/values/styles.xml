@@ -1,15 +1,32 @@
 <resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Theme.Show.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarStyle">@style/Theme.Show.ActionBar.ActionBarStyle</item>
+    </style>
+
+    <style name="Theme.Show.ActionBar.ActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="titleTextStyle">@style/Theme.Show.ActionBar.TitleTextStyle</item>
+    </style>
+
+    <style name="Theme.Show.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:fontFamily">cursive</item>
+        <item name="android:textSize">30dp</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="colorPrimary">@android:color/transparent</item>
         <item name="windowNoTitle">true</item>
     </style>
 
@@ -18,8 +35,44 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.Splash" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:statusBarColor">@android:color/holo_blue_light</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
+
+    <style name="SplashScreen">
+        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:text">@string/app_name</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:fontFamily">cursive</item>
+        <item name="android:textSize">40dp</item>
+    </style>
+
+    <style name="SplashScreenLoading" parent="@style/SplashScreen">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+        <item name="android:text">@string/loading</item>
+        <item name="android:maxLines">10</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="TitleOnTop">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:fontFamily">cursive</item>
+        <item name="android:textSize">30dp</item>
+    </style>
+
+    <style name="FindCollegeButton">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:text">@string/find_college_button_caption</item>
+    </style>
+
+
+
 
     <style name="SearchDegreesLists" parent="@android:style/TextAppearance.Medium">
         <item name="android:textStyle">bold</item>
@@ -74,24 +127,39 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="FindCollegeButton">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:background">@color/colorPrimary</item>
+
+
+
+    <style name="card_view_results">
+        <item name="android:elevation">2dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?selectableItemBackground</item>
     </style>
 
-    <style name="SplashScreen">
-        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:text">College Information</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:gravity">center</item>
+    <style name="text_view_result_title">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:textColor">@color/card_view_result_title</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">4</item>
     </style>
 
-    <style name="SplashScreenLoading" parent="@style/SplashScreen">
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
-        <item name="android:text">Loading...</item>
-        <item name="android:maxLines">10</item>
+    <style name="text_view_result_subtitle">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textColor">@color/card_view_result_subtitle</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
     </style>
-
 </resources>

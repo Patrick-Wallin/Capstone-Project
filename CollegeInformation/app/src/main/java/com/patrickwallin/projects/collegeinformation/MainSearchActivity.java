@@ -27,23 +27,18 @@ public class MainSearchActivity extends AppCompatActivity implements OnSearchOpt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_search);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
+        //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //}
 
         if (findViewById(R.id.activity_search_page_container) != null) {
-            //if (savedInstanceState == null) {
-                MainSearchActivityFragment mainSearchActivityFragment = new MainSearchActivityFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.activity_search_page_container, mainSearchActivityFragment).commit();
-            //}
+            MainSearchActivityFragment mainSearchActivityFragment = new MainSearchActivityFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.activity_search_page_container, mainSearchActivityFragment).commit();
         }else {
-            //if (savedInstanceState == null) {
-                MainSearchActivityFragment mainSearchActivityFragment = new MainSearchActivityFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.searches_fragment, mainSearchActivityFragment).commit();
-                SearchDegreesActivityFragment searchDegreesActivityFragment = new SearchDegreesActivityFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.search_detail_fragment, searchDegreesActivityFragment).commit();
-
-            //}
+            MainSearchActivityFragment mainSearchActivityFragment = new MainSearchActivityFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.searches_fragment, mainSearchActivityFragment).commit();
+            SearchDegreesActivityFragment searchDegreesActivityFragment = new SearchDegreesActivityFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.search_detail_fragment, searchDegreesActivityFragment).commit();
         }
     }
 

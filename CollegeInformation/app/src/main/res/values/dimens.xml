@@ -7,4 +7,7 @@
     <dimen name="activity_horizontal_linear_layout_manager_sample_recyclerViewWidth">80dp</dimen>
     <dimen name="list_item_sample_text_padding">8dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="appbar_elevation">4dp</dimen>
+    <dimen name="coordinator_layout_elevation">8dp</dimen>
+    <dimen name="list_toolbar_side_margin">0dp</dimen>
 </resources>

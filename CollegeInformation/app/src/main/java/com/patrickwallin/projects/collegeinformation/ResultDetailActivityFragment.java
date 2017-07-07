@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -72,6 +75,18 @@ public class ResultDetailActivityFragment extends Fragment {
 
     public ResultDetailActivityFragment() {}
 
+    private void scheduleStartPostponedTransition(final View sharedElement) {
+        sharedElement.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
+                        ActivityCompat.startPostponedEnterTransition(getActivity());
+                        return true;
+                    }
+                });
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -92,14 +107,20 @@ public class ResultDetailActivityFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+       // if(!getResources().getBoolean(R.bool.is_this_tablet)){
+         //   getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //}
+
 
         Bundle bundleResult = getArguments();
         if(bundleResult != null) {
             mFavoriteCollegeData = Parcels.unwrap(bundleResult.getParcelable("resultdetailinfo"));
         }
+
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+         //  ActivityCompat.postponeEnterTransition();
+        //}
+
 
     }
 
@@ -113,6 +134,16 @@ public class ResultDetailActivityFragment extends Fragment {
         DecimalFormat format = new DecimalFormat("0.00");
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
 
+        /*
+        final ViewTreeObserver observer = rootView.getViewTreeObserver();
+        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                observer.removeOnPreDrawListener(this);
+                getActivity().startPostponedEnterTransition();
+                return true;
+            }
+        });
+        */
 
         //int color = Color.parseColor("#ffffff");
         //mLikesImageView.setColorFilter(color);
@@ -195,6 +226,10 @@ public class ResultDetailActivityFragment extends Fragment {
 
                 }
             });
+
+            String transitionPhotoName = mContext.getResources().getString(R.string.transition_photo).trim() + String.valueOf(mFavoriteCollegeData.getId()).trim();
+            mCollegeImageView.setTransitionName(transitionPhotoName);
+
         }
         return rootView;
     }

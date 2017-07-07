@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="card_view_result_title">@android:color/white</color>
+    <color name="card_view_result_subtitle">@android:color/white</color>
+
+    <color name="background_on_title_and_subtitle">@color/colorPrimary</color>
+
 </resources>

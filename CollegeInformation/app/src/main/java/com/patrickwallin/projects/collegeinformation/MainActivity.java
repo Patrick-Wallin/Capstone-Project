@@ -59,10 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
         mSplashLoadingTextView = (TextView) findViewById(R.id.splash_loading_text_view);
 
-        if (BuildConfig.DEBUG) {
+        if(BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -70,133 +69,24 @@ public class MainActivity extends AppCompatActivity {
 
         FetchSearchQueryInputTask fetchSearchQueryInputTask = new FetchSearchQueryInputTask(MainActivity.this);
         fetchSearchQueryInputTask.execute();
-
-        //Intent intentSearchActivity = new Intent(this, MainSearchActivity.class);
-        //startActivity(intentSearchActivity);
-
     }
 
-    void checkPermission() {
-        //select which permission you want
-        final String permission = WRITE_EXTERNAL_STORAGE;
-        if (ContextCompat.checkSelfPermission(MainActivity.this, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, permission)) {
-            } else {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, REQUEST_RUNTIME_PERMISSION);
-            }
-        } else {
-            // you have permission go ahead launch service
-            //SomeTask();
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            signInAnonymously();
-        }
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_RUNTIME_PERMISSION:
-                final int numOfRequest = grantResults.length;
-                final boolean isGranted = numOfRequest == 1
-                        && PackageManager.PERMISSION_GRANTED == grantResults[numOfRequest - 1];
-                if (isGranted) {
-                    // you have permission go ahead
-                    FirebaseUser currentUser = mAuth.getCurrentUser();
-                    signInAnonymously();
-                } else {
-                    // you dont have permission show toast
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
     @Override
     protected void onStart() {
         super.onStart();
-
-        //FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        Log.i("Test","OnStart Of MainActivity");
-
         signInAnonymously();
-
     }
 
     private void signInAnonymously() {
-    /*
-        mAuth.signInWithEmailAndPassword("patricktwallin@gmail.com", "Ryazan@900")
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-
-                    @Override
-
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-                            Toast.makeText(MainActivity.this, "Name: " + user.getEmail(), Toast.LENGTH_LONG).show();
-
-                            Toast.makeText(MainActivity.this, "Authentication Success.", Toast.LENGTH_SHORT).show();
-
-                            FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this);
-                            fetchVersionsTask.execute();
-
-
-
-
-                        } else {
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-
-                                    Toast.LENGTH_SHORT).show();
-
-
-
-                        }
-
-
-
-
-                    }
-
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MainActivity.this, "Authentication failed: " + e.toString(),
-
-                        Toast.LENGTH_SHORT).show();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                Toast.makeText(MainActivity.this, "Success? failed: " + authResult.toString(),
-
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-        */
-
-
         if(mAuth != null) {
             mAuth.signInAnonymously()
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Log.e("MainActivity", "signInAnonymously:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                //Toast.makeText(MainActivity.this, "Name: " + user.getEmail(), Toast.LENGTH_LONG).show();
-
-                                //Toast.makeText(MainActivity.this, "Authentication Success.", Toast.LENGTH_SHORT).show();
-
-                                //FetchSearchQueryInputTask fetchSearchQueryInputTask = new FetchSearchQueryInputTask(MainActivity.this);
-                                //fetchSearchQueryInputTask.execute();
-
-
+                                Timber.d("signInAnonymously:success");
                                 try {
-                                    final File jsonFile = File.createTempFile("jsonFromStorage", "json");
+                                    final File jsonFile = File.createTempFile(getResources().getString(R.string.temp_file_name), getResources().getString(R.string.json_ext));
                                     NetworkUtils networkUtils = new NetworkUtils(MainActivity.this);
                                     StorageReference storageReference = networkUtils.getStorageReference(VersionContract.VersionEntry.TABLE_NAME);
                                     com.google.firebase.storage.FileDownloadTask taskDownloadFile = storageReference.getFile(jsonFile);
@@ -205,33 +95,22 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                                 List<VersionData> versionDataList = OpenJsonUtils.getVersionDataFromJson(jsonFile);
-
                                                 FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this, mSplashLoadingTextView, versionDataList);
                                                 fetchVersionsTask.execute();
-
-
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_LONG);
+                                                mSplashLoadingTextView.setText(e.getMessage());
                                             }
                                         });
                                     }
-
-
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-
-
-                                //FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this,mSplashLoadingTextView);
-                                //fetchVersionsTask.execute();
                             } else {
-                                Log.e("MainActivity", "signInAnonymously:failure", task.getException());
-
-                                Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-
+                                Timber.d("singInAnonymously:failure");
+                                Timber.d(task.getException());
                                 mSplashLoadingTextView.setText("Authentication by Firebase failed.");
                             }
                         }
@@ -242,12 +121,8 @@ public class MainActivity extends AppCompatActivity {
                             mSplashLoadingTextView.setText("Firebase Error:...\n "+e.getMessage());
                         }
                     });
-
-            // [END signin_anonymously]
         }else {
             mSplashLoadingTextView.setText("Authentication by Firebase failed.");
         }
-
-
     }
 }

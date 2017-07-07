@@ -26,9 +26,11 @@
             android:launchMode="singleTop" />
         <activity
             android:name=".SearchDegreesActivity"
+            android:theme="@style/Theme.Show.ActionBar"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".SearchProgramsActivity"
+            android:theme="@style/Theme.Show.ActionBar"
             android:parentActivityName=".MainActivity" />
 
         <provider
@@ -38,6 +40,7 @@
 
         <activity
             android:name=".SearchLocationsActivity"
+            android:theme="@style/Theme.Show.ActionBar"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".SearchLocationsStatesActivity"
@@ -47,12 +50,15 @@
             android:parentActivityName=".SearchLocationsActivity" />
         <activity
             android:name=".SearchNamesActivity"
+            android:theme="@style/Theme.Show.ActionBar"
             android:parentActivityName=".SearchLocationsActivity" />
         <activity
             android:name=".ResultsActivity"
             android:launchMode="singleTop"
+            android:theme="@style/Theme.Show.ActionBar"
             android:parentActivityName=".SearchLocationsActivity" />
         <activity android:name=".ResultDetailActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:parentActivityName=".ResultsActivity"></activity>
     </application>
 

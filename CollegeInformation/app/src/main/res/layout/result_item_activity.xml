@@ -2,9 +2,8 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/result_card_view"
-    android:layout_margin="0dp"
-    android:layout_marginTop="10dp"
-    app:cardCornerRadius="0dp"
+    app:cardBackgroundColor="@color/colorPrimaryDark"
+    style="@style/card_view_results"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -33,14 +32,14 @@
                 android:id="@+id/college_name_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/ResultsTextView" />
+                style="@style/text_view_result_title" />
 
 
             <TextView
                 android:id="@+id/college_city_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/ResultsTextView" />
+                style="@style/text_view_result_subtitle" />
         </LinearLayout>
     </LinearLayout>
 

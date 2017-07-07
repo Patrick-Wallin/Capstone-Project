@@ -2,13 +2,22 @@ package com.patrickwallin.projects.collegeinformation;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -32,22 +41,23 @@ public class ResultsActivity extends AppCompatActivity implements OnResultOption
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+       // if(!getResources().getBoolean(R.bool.is_this_tablet)){
+       //     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      //  }
 
         //if(savedInstanceState == null) {
-        if (findViewById(R.id.activity_result_page_container) != null) {
+        //if (findViewById(R.id.activity_result_page_container) != null) {
             ResultsActivityFragment resultsActivityFragment = new ResultsActivityFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.activity_result_page_container,resultsActivityFragment).commit();
-        }else {
-            ResultsActivityFragment resultsActivityFragment = new ResultsActivityFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.results_fragment,resultsActivityFragment).commit();
-            ResultDetailActivityFragment resultDetailActivityFragment = new ResultDetailActivityFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.results_detail_fragment,resultDetailActivityFragment).commit();
-        }
+        //}else {
+        //    ResultsActivityFragment resultsActivityFragment = new ResultsActivityFragment();
+        //    getSupportFragmentManager().beginTransaction().replace(R.id.results_fragment,resultsActivityFragment).commit();
+         //   ResultDetailActivityFragment resultDetailActivityFragment = new ResultDetailActivityFragment();
+         //   getSupportFragmentManager().beginTransaction().replace(R.id.results_detail_fragment,resultDetailActivityFragment).commit();
+        //}
     }
 
     @Override
@@ -63,11 +73,27 @@ public class ResultsActivity extends AppCompatActivity implements OnResultOption
     }
 
     @Override
-    public void OnSelectionChanged(Bundle bundle) {
-        if (findViewById(R.id.activity_result_page_container) != null) {
+    public void OnSelectionChanged(Bundle bundle, ImageView imageView) {
+        //if (findViewById(R.id.activity_result_page_container) != null) {
             Intent intentResultDetailActivity = new Intent(this, ResultDetailActivity.class);
             intentResultDetailActivity.putExtras(bundle);
-            this.startActivity(intentResultDetailActivity);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                View statusBar = findViewById(android.R.id.statusBarBackground);
+                View navigationBar = findViewById(android.R.id.navigationBarBackground);
+
+                List<Pair<View, String>> pairs = new ArrayList<>();
+                pairs.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+                pairs.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+                pairs.add(Pair.create((View)imageView, imageView.getTransitionName()));
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, pairs.toArray(new Pair[pairs.size()]));
+                startActivity(intentResultDetailActivity, options.toBundle());
+            }else {
+                startActivity(intentResultDetailActivity);
+            }
+            //this.startActivity(intentResultDetailActivity);
+        /*
         }else {
             listener.OnDataSelectionChanged(bundle);
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -80,5 +106,6 @@ public class ResultsActivity extends AppCompatActivity implements OnResultOption
                     .commit();
             //getSupportFragmentManager().beginTransaction().replace(R.id.results_detail_fragment,currentFragment).commit();
         }
+        */
     }
 }
