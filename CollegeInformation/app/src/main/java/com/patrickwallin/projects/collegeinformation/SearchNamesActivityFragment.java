@@ -204,7 +204,6 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
 
     @Override
     public void onResume() {
-
         super.onResume();
         checkVersion();
     }

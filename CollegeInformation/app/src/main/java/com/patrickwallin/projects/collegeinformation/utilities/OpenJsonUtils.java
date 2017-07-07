@@ -347,7 +347,7 @@ public class OpenJsonUtils {
             FileReader reader = new FileReader(fileName);
             JsonReader jsonReader = new JsonReader(reader);
 
-            Gson gson = new GsonBuilder().create();
+            //Gson gson = new GsonBuilder().create();
 
             // Read file in stream mode
             jsonReader.beginObject();
