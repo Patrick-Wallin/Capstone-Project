@@ -6,6 +6,7 @@
     <string name="json_ext">json</string>
 
     <string name="find_college_button_caption">Find College</string>
+    <string name="go_favorite_button_caption">View Favorites</string>
 
     <string name="not_favorite_college">no</string>
     <string name="favorite_college">yes</string>
@@ -47,5 +48,11 @@
     <string name="title_activity_search_locations_states">SearchLocationsStatesActivity</string>
 
     <string name="transition_photo">transitionPhoto</string>
+    <string name="appwidget_text">College Info</string>
+    <string name="add_widget">Add widget</string>
 
+    <string name="no_internet_connection_title">No Internet Connection</string>
+    <string name="no_internet_connection_message">It looks like your internet connection is off. \n Please turn it on and try again</string>
+
+    <string name="id">id</string>
 </resources>

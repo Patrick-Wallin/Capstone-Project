@@ -30,6 +30,7 @@ public class FetchCollegeNamesTask extends AsyncTask<Void, Void, List<NameData>>
     @Override
     protected List<NameData> doInBackground(Void... params) {
         Cursor programCursor;
+        List<NameData> nameDataList = null;
 
         programCursor = mContext.getContentResolver().query(
                 NameContract.NameEntry.CONTENT_URI,
@@ -38,14 +39,15 @@ public class FetchCollegeNamesTask extends AsyncTask<Void, Void, List<NameData>>
                 null,
                 NameContract.NameEntry.COLUMN_NAME_NAME);
         if(programCursor != null && programCursor.moveToFirst())
-            return CursorAndDataConverter.getNameDataFromCursor(programCursor);
+            nameDataList = CursorAndDataConverter.getNameDataFromCursor(programCursor);
+        if(programCursor != null)
+            programCursor.close();
 
-        return null;
+        return nameDataList;
     }
 
     @Override
     protected void onPreExecute() {
-
         super.onPreExecute();
         listener.returnString("Loading data... Please wait.");
     }
@@ -55,7 +57,7 @@ public class FetchCollegeNamesTask extends AsyncTask<Void, Void, List<NameData>>
         if(nameDatas != null) {
             mNamesAdapter.setNameData(nameDatas);
         }
-
-        listener.closeScreen();
+        listener.returnString("Finished!");
+        //listener.closeScreen();
     }
 }

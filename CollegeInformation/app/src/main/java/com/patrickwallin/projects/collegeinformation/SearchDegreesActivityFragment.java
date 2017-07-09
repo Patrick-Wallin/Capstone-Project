@@ -2,6 +2,7 @@ package com.patrickwallin.projects.collegeinformation;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -70,9 +72,9 @@ public class SearchDegreesActivityFragment extends Fragment implements AsyncList
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
+        //    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //}
 
     }
 
@@ -124,38 +126,42 @@ public class SearchDegreesActivityFragment extends Fragment implements AsyncList
             final int currentVersion = versionDataList.get(0).getVersionNumber();
             final int priorVersion = versionDataList.get(0).getPriorVersionNumber();
             if(currentVersion != priorVersion) {
-                try {
-                    final File jsonFile = File.createTempFile(mContext.getResources().getString(R.string.temp_file_name), mContext.getResources().getString(R.string.json_ext));
-                    NetworkUtils networkUtils = new NetworkUtils(mContext);
-                    StorageReference storageReference = networkUtils.getStorageReference(DegreeContract.DegreeEntry.TABLE_NAME);
-                    storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            List<DegreesData> degreesDataList = OpenJsonUtils.getDegreeDataFromJson(jsonFile);
-                            mContext.getContentResolver().delete(DegreeContract.DegreeEntry.CONTENT_URI, null, null);
-                            if (degreesDataList != null && !degreesDataList.isEmpty()) {
-                                String message = "Loading data... 1 of " + String.valueOf(degreesDataList.size());
-                                returnString(message);
-                                for (int i = 0; i < degreesDataList.size(); i++) {
-                                    message = "Loading data... " + String.valueOf(i + 1) + " of " + String.valueOf(degreesDataList.size());
+                NetworkUtils networkUtils = new NetworkUtils(mContext);
+                if (networkUtils.isNetworkConnected()) {
+                    try {
+                        final File jsonFile = File.createTempFile(mContext.getResources().getString(R.string.temp_file_name), mContext.getResources().getString(R.string.json_ext));
+                        StorageReference storageReference = networkUtils.getStorageReference(DegreeContract.DegreeEntry.TABLE_NAME);
+                        storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                List<DegreesData> degreesDataList = OpenJsonUtils.getDegreeDataFromJson(jsonFile);
+                                mContext.getContentResolver().delete(DegreeContract.DegreeEntry.CONTENT_URI, null, null);
+                                if (degreesDataList != null && !degreesDataList.isEmpty()) {
+                                    String message = "Loading data... 1 of " + String.valueOf(degreesDataList.size());
                                     returnString(message);
-                                    mContext.getContentResolver().insert(DegreeContract.DegreeEntry.CONTENT_URI, degreesDataList.get(i).getDegreesContentValues());
+                                    for (int i = 0; i < degreesDataList.size(); i++) {
+                                        message = "Loading data... " + String.valueOf(i + 1) + " of " + String.valueOf(degreesDataList.size());
+                                        returnString(message);
+                                        mContext.getContentResolver().insert(DegreeContract.DegreeEntry.CONTENT_URI, degreesDataList.get(i).getDegreesContentValues());
+                                    }
                                 }
-                            }
-                            VersionData versionData = new VersionData(VersionContract.VERSION_ID_DEGREES, DegreeContract.PATH_DEGREES, currentVersion,currentVersion);
-                            ContentValues contentValues = versionData.getVersionContentValues();
-                            mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_DEGREES, null);
+                                VersionData versionData = new VersionData(VersionContract.VERSION_ID_DEGREES, DegreeContract.PATH_DEGREES, currentVersion, currentVersion);
+                                ContentValues contentValues = versionData.getVersionContentValues();
+                                mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_DEGREES, null);
 
-                            loadData();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            returnString("Failed loading data");
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
+                                loadData();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                returnString("Failed loading data");
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    networkUtils.showAlertMessageAboutNoInternetConnection(true);
                 }
             }else {
                 loadData();

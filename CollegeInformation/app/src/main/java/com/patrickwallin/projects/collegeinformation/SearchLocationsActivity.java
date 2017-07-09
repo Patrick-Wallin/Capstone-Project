@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-public class SearchLocationsActivity extends AppCompatActivity {
+public class SearchLocationsActivity extends AppCompatActivity implements OnGoBackChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,9 +15,9 @@ public class SearchLocationsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+       // if(!getResources().getBoolean(R.bool.is_this_tablet)){
+        //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+       // }
 
         if(savedInstanceState == null) {
             SearchLocationsActivityFragment searchLocationsActivityFragment = new SearchLocationsActivityFragment();
@@ -37,5 +37,10 @@ public class SearchLocationsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    @Override
+    public void OnGoBackChanged() {
+        onBackPressed();
     }
 }

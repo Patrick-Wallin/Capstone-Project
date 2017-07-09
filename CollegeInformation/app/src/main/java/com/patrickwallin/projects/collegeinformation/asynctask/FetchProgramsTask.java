@@ -29,6 +29,7 @@ public class FetchProgramsTask extends AsyncTask<Void, Void, List<ProgramData>> 
     @Override
     protected List<ProgramData> doInBackground(Void... params) {
         Cursor programCursor;
+        List<ProgramData> programDataList = null;
 
         programCursor = mContext.getContentResolver().query(
                 ProgramContract.ProgramEntry.CONTENT_URI,
@@ -38,9 +39,11 @@ public class FetchProgramsTask extends AsyncTask<Void, Void, List<ProgramData>> 
                 null);
 
         if(programCursor != null && programCursor.moveToFirst())
-            return CursorAndDataConverter.getProgramDataFromCursor(programCursor);
+            programDataList = CursorAndDataConverter.getProgramDataFromCursor(programCursor);
+        if(programCursor != null)
+            programCursor.close();
 
-        return null;
+        return programDataList;
     }
 
     @Override
@@ -53,6 +56,7 @@ public class FetchProgramsTask extends AsyncTask<Void, Void, List<ProgramData>> 
     protected void onPostExecute(List<ProgramData> programDatas) {
         if(programDatas != null) {
             mProgramsAdapter.setProgramData(programDatas);
+
         }
         listener.closeScreen();
     }

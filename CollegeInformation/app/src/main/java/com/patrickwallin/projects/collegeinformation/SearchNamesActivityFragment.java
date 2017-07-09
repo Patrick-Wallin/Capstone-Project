@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ActionProvider;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +33,7 @@ import com.patrickwallin.projects.collegeinformation.adapter.NamesAdapter;
 import com.patrickwallin.projects.collegeinformation.adapter.ProgramsAdapter;
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchCollegeNamesTask;
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchProgramsTask;
+import com.patrickwallin.projects.collegeinformation.asynctask.InsertNamesTask;
 import com.patrickwallin.projects.collegeinformation.data.NameContract;
 import com.patrickwallin.projects.collegeinformation.data.NameData;
 import com.patrickwallin.projects.collegeinformation.data.ProgramData;
@@ -48,6 +51,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by piwal on 6/22/2017.
@@ -62,6 +66,8 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
     private NamesAdapter mNamesAdapter;
     private Snackbar mSnackbar;
 
+    private static int mDisplayedItemPosition = 0;
+
     public SearchNamesActivityFragment() {}
 
     @Override
@@ -74,9 +80,9 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+       // if(!getResources().getBoolean(R.bool.is_this_tablet)){
+        //    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+       // }
 
     }
 
@@ -93,6 +99,20 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
 
         names_recycler_view.setLayoutManager(llm);
         names_recycler_view.setHasFixedSize(true);
+
+        names_recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager llm = (LinearLayoutManager) names_recycler_view.getLayoutManager();
+                mDisplayedItemPosition = llm.findFirstVisibleItemPosition();
+            }
+        });
 
         Drawable dividerDrawable = ContextCompat.getDrawable(mContext, R.drawable.divider_line);
 
@@ -113,12 +133,21 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
+        searchView.setQueryHint("Type keywords here");
+        searchView.onActionViewExpanded();
+        searchView.setIconified(false);
+        searchView.clearFocus();
 
         MenuItemCompat.setOnActionExpandListener(item,
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-                        mNamesAdapter.setNameData(mNameData);
+                        //mNamesAdapter.setNameData(mNameData);
+                        Timber.i("tap on up button " + mDisplayedItemPosition);
+                        LinearLayoutManager llm = (LinearLayoutManager) names_recycler_view.getLayoutManager();
+                        llm.scrollToPosition(mNamesAdapter.getSelectedPosition());
+                        //llm.scrollToPositionWithOffset(mDisplayedItemPosition , mNameData.size());
+                        //names_recycler_view.scrollToPosition(10);
                         return true; // Return true to collapse action view
                     }
 
@@ -137,7 +166,7 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
     }
 
     private void setUpAdapter() {
-        mNamesAdapter = new NamesAdapter(mNameData,mContext);
+        mNamesAdapter = new NamesAdapter(mNameData,mContext,names_recycler_view);
         names_recycler_view.setAdapter(mNamesAdapter);
     }
 
@@ -147,40 +176,52 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
             final int currentVersion = versionDataList.get(0).getVersionNumber();
             final int priorVersion = versionDataList.get(0).getPriorVersionNumber();
             if(currentVersion != priorVersion) {
-                try {
-                    final File jsonFile = File.createTempFile(mContext.getResources().getString(R.string.temp_file_name), mContext.getResources().getString(R.string.json_ext));
-                    NetworkUtils networkUtils = new NetworkUtils(mContext);
-                    StorageReference storageReference = networkUtils.getStorageReference(NameContract.NameEntry.TABLE_NAME);
-                    storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            returnString("Loading data... Please wait.");
-                            Snackbar.make(getView().findViewById(R.id.root_search_names), "Loading data...", Snackbar.LENGTH_INDEFINITE).show();
-                            List<NameData> nameDataList = OpenJsonUtils.getNameDataFromJson(jsonFile);
-                            mContext.getContentResolver().delete(NameContract.NameEntry.CONTENT_URI, null, null);
+                NetworkUtils networkUtils = new NetworkUtils(mContext);
+                if (networkUtils.isNetworkConnected()) {
+                    try {
+                        final File jsonFile = File.createTempFile(mContext.getResources().getString(R.string.temp_file_name), mContext.getResources().getString(R.string.json_ext));
+                        StorageReference storageReference = networkUtils.getStorageReference(NameContract.NameEntry.TABLE_NAME);
+                        storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                returnString("Loading data... Please wait.");
+                                Snackbar.make(getView().findViewById(R.id.root_search_names), "Loading data...", Snackbar.LENGTH_INDEFINITE).show();
+                                List<NameData> nameDataList = OpenJsonUtils.getNameDataFromJson(jsonFile);
+                                nameDataList.add(new NameData(-1, "Any", "", "", "", ""));
+
+                                mDisplayedItemPosition = mNamesAdapter.setNameData(nameDataList);
+                                mContext.getContentResolver().delete(NameContract.NameEntry.CONTENT_URI, null, null);
+
+                                new InsertNamesTask(mContext, nameDataList, mNamesAdapter).execute();
+
+                            /*
                             if (nameDataList != null && !nameDataList.isEmpty()) {
                                 String message = "Loading data... 1 of " + String.valueOf(nameDataList.size());
                                 returnString(message);
                                 for (int i = 0; i < nameDataList.size(); i++) {
                                     message = "Loading data... " + String.valueOf(i + 1) + " of " + String.valueOf(nameDataList.size());
                                     returnString(message);
-                                    mContext.getContentResolver().insert(NameContract.NameEntry.CONTENT_URI, nameDataList.get(i).getNamesContentValues());
+                                    //mContext.getContentResolver().insert(NameContract.NameEntry.CONTENT_URI, nameDataList.get(i).getNamesContentValues());
                                 }
                             }
-                            VersionData versionData = new VersionData(VersionContract.VERSION_ID_NAMES, NameContract.PATH_NAMES, currentVersion,currentVersion);
-                            ContentValues contentValues = versionData.getVersionContentValues();
-                            mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_NAMES, null);
+                            */
+                                VersionData versionData = new VersionData(VersionContract.VERSION_ID_NAMES, NameContract.PATH_NAMES, currentVersion, currentVersion);
+                                ContentValues contentValues = versionData.getVersionContentValues();
+                                mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_NAMES, null);
 
-                            loadData();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            returnString("Failed loading data");
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
+                                //loadData();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                returnString("Failed loading data");
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    networkUtils.showAlertMessageAboutNoInternetConnection(true);
                 }
             }else {
                 loadData();
@@ -210,12 +251,18 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        if(mNameData == null || (mNameData != null && mNameData.isEmpty())) {
+            mNameData = mNamesAdapter.getNameData();
+        }
+        final List<NameData> filteredModelList = filterProgramList(mNameData, query);
+
+        mNamesAdapter.setNameData(filteredModelList);
+
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        //Log.i(SearchProgramsActivityFragment.class.getSimpleName(),newText);
         if(mNameData == null || (mNameData != null && mNameData.isEmpty())) {
             mNameData = mNamesAdapter.getNameData();
         }
@@ -231,13 +278,9 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
 
         query = query.toLowerCase();
 
-        Log.i(SearchNamesActivityFragment.class.getSimpleName(),"Query: " + query);
-
         for (NameData model : data) {
             final String text = model.getName().toLowerCase();
-            Log.i(SearchNamesActivityFragment.class.getSimpleName(),text);
             if (text.contains(query)) {
-                Log.i(SearchNamesActivityFragment.class.getSimpleName(),"make it");
                 filteredModelList.add(model);
             }
         }
@@ -263,4 +306,6 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
          //   mSnackbar.dismiss();
         //}
     }
+
+
 }

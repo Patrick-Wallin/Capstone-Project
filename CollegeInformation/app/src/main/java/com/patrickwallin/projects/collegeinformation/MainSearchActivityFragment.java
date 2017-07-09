@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,6 +27,7 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.patrickwallin.projects.collegeinformation.adapter.MainSearchPageAdapter;
+import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeContract;
 import com.patrickwallin.projects.collegeinformation.data.MainSearchPage;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputContract;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputData;
@@ -48,11 +50,14 @@ import timber.log.Timber;
 public class MainSearchActivityFragment extends Fragment {
     @BindView(R.id.search_recycler_view) RecyclerView search_recycler_view;
     @BindView(R.id.find_college_button) Button find_college_button;
+    @BindView(R.id.go_favorite_button) Button go_favorite_button;
     @BindView(R.id.search_query_text_view) TextView search_query_text_view;
 
     private List<MainSearchPage> mMainSearchPage;
 
     private Context mContext;
+    private int mTotalRecordsInResults = 0;
+    private int mTotalRecordsInFavorites = 0;
 
     public MainSearchActivityFragment() {}
 
@@ -75,7 +80,7 @@ public class MainSearchActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_main_search_fragment,container,false);
-        Log.i("Test","OnCreateView Of MainSearchActivityFragment");
+
         ButterKnife.bind(this,rootView);
 
         //if(getResources().getBoolean(R.bool.is_this_tablet) && !getResources().getBoolean(R.bool.is_this_portrait)){
@@ -84,13 +89,31 @@ public class MainSearchActivityFragment extends Fragment {
               //  GridLayoutManager sglm = new GridLayoutManager(mContext, 4);
                 //search_recycler_view.setLayoutManager(sglm);
             //}else {
+            int numberOfSpan = 4;
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            }else {
+                if(getResources().getBoolean(R.bool.is_this_big_tablet)) {
+                    numberOfSpan = 1;
+                }else {
+                    numberOfSpan = 2;
+                }
+            }
+
+            /*
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                GridLayoutManager sglm = new GridLayoutManager(mContext, 4);
+                GridLayoutManager sglm = new GridLayoutManager(mContext, numberOfSpan);
                 search_recycler_view.setLayoutManager(sglm);
             }else {
-                GridLayoutManager sglm = new GridLayoutManager(mContext, 1);
+                GridLayoutManager sglm = new GridLayoutManager(mContext, 4);
                 search_recycler_view.setLayoutManager(sglm);
             }
+            */
+
+            GridLayoutManager sglm = new GridLayoutManager(mContext, numberOfSpan);
+
+            search_recycler_view.setLayoutManager(sglm);
+
             /*
                 LinearLayoutManager llm = new LinearLayoutManager(mContext);
                 Drawable dividerDrawable = ContextCompat.getDrawable(mContext, R.drawable.divider_line);
@@ -115,8 +138,28 @@ public class MainSearchActivityFragment extends Fragment {
         find_college_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentResultsActivity = new Intent(mContext, ResultsActivity.class);
-                mContext.startActivity(intentResultsActivity);
+                // check if any record first!
+                if(mTotalRecordsInResults == 0) {
+                    Snackbar.make(getView().findViewById(R.id.article_coordinator_layout), "No results based on search", Snackbar.LENGTH_LONG).show();
+                }else {
+                    Intent intentResultsActivity = new Intent(mContext, ResultsActivity.class);
+                    intentResultsActivity.putExtra("favoriteresults",false);
+                    mContext.startActivity(intentResultsActivity);
+                }
+            }
+        });
+
+        go_favorite_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // check if any record first!
+                if(mTotalRecordsInFavorites == 0) {
+                    Snackbar.make(getView().findViewById(R.id.article_coordinator_layout),"Unable to show since there is no favorite.",Snackbar.LENGTH_LONG).show();
+                }else {
+                    Intent intentResultsActivity = new Intent(mContext, ResultsActivity.class);
+                    intentResultsActivity.putExtra("favoriteresults",true);
+                    mContext.startActivity(intentResultsActivity);
+                }
             }
         });
 
@@ -142,7 +185,19 @@ public class MainSearchActivityFragment extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         int totalRecords = OpenJsonUtils.getTotalRecords(response);
-                        search_query_text_view.setText("Total Records In Results: " + String.valueOf(totalRecords));
+                        String queryAnswer = "Total Records In Results: " + String.valueOf(totalRecords);
+                        search_query_text_view.setText(queryAnswer);
+                        mTotalRecordsInResults = totalRecords;
+                        mTotalRecordsInFavorites = 0;
+                        Cursor cursor = mContext.getContentResolver().query(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,new String[] {"count(*)"},null,null,null);
+                        if(cursor != null && cursor.moveToFirst()) {
+                            queryAnswer += "\n";
+                            queryAnswer += "Total Records in Favorites: " + String.valueOf(cursor.getInt(0));
+                            mTotalRecordsInFavorites = cursor.getInt(0);
+                            search_query_text_view.setText(queryAnswer);
+                        }
+                        if(cursor != null)
+                            cursor.close();
                     }
 
                     @Override

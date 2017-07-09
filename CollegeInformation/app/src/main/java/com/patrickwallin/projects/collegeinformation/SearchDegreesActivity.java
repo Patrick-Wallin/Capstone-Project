@@ -9,8 +9,8 @@ import android.view.MenuItem;
 
 import com.patrickwallin.projects.collegeinformation.utilities.AsyncListener;
 
-public class SearchDegreesActivity extends AppCompatActivity  {
-
+public class SearchDegreesActivity extends AppCompatActivity implements OnGoBackChangeListener {
+    public SearchDegreesActivity() {}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +20,9 @@ public class SearchDegreesActivity extends AppCompatActivity  {
         if(getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
+        //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //}
 
         if(savedInstanceState == null) {
             SearchDegreesActivityFragment searchDegreesActivityFragment = new SearchDegreesActivityFragment();
@@ -45,4 +45,8 @@ public class SearchDegreesActivity extends AppCompatActivity  {
     }
 
 
+    @Override
+    public void OnGoBackChanged() {
+        onBackPressed();
+    }
 }

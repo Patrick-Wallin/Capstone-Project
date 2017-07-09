@@ -59,13 +59,17 @@ public class FetchDegreesTask extends AsyncTask<Void, Void, List<DegreesData>> {
     @Override
     protected List<DegreesData> doInBackground(Void... params) {
         final Cursor degreeCursor;
+        List<DegreesData> degreesDataList = null;
 
         degreeCursor = getCursor();
 
         if(degreeCursor != null && degreeCursor.moveToFirst())
-            return CursorAndDataConverter.getDegreeDataFromCursor(degreeCursor);
+            degreesDataList = CursorAndDataConverter.getDegreeDataFromCursor(degreeCursor);
 
-        return null;
+        if(degreeCursor != null)
+            degreeCursor.close();
+
+        return degreesDataList;
     }
 
     @Override

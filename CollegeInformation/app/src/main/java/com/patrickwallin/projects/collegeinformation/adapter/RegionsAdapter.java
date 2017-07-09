@@ -112,6 +112,8 @@ public class RegionsAdapter extends RecyclerView.Adapter<SearchLocationRegionsVi
                 selectedRegionId = value.split(",",-1);
             }
         }
+        if(cursor != null)
+            cursor.close();
 
         if(mRegionsData != null && mRegionsData.size() > 0) {
             if(selectedRegionId.length > 0) {

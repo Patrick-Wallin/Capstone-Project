@@ -2,6 +2,8 @@ package com.patrickwallin.projects.collegeinformation;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.patrickwallin.projects.collegeinformation.adapter.FavoriteCollegeAdapter;
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchResultTask;
+import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeContract;
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeData;
 import com.patrickwallin.projects.collegeinformation.utilities.CursorAndDataConverter;
 import com.patrickwallin.projects.collegeinformation.utilities.NetworkUtils;
@@ -49,6 +52,8 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
     private int mNumberOfRecordPerPage = 100;
     private String mResultRequestString = "";
 
+    private boolean mFavoriteResults = false;
+
     public ResultsActivityFragment() {}
 
     @Override
@@ -60,6 +65,9 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        mFavoriteResults = bundle.getBoolean("favoriteresults");
 
         if(savedInstanceState == null) {
 
@@ -81,9 +89,19 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
         //LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         //llm.setOrientation(LinearLayoutManager.VERTICAL);
         if(!getResources().getBoolean(R.bool.is_this_tablet)) {
-            StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            // GridLayoutManager sglm = new GridLayoutManager(mContext, 2);
-            results_recycler_view.setLayoutManager(sglm);
+            int numberOfColumn = 2;
+
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                numberOfColumn = 3;
+               // LinearLayoutManager llm = new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false);
+
+                StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+                results_recycler_view.setLayoutManager(sglm);
+            }else {
+                StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(numberOfColumn, StaggeredGridLayoutManager.VERTICAL);
+                // GridLayoutManager sglm = new GridLayoutManager(mContext, 2);
+                results_recycler_view.setLayoutManager(sglm);
+            }
         }else {
             StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
             // GridLayoutManager sglm = new GridLayoutManager(mContext, 2);
@@ -95,9 +113,15 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
 
         setUpData();
         setUpAdapter();
-        loadData();
+        //loadData();
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        loadData();
     }
 
     private void setUpData(){
@@ -112,16 +136,31 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
     private void loadData() {
         setUpData();
 
-        mFirstTimeLoadingData = true;
-
-        NetworkUtils networkUtils = new NetworkUtils(mContext);
-
-        mResultRequestString = networkUtils.buildQueryBasedOnQueryInput(false);
-
-        AndroidNetworking.get(mResultRequestString)
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsString(this);
+        if(mFavoriteResults) {
+            Cursor cursorFavorites = mContext.getContentResolver().query(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,null,null,null,null);
+            if(cursorFavorites != null && cursorFavorites.moveToFirst()) {
+                for (cursorFavorites.moveToFirst(); !cursorFavorites.isAfterLast(); cursorFavorites.moveToNext()) {
+                    FavoriteCollegeData favoriteCollegeData = new FavoriteCollegeData(cursorFavorites);
+                    mFavoriteCollegeData.add(favoriteCollegeData);
+                }
+                mFavoriteCollegeAdapter.setFavoriteData(mFavoriteCollegeData);
+               // updateCollegeImageLinkFromAnotherWebsite();
+            }
+            if(cursorFavorites != null)
+                cursorFavorites.close();
+        }else {
+            NetworkUtils networkUtils = new NetworkUtils(mContext);
+            if (networkUtils.isNetworkConnected()) {
+                mFirstTimeLoadingData = true;
+                mResultRequestString = networkUtils.buildQueryBasedOnQueryInput(false);
+                AndroidNetworking.get(mResultRequestString)
+                        .setPriority(Priority.LOW)
+                        .build()
+                        .getAsString(this);
+            }else {
+                networkUtils.showAlertMessageAboutNoInternetConnection(true);
+            }
+        }
     }
 
     private void loadData(int pageNumber) {
@@ -190,7 +229,8 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
                 if(totalNumberOfPages > pageNumber) {
                     loadData(++pageNumber);
                 }else {// need to update IMAGE LINK!
-                    updateCollegeImageLinkFromAnotherWebsite();
+                   // updateCollegeImageLinkFromAnotherWebsite();
+                    mFavoriteCollegeAdapter.setFavoriteData(mFavoriteCollegeData);
 
                 }
 

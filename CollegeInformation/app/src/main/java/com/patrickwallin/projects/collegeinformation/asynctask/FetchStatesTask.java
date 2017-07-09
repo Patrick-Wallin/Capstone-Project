@@ -27,6 +27,7 @@ public class FetchStatesTask extends AsyncTask<Void, Void, List<StateData>> {
     @Override
     protected List<StateData> doInBackground(Void... params) {
         Cursor stateCursor;
+        List<StateData> stateDataList = null;
 
         stateCursor = mContext.getContentResolver().query(
                 StatesContract.StateEntry.CONTENT_URI,
@@ -35,9 +36,11 @@ public class FetchStatesTask extends AsyncTask<Void, Void, List<StateData>> {
                 null,
                 null);
         if(stateCursor != null && stateCursor.moveToFirst())
-            return CursorAndDataConverter.getStateDataFromCursor(stateCursor);
+            stateDataList = CursorAndDataConverter.getStateDataFromCursor(stateCursor);
+        if(stateCursor != null)
+            stateCursor.close();
 
-        return null;
+        return stateDataList;
     }
 
     @Override

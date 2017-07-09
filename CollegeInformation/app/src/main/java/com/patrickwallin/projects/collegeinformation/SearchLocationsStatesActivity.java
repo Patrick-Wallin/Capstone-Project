@@ -15,9 +15,9 @@ public class SearchLocationsStatesActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
+        //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+       // }
 
         if(savedInstanceState == null) {
             SearchLocationsStatesActivityFragment searchLocationsStatesActivityFragment = new SearchLocationsStatesActivityFragment();

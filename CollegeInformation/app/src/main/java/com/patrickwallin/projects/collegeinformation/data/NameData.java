@@ -18,6 +18,7 @@ public class NameData {
     String mState;
     String mCity;
     String mZip;
+    String mImageLink;
     /*
     String mLatitude;
     String mLongitude;
@@ -35,6 +36,7 @@ public class NameData {
             setState(cursor.getString(NameContract.NameEntry.COL_NAME_STATE));
             setCity(cursor.getString(NameContract.NameEntry.COL_NAME_CITY));
             setZip(cursor.getString(NameContract.NameEntry.COL_NAME_ZIP));
+            setImageLink(cursor.getString(NameContract.NameEntry.COL_NAME_IMAGE_LINK));
             /*
             setLatitude(cursor.getString(NameContract.NameEntry.COL_NAME_LAT));
             setLongitude(cursor.getString(NameContract.NameEntry.COL_NAME_LON));
@@ -45,12 +47,13 @@ public class NameData {
         }
     }
     //public NameData(int id, String name, String state, String city, String zip, String latitude, String longitude, int regionId, int degreesAwardedHighest, int stateId)
-    public NameData(int id, String name, String state, String city, String zip) {
+    public NameData(int id, String name, String state, String city, String zip, String imageLink) {
         mId = id;
         mName = name;
         mState = state;
         mCity = city;
         mZip = zip;
+        mImageLink = imageLink;
         /*
         mLatitude = latitude;
         mLongitude = longitude;
@@ -75,22 +78,10 @@ public class NameData {
     public String getZip() { return mZip; }
     public void setZip(String zip) { mZip = zip; }
 
-    /*
-    public String getLatitude() { return mLatitude; }
-    public void setLatitude(String latitude) { mLatitude = latitude; }
+    public String getImageLink() { return mImageLink; }
+    public void setImageLink(String imageLink) { mImageLink = imageLink; }
 
-    public String getLongitude() { return mLongitude; }
-    public void setLongitude(String longitude) { mLongitude = longitude; }
 
-    public int getRegionId() { return mRegionId; }
-    public void setRegionId(int regionId) { mRegionId = regionId; }
-
-    public int getDegreesAwardedHighest() { return mDegreesAwardedHighest; }
-    public void setDegreesAwardedHighest(int degreesAwardedHighest) { mDegreesAwardedHighest = degreesAwardedHighest; }
-
-    public int getStateId() { return mStateId; }
-    public void setStateId(int stateId) { mStateId = stateId; }
-*/
     public ContentValues getNamesContentValues() {
         ContentValues contentValues = new ContentValues();
 
@@ -99,13 +90,7 @@ public class NameData {
         contentValues.put(NameContract.NameEntry.COLUMN_NAME_STATE, getState());
         contentValues.put(NameContract.NameEntry.COLUMN_NAME_CITY, getCity());
         contentValues.put(NameContract.NameEntry.COLUMN_NAME_ZIP, getZip());
-        /*
-        contentValues.put(NameContract.NameEntry.COLUMN_NAME_LAT, getLatitude());
-        contentValues.put(NameContract.NameEntry.COLUMN_NAME_LON, getLongitude());
-        contentValues.put(NameContract.NameEntry.COLUMN_NAME_REGION_ID, getRegionId());
-        contentValues.put(NameContract.NameEntry.COLUMN_NAME_DEGREES_AWARDED_HIGHEST, getDegreesAwardedHighest());
-        contentValues.put(NameContract.NameEntry.COLUMN_NAME_STATE_ID, getStateId());
-        */
+        contentValues.put(NameContract.NameEntry.COLUMN_NAME_IMAGE_LINK, getImageLink());
 
         return contentValues;
     }

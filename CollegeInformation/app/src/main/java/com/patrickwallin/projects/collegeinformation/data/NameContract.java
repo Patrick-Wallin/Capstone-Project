@@ -25,6 +25,7 @@ public class NameContract {
         public static final String COLUMN_NAME_STATE = "name_state";
         public static final String COLUMN_NAME_CITY = "name_city";
         public static final String COLUMN_NAME_ZIP = "name_zip";
+        public static final String COLUMN_NAME_IMAGE_LINK = "name_image_link";
 
         /*
         public static final String COLUMN_NAME_LAT = "name_latitude";
@@ -39,6 +40,7 @@ public class NameContract {
         public static final int COL_NAME_STATE = 3;
         public static final int COL_NAME_CITY = 4;
         public static final int COL_NAME_ZIP = 5;
+        public static final int COL_NAME_IMAGE_LINK = 6;
         /*
         public static final int COL_NAME_LAT = 6;
         public static final int COL_NAME_LON = 7;
@@ -65,19 +67,9 @@ public class NameContract {
         createTableTableStatement.append(NameEntry.COLUMN_NAME_CITY);
         createTableTableStatement.append(" TEXT NOT NULL, ");
         createTableTableStatement.append(NameEntry.COLUMN_NAME_ZIP);
+        createTableTableStatement.append(" TEXT NOT NULL, ");
+        createTableTableStatement.append(NameEntry.COLUMN_NAME_IMAGE_LINK);
         createTableTableStatement.append(" TEXT NOT NULL ");
-        /*
-        createTableTableStatement.append(NameEntry.COLUMN_NAME_LAT);
-        createTableTableStatement.append(" TEXT NOT NULL, ");
-        createTableTableStatement.append(NameEntry.COLUMN_NAME_LON);
-        createTableTableStatement.append(" TEXT NOT NULL, ");
-        createTableTableStatement.append(NameEntry.COLUMN_NAME_REGION_ID);
-        createTableTableStatement.append(" INTEGER NOT NULL, ");
-        createTableTableStatement.append(NameEntry.COLUMN_NAME_DEGREES_AWARDED_HIGHEST);
-        createTableTableStatement.append(" INTEGER NOT NULL, ");
-        createTableTableStatement.append(NameEntry.COLUMN_NAME_STATE_ID);
-        createTableTableStatement.append(" INTEGER NOT NULL ");
-        */
         createTableTableStatement.append(")");
 
         return createTableTableStatement.toString();

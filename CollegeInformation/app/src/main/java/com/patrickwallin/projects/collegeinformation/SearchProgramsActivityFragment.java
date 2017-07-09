@@ -73,9 +73,9 @@ public class SearchProgramsActivityFragment extends Fragment implements SearchVi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
+       //     getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+       // }
 
     }
 
@@ -110,38 +110,42 @@ public class SearchProgramsActivityFragment extends Fragment implements SearchVi
             final int currentVersion = versionDataList.get(0).getVersionNumber();
             final int priorVersion = versionDataList.get(0).getPriorVersionNumber();
             if(currentVersion != priorVersion) {
-                try {
-                    final File jsonFile = File.createTempFile(mContext.getResources().getString(R.string.temp_file_name), mContext.getResources().getString(R.string.json_ext));
-                    NetworkUtils networkUtils = new NetworkUtils(mContext);
-                    StorageReference storageReference = networkUtils.getStorageReference(ProgramContract.ProgramEntry.TABLE_NAME);
-                    storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            List<ProgramData> programDataList = OpenJsonUtils.getProgramDataFromJson(jsonFile);
-                            mContext.getContentResolver().delete(ProgramContract.ProgramEntry.CONTENT_URI, null, null);
-                            if (programDataList != null && !programDataList.isEmpty()) {
-                                String message = "Loading data... 1 of " + String.valueOf(programDataList.size());
-                                returnString(message);
-                                for (int i = 0; i < programDataList.size(); i++) {
-                                    message = "Loading data... " + String.valueOf(i + 1) + " of " + String.valueOf(programDataList.size());
+                NetworkUtils networkUtils = new NetworkUtils(mContext);
+                if (networkUtils.isNetworkConnected()) {
+                    try {
+                        final File jsonFile = File.createTempFile(mContext.getResources().getString(R.string.temp_file_name), mContext.getResources().getString(R.string.json_ext));
+                        StorageReference storageReference = networkUtils.getStorageReference(ProgramContract.ProgramEntry.TABLE_NAME);
+                        storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                List<ProgramData> programDataList = OpenJsonUtils.getProgramDataFromJson(jsonFile);
+                                mContext.getContentResolver().delete(ProgramContract.ProgramEntry.CONTENT_URI, null, null);
+                                if (programDataList != null && !programDataList.isEmpty()) {
+                                    String message = "Loading data... 1 of " + String.valueOf(programDataList.size());
                                     returnString(message);
-                                    mContext.getContentResolver().insert(ProgramContract.ProgramEntry.CONTENT_URI, programDataList.get(i).getProgramContentValues());
+                                    for (int i = 0; i < programDataList.size(); i++) {
+                                        message = "Loading data... " + String.valueOf(i + 1) + " of " + String.valueOf(programDataList.size());
+                                        returnString(message);
+                                        mContext.getContentResolver().insert(ProgramContract.ProgramEntry.CONTENT_URI, programDataList.get(i).getProgramContentValues());
+                                    }
                                 }
-                            }
-                            VersionData versionData = new VersionData(VersionContract.VERSION_ID_PROGRAMS, ProgramContract.PATH_PROGRAMS, currentVersion,currentVersion);
-                            ContentValues contentValues = versionData.getVersionContentValues();
-                            mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_PROGRAMS, null);
+                                VersionData versionData = new VersionData(VersionContract.VERSION_ID_PROGRAMS, ProgramContract.PATH_PROGRAMS, currentVersion, currentVersion);
+                                ContentValues contentValues = versionData.getVersionContentValues();
+                                mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_PROGRAMS, null);
 
-                            loadData();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            returnString("Failed loading data");
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
+                                loadData();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                returnString("Failed loading data");
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    networkUtils.showAlertMessageAboutNoInternetConnection(true);
                 }
             }else {
                 loadData();
@@ -249,4 +253,6 @@ public class SearchProgramsActivityFragment extends Fragment implements SearchVi
             mSnackbar.dismiss();
         }
     }
+
+
 }

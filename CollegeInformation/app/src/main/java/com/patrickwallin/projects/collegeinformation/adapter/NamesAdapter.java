@@ -3,6 +3,7 @@ package com.patrickwallin.projects.collegeinformation.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,12 +31,15 @@ public class NamesAdapter extends RecyclerView.Adapter<SearchNamesViewHolder> {
     private List<NameData> mNameData;
 
     private int mSelectedPosition = 0;
+    private int mSelectedPositionBasedOnFullList = 0;
 
     private Context mContext;
+    private RecyclerView mNameRecyclerView;
 
-    public NamesAdapter(List<NameData> nameData, Context context) {
+    public NamesAdapter(List<NameData> nameData, Context context, RecyclerView nameRecyclerView) {
         mNameData = nameData;
         mContext = context;
+        mNameRecyclerView = nameRecyclerView;
     }
 
     @Override
@@ -61,9 +65,9 @@ public class NamesAdapter extends RecyclerView.Adapter<SearchNamesViewHolder> {
                 holder.mCityTextView.setTextColor(Color.WHITE);
                 holder.mStateTextView.setTextColor(Color.WHITE);
                 holder.mZipTextView.setTextColor(Color.WHITE);
-                SearchQueryInputData searchQueryInputData = new SearchQueryInputData(2,"names",String.valueOf(nameData.getId()));
+                SearchQueryInputData searchQueryInputData = new SearchQueryInputData(FetchSearchQueryInputTask.SEARCH_QUERY_NAMES_ID,"names",String.valueOf(nameData.getId()));
                 mContext.getContentResolver().update(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,searchQueryInputData.getSearchQueryInputContentValues(),
-                        SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_ID + " = 2", null);
+                        SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_ID + " = " + String.valueOf(FetchSearchQueryInputTask.SEARCH_QUERY_NAMES_ID), null);
             }else {
                 holder.itemView.setBackgroundColor(Color.WHITE);
                 holder.mNameTextView.setTextColor(Color.BLACK);
@@ -79,6 +83,7 @@ public class NamesAdapter extends RecyclerView.Adapter<SearchNamesViewHolder> {
                     notifyItemChanged(mSelectedPosition);
                     mSelectedPosition = position;
                     notifyItemChanged(mSelectedPosition);
+                    updatePositionBasedOnFullList(nameData.getId());
                 }
             });
         }
@@ -89,7 +94,7 @@ public class NamesAdapter extends RecyclerView.Adapter<SearchNamesViewHolder> {
         return (mNameData == null ? 0 : mNameData.size());
     }
 
-    public void setNameData(List<NameData> nameData) {
+    public int setNameData(List<NameData> nameData) {
         mNameData = nameData;
 
         // check default degree id!
@@ -105,6 +110,8 @@ public class NamesAdapter extends RecyclerView.Adapter<SearchNamesViewHolder> {
                 Log.i("Position: ", String.valueOf(selectedNameId));
             }
         }
+        if(cursor != null)
+            cursor.close();
 
         if(mNameData != null && mNameData.size() > 0) {
             for (int i = 0; i < mNameData.size(); i++) {
@@ -115,13 +122,31 @@ public class NamesAdapter extends RecyclerView.Adapter<SearchNamesViewHolder> {
             }
         }
         mSelectedPosition = selectedPosition;
+        mSelectedPositionBasedOnFullList = selectedPosition;
 
-
+        LinearLayoutManager llm = (LinearLayoutManager) mNameRecyclerView.getLayoutManager();
+        llm.scrollToPosition(mSelectedPosition);
 
         notifyDataSetChanged();
+
+        return mSelectedPosition;
+    }
+
+    private void updatePositionBasedOnFullList(int id) {
+        if(mNameData != null && mNameData.size() > 0) {
+            for (int i = 0; i < mNameData.size(); i++) {
+                if (mNameData.get(i).getId() == id) {
+                    mSelectedPositionBasedOnFullList = i;
+                    break;
+                }
+            }
+        }
+
     }
 
     public List<NameData> getNameData() {
         return mNameData;
     }
+
+    public int getSelectedPosition() { return mSelectedPositionBasedOnFullList; }
 }

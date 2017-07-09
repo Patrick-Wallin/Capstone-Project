@@ -2,4 +2,5 @@
 <resources>
     <bool name="is_this_tablet">true</bool>
     <bool name="is_this_portrait">true</bool>
+    <bool name="is_this_big_tablet">false</bool>
 </resources>

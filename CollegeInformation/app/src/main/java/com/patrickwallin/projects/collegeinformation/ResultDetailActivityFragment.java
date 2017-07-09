@@ -1,14 +1,19 @@
 package com.patrickwallin.projects.collegeinformation;
 
 import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,6 +23,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeContract;
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeData;
 import com.squareup.picasso.Picasso;
 
@@ -69,6 +75,10 @@ public class ResultDetailActivityFragment extends Fragment {
     @BindView(R.id.admission_act_75_value_text_view) TextView mAdmissionACT75TextView;
     @Nullable
     @BindView(R.id.likes_image_view) ImageView mLikesImageView;
+    @Nullable
+    @BindView(R.id.app_bar) AppBarLayout mAppBarLayout;
+    @Nullable
+    @BindView(R.id.draw_insets_frame_layout) CoordinatorLayout mCoordinatorLayout;
 
     private FavoriteCollegeData mFavoriteCollegeData;
     private Context mContext;
@@ -185,6 +195,18 @@ public class ResultDetailActivityFragment extends Fragment {
             mAdmissionACT25TextView.setText(String.format("%.0f", mFavoriteCollegeData.getACT25()));
             mAdmissionACT75TextView.setText(String.format("%.0f", mFavoriteCollegeData.getACT75()));
 
+            String sqlWhere = FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_ID + " = " + String.valueOf(mFavoriteCollegeData.getId());
+            Cursor cursor = mContext.getContentResolver().query(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,null,sqlWhere,null,null);
+            if(cursor != null && cursor.moveToFirst()) {
+                mLikesImageView.setTag("yes");
+                mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_red_24dp));
+            }else {
+                mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_black_24dp));
+                mLikesImageView.setTag(mContext.getString(R.string.not_favorite_college));
+            }
+            if(cursor != null)
+                cursor.close();
+
             mLikesImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -192,9 +214,16 @@ public class ResultDetailActivityFragment extends Fragment {
                     if(mLikesImageView.getTag().toString().trim().equalsIgnoreCase(mContext.getString(R.string.not_favorite_college))) {
                         mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_red_24dp));
                         mLikesImageView.setTag(mContext.getString(R.string.favorite_college));
+                        // need to add it to table!
+                        ContentValues cv = mFavoriteCollegeData.getFavoriteCollegeContentValues();
+                        mContext.getContentResolver().insert(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,cv);
                     }else {
                         mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_black_24dp));
                         mLikesImageView.setTag(mContext.getString(R.string.not_favorite_college));
+                        String sqlWhereDelete = FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_ID + " = " + String.valueOf(mFavoriteCollegeData.getId());
+                        mContext.getContentResolver().delete(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,sqlWhereDelete,null);
+                        // remove it from table!
+
                     }
                         //mLikesImageView.getColorFilter()
                     //int color = Color.parseColor("#ff0000");
@@ -243,6 +272,16 @@ public class ResultDetailActivityFragment extends Fragment {
         }
         return rootView;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //mAppBarLayout.setExpanded(false,true);
+        }
+    }
+
+
 
 
 }

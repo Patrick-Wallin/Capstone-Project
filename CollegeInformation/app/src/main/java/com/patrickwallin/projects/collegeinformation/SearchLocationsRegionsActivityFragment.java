@@ -51,9 +51,9 @@ public class SearchLocationsRegionsActivityFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+       // if(!getResources().getBoolean(R.bool.is_this_tablet)){
+       //     getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+       // }
 
     }
 

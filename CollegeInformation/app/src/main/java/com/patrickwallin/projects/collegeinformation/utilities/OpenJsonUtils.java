@@ -432,7 +432,7 @@ public class OpenJsonUtils {
                                             jsonObject.has("city")) {
                                         NameData nameData = new NameData(jsonObject.getInt("id"), jsonObject.getString("name"),
                                                 jsonObject.getString("state"), jsonObject.getString("city"),
-                                                String.valueOf(jsonObject.getInt("zip")));
+                                                String.valueOf(jsonObject.getInt("zip")),"");
                                         parsedNameData.add(nameData);
                                     }
                                 }

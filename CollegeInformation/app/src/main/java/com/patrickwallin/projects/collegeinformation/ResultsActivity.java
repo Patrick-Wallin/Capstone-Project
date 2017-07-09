@@ -25,7 +25,7 @@ import timber.log.Timber;
  * Created by piwal on 6/27/2017.
  */
 
-public class ResultsActivity extends AppCompatActivity implements OnResultOptionSelectionChangeListener {
+public class ResultsActivity extends AppCompatActivity implements OnResultOptionSelectionChangeListener, OnGoBackChangeListener {
     private OnDataSelectionChangeListener listener;
 
     public ResultsActivity() {
@@ -50,7 +50,16 @@ public class ResultsActivity extends AppCompatActivity implements OnResultOption
 
         if(savedInstanceState == null) {
             //if (findViewById(R.id.activity_result_page_container) != null) {
+            boolean favoriteResults = false;
+            Intent intent = getIntent();
+            if(intent != null) {
+                if(intent.hasExtra("favoriteresults"))
+                    favoriteResults = intent.getBooleanExtra("favoriteresults",false);
+            }
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("favoriteresults",favoriteResults);
             ResultsActivityFragment resultsActivityFragment = new ResultsActivityFragment();
+            resultsActivityFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.activity_result_page_container, resultsActivityFragment).commit();
         }else {
 
@@ -117,5 +126,10 @@ public class ResultsActivity extends AppCompatActivity implements OnResultOption
             //getSupportFragmentManager().beginTransaction().replace(R.id.results_detail_fragment,currentFragment).commit();
         }
         */
+    }
+
+    @Override
+    public void OnGoBackChanged() {
+        onBackPressed();
     }
 }

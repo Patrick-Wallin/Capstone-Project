@@ -1,5 +1,6 @@
 package com.patrickwallin.projects.collegeinformation;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -76,28 +78,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         //signInAnonymously();
 
-        try {
-            final File jsonFile = File.createTempFile(getResources().getString(R.string.temp_file_name), getResources().getString(R.string.json_ext));
-            NetworkUtils networkUtils = new NetworkUtils(MainActivity.this);
-            StorageReference storageReference = networkUtils.getStorageReference(VersionContract.VersionEntry.TABLE_NAME);
-            storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    List<VersionData> versionDataList = OpenJsonUtils.getVersionDataFromJson(jsonFile);
-                    FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this, mSplashLoadingTextView, versionDataList);
-                    fetchVersionsTask.execute();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    mSplashLoadingTextView.setText(e.getMessage());
-                }
-            });
-
-            /*
-            com.google.firebase.storage.FileDownloadTask taskDownloadFile = storageReference.getFile(jsonFile);
-            synchronized (taskDownloadFile) {
-                taskDownloadFile.addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+        NetworkUtils networkUtils = new NetworkUtils(MainActivity.this);
+        if (networkUtils.isNetworkConnected()) {
+            try {
+                final File jsonFile = File.createTempFile(getResources().getString(R.string.temp_file_name), getResources().getString(R.string.json_ext));
+                StorageReference storageReference = networkUtils.getStorageReference(VersionContract.VersionEntry.TABLE_NAME);
+                storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         List<VersionData> versionDataList = OpenJsonUtils.getVersionDataFromJson(jsonFile);
@@ -110,11 +96,15 @@ public class MainActivity extends AppCompatActivity {
                         mSplashLoadingTextView.setText(e.getMessage());
                     }
                 });
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            */
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            networkUtils.showAlertMessageAboutNoInternetConnection(false);
+            mSplashLoadingTextView.setText(getString(R.string.no_internet_connection_title) + "\n " + getString(R.string.no_internet_connection_message));
         }
+
 
     }
 

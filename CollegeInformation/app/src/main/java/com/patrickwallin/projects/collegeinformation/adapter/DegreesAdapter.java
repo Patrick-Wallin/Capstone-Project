@@ -102,6 +102,8 @@ public class DegreesAdapter extends RecyclerView.Adapter<SearchDegreesViewHolder
                 Log.i("Position: ", String.valueOf(selectedDegreeId));
             }
         }
+        if(cursor != null)
+            cursor.close();
 
         if(mDegreesData != null && mDegreesData.size() > 0) {
             for (int i = 0; i < mDegreesData.size(); i++) {

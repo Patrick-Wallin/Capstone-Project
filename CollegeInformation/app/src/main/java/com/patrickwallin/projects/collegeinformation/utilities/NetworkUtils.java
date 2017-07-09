@@ -1,9 +1,13 @@
 package com.patrickwallin.projects.collegeinformation.utilities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
@@ -14,13 +18,17 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.patrickwallin.projects.collegeinformation.OnGoBackChangeListener;
 import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.data.DegreeContract;
 import com.patrickwallin.projects.collegeinformation.data.NameContract;
 import com.patrickwallin.projects.collegeinformation.data.NameData;
 import com.patrickwallin.projects.collegeinformation.data.ProgramContract;
+import com.patrickwallin.projects.collegeinformation.data.ProgramData;
+import com.patrickwallin.projects.collegeinformation.data.RegionsContract;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputContract;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputData;
+import com.patrickwallin.projects.collegeinformation.data.StatesContract;
 import com.patrickwallin.projects.collegeinformation.data.VersionContract;
 
 import java.io.IOException;
@@ -33,11 +41,31 @@ import java.util.List;
  * Created by piwal on 6/4/2017.
  */
 
-public class NetworkUtils {
+public class NetworkUtils  {
     private Context mContext;
 
     public NetworkUtils(Context context) {
         mContext = context;
+    }
+
+    public boolean isNetworkConnected() {
+        ConnectivityManager connMgr = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    public void showAlertMessageAboutNoInternetConnection(final boolean goBackToPreviousActivity) {
+        new AlertDialog.Builder(mContext)
+                .setTitle(mContext.getString(R.string.no_internet_connection_title))
+                .setMessage(mContext.getString(R.string.no_internet_connection_message))
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(goBackToPreviousActivity) {
+                            OnGoBackChangeListener listener = (OnGoBackChangeListener) mContext;
+                            listener.OnGoBackChanged();
+                        }
+                    }
+                }).setIcon(android.R.drawable.ic_dialog_alert).show();
     }
 
     public URL buildUrl(String jsonName) {
@@ -197,6 +225,7 @@ public class NetworkUtils {
         String urlString = "";
 
         StringBuilder sqlWhere = new StringBuilder();
+        StringBuilder sqlNameWhere = new StringBuilder();
 
         Cursor cursor = mContext.getContentResolver().query(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,null,null, null,null);
         if(cursor != null && cursor.moveToFirst()) {
@@ -218,7 +247,6 @@ public class NetworkUtils {
                             }
                         }
                     }else {
-                        /*
                         if(searchQueryInputData.getName().equalsIgnoreCase(ProgramContract.ProgramEntry.TABLE_NAME)) {
                             String value = searchQueryInputData.getValue().trim();
                             if(!value.isEmpty()) {
@@ -227,27 +255,54 @@ public class NetworkUtils {
                                     if (!sqlWhere.toString().trim().isEmpty()) {
                                         sqlWhere.append("&");
                                     }
-                                    //sqlWhere.append(mContext.getString(R.string.query_school_degrees));
-                                    //sqlWhere.append(searchQueryInputData.getId());
+                                    String programSQLWhere = ProgramContract.ProgramEntry.COLUMN_PROGRAM_ID + " = " + String.valueOf(programId);
+                                    String programUrlAddress = "";
+                                    Cursor cursorProgram = mContext.getContentResolver().query(ProgramContract.ProgramEntry.CONTENT_URI,null,programSQLWhere,null,null);
+                                    if(cursorProgram != null && cursorProgram.moveToFirst()) {
+                                        ProgramData programData = new ProgramData(cursorProgram);
+                                        programUrlAddress = programData.getUrlName().trim();
+                                    }
+                                    if(cursorProgram != null)
+                                        cursorProgram.close();
 
                                     String latestYearData = mContext.getString(R.string.latest_year_data);
-
-                                    String programCertificateLessOneYear = "academics.program.certificate_lt_1_yr.";
-                                    String programCertificateLessTwoYear = "academics.program.certificate_lt_2_yr.";
-                                    String programAssociate = "academics.program.assoc.";
-                                    String programCertificateLessFourYear = "academics.program.certificate_lt_4_yr.";
-                                    String programBachelors = "academics.program.bachelors.";
 
                                     String programPercentage = "academics.program_percentage.";
 
                                     sqlWhere.append(latestYearData);
+                                    sqlWhere.append(".");
                                     sqlWhere.append(programPercentage);
-                                    sqlWhere.append("__not = 0.0");
+                                    sqlWhere.append(programUrlAddress);
+                                    sqlWhere.append("__not=0.0");
                                 }
                             }
 
+                        }else {
+                            if(searchQueryInputData.getName().equalsIgnoreCase(NameContract.NameEntry.TABLE_NAME)) {
+                                String value = searchQueryInputData.getValue().trim();
+                                if(!value.isEmpty()) {
+                                    int nameId = Integer.valueOf(value);
+                                    if (nameId > -1) {
+                                        if (!sqlNameWhere.toString().trim().isEmpty()) {
+                                            sqlNameWhere.append("&");
+                                        }
+                                        sqlNameWhere.append("id=");
+                                        sqlNameWhere.append(String.valueOf(nameId));
+                                    }
+                                }
+                            }else {
+                                if(searchQueryInputData.getName().equalsIgnoreCase(StatesContract.StateEntry.TABLE_NAME)) {
+
+                                }else {
+                                    if(searchQueryInputData.getName().equalsIgnoreCase(RegionsContract.RegionEntry.TABLE_NAME)) {
+
+                                    }
+                                }
+                            }
+
+
                         }
-                        */
+
 
                     }
 
@@ -255,6 +310,9 @@ public class NetworkUtils {
             }
 
         }
+
+        if(cursor != null)
+            cursor.close();
 
         StringBuilder sqlSearch = new StringBuilder();
         sqlSearch.append(mContext.getString(R.string.url_data_gov));
@@ -270,9 +328,14 @@ public class NetworkUtils {
         sqlSearch.append("&");
         sqlSearch.append(mContext.getString(R.string.query_page_number));
         sqlSearch.append("0");
-        if(!sqlWhere.toString().trim().isEmpty()) {
+        if(!sqlNameWhere.toString().trim().isEmpty()) {
             sqlSearch.append("&");
-            sqlSearch.append(sqlWhere.toString());
+            sqlSearch.append(sqlNameWhere.toString());
+        }else {
+            if (!sqlWhere.toString().trim().isEmpty()) {
+                sqlSearch.append("&");
+                sqlSearch.append(sqlWhere.toString());
+            }
         }
         sqlSearch.append("&");
         if(!totalOnly)

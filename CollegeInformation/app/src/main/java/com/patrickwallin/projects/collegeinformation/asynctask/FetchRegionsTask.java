@@ -30,6 +30,7 @@ public class FetchRegionsTask extends AsyncTask<Void, Void, List<RegionData>> {
     @Override
     protected List<RegionData> doInBackground(Void... params) {
         Cursor regionCursor;
+        List<RegionData> regionDataList = null;
 
         regionCursor = mContext.getContentResolver().query(
                 RegionsContract.RegionEntry.CONTENT_URI,
@@ -38,9 +39,11 @@ public class FetchRegionsTask extends AsyncTask<Void, Void, List<RegionData>> {
                 null,
                 null);
         if(regionCursor != null && regionCursor.moveToFirst())
-            return CursorAndDataConverter.getRegionDataFromCursor(regionCursor);
+            regionDataList = CursorAndDataConverter.getRegionDataFromCursor(regionCursor);
+        if(regionCursor != null)
+            regionCursor.close();
 
-        return null;
+        return regionDataList;
     }
 
     @Override

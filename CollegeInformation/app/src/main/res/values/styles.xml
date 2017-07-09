@@ -71,6 +71,11 @@
         <item name="android:text">@string/find_college_button_caption</item>
     </style>
 
+    <style name="GoFavoriteButton">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:text">@string/go_favorite_button_caption</item>
+    </style>
 
 
 

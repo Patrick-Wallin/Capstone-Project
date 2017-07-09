@@ -31,15 +31,15 @@ public class MainSearchActivity extends AppCompatActivity implements OnSearchOpt
         //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //}
 
-        if (findViewById(R.id.activity_search_page_container) != null) {
+        //if (findViewById(R.id.activity_search_page_container) != null) {
             MainSearchActivityFragment mainSearchActivityFragment = new MainSearchActivityFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.activity_search_page_container, mainSearchActivityFragment).commit();
-        }else {
-            MainSearchActivityFragment mainSearchActivityFragment = new MainSearchActivityFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.searches_fragment, mainSearchActivityFragment).commit();
-            SearchDegreesActivityFragment searchDegreesActivityFragment = new SearchDegreesActivityFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.search_detail_fragment, searchDegreesActivityFragment).commit();
-        }
+       // }else {
+        //    MainSearchActivityFragment mainSearchActivityFragment = new MainSearchActivityFragment();
+       //    getSupportFragmentManager().beginTransaction().replace(R.id.searches_fragment, mainSearchActivityFragment).commit();
+        //    SearchDegreesActivityFragment searchDegreesActivityFragment = new SearchDegreesActivityFragment();
+         //   getSupportFragmentManager().beginTransaction().replace(R.id.search_detail_fragment, searchDegreesActivityFragment).commit();
+        //}
     }
 
     @Override
@@ -54,7 +54,8 @@ public class MainSearchActivity extends AppCompatActivity implements OnSearchOpt
 
     @Override
     public void OnSelectionChanged(int imageId) {
-        if (findViewById(R.id.activity_search_page_container) != null) {
+       // if (findViewById(R.id.activity_search_page_container) != null) {
+
             if(imageId == R.drawable.ic_graduation_cap) {
                 Intent intentDegreesActivity = new Intent(this, SearchDegreesActivity.class);
                 this.startActivity(intentDegreesActivity);
@@ -74,7 +75,7 @@ public class MainSearchActivity extends AppCompatActivity implements OnSearchOpt
                     }
                 }
             }
-
+/*
         }else {
             if(imageId == R.drawable.ic_graduation_cap) {
                 SearchDegreesActivityFragment searchDegreesActivityFragment = new SearchDegreesActivityFragment();
@@ -96,6 +97,7 @@ public class MainSearchActivity extends AppCompatActivity implements OnSearchOpt
                 }
             }
         }
+        */
     }
 
 }

@@ -1,19 +1,29 @@
 package com.patrickwallin.projects.collegeinformation.adapter;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.StringRequestListener;
 import com.patrickwallin.projects.collegeinformation.OnResultOptionSelectionChangeListener;
 import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.ResultDetailActivity;
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeData;
+import com.patrickwallin.projects.collegeinformation.data.NameContract;
 import com.patrickwallin.projects.collegeinformation.data.NameData;
 import com.patrickwallin.projects.collegeinformation.data.ProgramData;
+import com.patrickwallin.projects.collegeinformation.utilities.NetworkUtils;
+import com.patrickwallin.projects.collegeinformation.utilities.OpenJsonUtils;
 import com.patrickwallin.projects.collegeinformation.viewholder.FavoriteCollegeViewHolder;
 import com.patrickwallin.projects.collegeinformation.viewholder.SearchNamesViewHolder;
 import com.patrickwallin.projects.collegeinformation.viewholder.SearchProgramsViewHolder;
@@ -35,6 +45,20 @@ public class FavoriteCollegeAdapter extends RecyclerView.Adapter<FavoriteCollege
     public FavoriteCollegeAdapter(List<FavoriteCollegeData> favoriteCollegeDatas, Context context) {
         mFavoriteCollegeData = favoriteCollegeDatas;
         mContext = context;
+    }
+
+    public void updateImageLink(String imageLink, int position, int id) {
+        mFavoriteCollegeData.get(position).setImageLink(imageLink);
+        String sqlWhere = NameContract.NameEntry.COLUMN_NAME_ID + " = " + String.valueOf(id);
+        Cursor cursorName = mContext.getContentResolver().query(NameContract.NameEntry.CONTENT_URI,null,sqlWhere,null,null);
+        if(cursorName != null && cursorName.moveToFirst()) {
+            NameData nameData = new NameData(cursorName);
+            ContentValues cv = nameData.getNamesContentValues();
+            cv.put(NameContract.NameEntry.COLUMN_NAME_IMAGE_LINK,imageLink);
+            mContext.getContentResolver().update(NameContract.NameEntry.CONTENT_URI,cv,sqlWhere,null);
+        }
+
+
     }
 
     @Override
@@ -59,6 +83,50 @@ public class FavoriteCollegeAdapter extends RecyclerView.Adapter<FavoriteCollege
                 Picasso.with(mContext)
                         .load(R.drawable.no_image_available_building)
                         .into(holder.mCollegeImageView);
+
+                String imageLink = "";
+                String sqlWhere = NameContract.NameEntry.COLUMN_NAME_ID + " = " + String.valueOf(favoriteCollegeData.getId());
+                Cursor cursorName = mContext.getContentResolver().query(NameContract.NameEntry.CONTENT_URI,null,sqlWhere,null,null);
+                if(cursorName != null && cursorName.moveToFirst()) {
+                    NameData nameData = new NameData(cursorName);
+                    imageLink = nameData.getImageLink().trim();
+                }
+                if(imageLink.isEmpty()) {
+                    NetworkUtils networkUtils = new NetworkUtils(mContext);
+                    String urlString = networkUtils.buildSchoolQuery();
+
+                    AndroidNetworking.get(urlString)
+                            .addPathParameter("unitid", String.valueOf(favoriteCollegeData.getId()))
+                            .setPriority(Priority.LOW)
+                            .build()
+                            .getAsString(new StringRequestListener() {
+                                @Override
+                                public void onResponse(String response) {
+                                    if (response != null && !response.trim().isEmpty()) {
+                                        String imageLink = OpenJsonUtils.getImageLinkFromJson(response);
+                                        updateImageLink(imageLink, position, favoriteCollegeData.getId());
+                                        if (!imageLink.trim().isEmpty()) {
+                                            Picasso.with(mContext)
+                                                    .load(imageLink)
+                                                    .placeholder(R.drawable.no_image_available_building)
+                                                    .into(holder.mCollegeImageView);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onError(ANError anError) {
+
+                                    // fail!  do nothing since it might not be existed!
+                                }
+                            });
+                }else {
+                    mFavoriteCollegeData.get(position).setImageLink(imageLink);
+                    Picasso.with(mContext)
+                            .load(imageLink)
+                            .placeholder(R.drawable.no_image_available_building)
+                            .into(holder.mCollegeImageView);
+                }
             }
 
             String transitionPhotoName = mContext.getResources().getString(R.string.transition_photo).trim() + String.valueOf(favoriteCollegeData.getId()).trim();

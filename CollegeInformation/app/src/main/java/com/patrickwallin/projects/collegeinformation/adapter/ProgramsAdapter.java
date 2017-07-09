@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.patrickwallin.projects.collegeinformation.R;
+import com.patrickwallin.projects.collegeinformation.asynctask.FetchSearchQueryInputTask;
 import com.patrickwallin.projects.collegeinformation.data.ProgramData;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputContract;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputData;
@@ -52,9 +53,9 @@ public class ProgramsAdapter extends RecyclerView.Adapter<SearchProgramsViewHold
 
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 holder.mTitleTextView.setTextColor(Color.WHITE);
-                SearchQueryInputData searchQueryInputData = new SearchQueryInputData(1,"programs",String.valueOf(programData.getId()));
+                SearchQueryInputData searchQueryInputData = new SearchQueryInputData(FetchSearchQueryInputTask.SEARCH_QUERY_PROGRAMS_ID,"programs",String.valueOf(programData.getId()));
                 mContext.getContentResolver().update(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,searchQueryInputData.getSearchQueryInputContentValues(),
-                        SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_ID + " = 1", null);
+                        SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_ID + " = " + String.valueOf(FetchSearchQueryInputTask.SEARCH_QUERY_PROGRAMS_ID), null);
             }else {
                 holder.itemView.setBackgroundColor(Color.WHITE);
                 holder.mTitleTextView.setTextColor(Color.BLACK);
@@ -88,14 +89,14 @@ public class ProgramsAdapter extends RecyclerView.Adapter<SearchProgramsViewHold
         return (mProgramData == null ? 0 : mProgramData.size());
     }
 
-    public void setProgramData(List<ProgramData> programData) {
+    public int setProgramData(List<ProgramData> programData) {
         mProgramData = programData;
 
         // check default degree id!
         int selectedProgramId = -1;
         int selectedPosition = 0;
         Cursor cursor = mContext.getContentResolver().query(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,null,
-                SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_ID + " = 1", null,null);
+                SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_ID + " = " + String.valueOf(FetchSearchQueryInputTask.SEARCH_QUERY_PROGRAMS_ID), null,null);
         if(cursor != null && cursor.moveToFirst()) {
             List<SearchQueryInputData> searchQueryInputDataList = CursorAndDataConverter.getSearchQueryInputDataFromCursor(cursor);
             if(searchQueryInputDataList != null && searchQueryInputDataList.size() > 0) {
@@ -104,6 +105,8 @@ public class ProgramsAdapter extends RecyclerView.Adapter<SearchProgramsViewHold
                 Log.i("Position: ", String.valueOf(selectedProgramId));
             }
         }
+        if(cursor != null)
+            cursor.close();
 
         if(mProgramData != null && mProgramData.size() > 0) {
             for (int i = 0; i < mProgramData.size(); i++) {
@@ -115,7 +118,11 @@ public class ProgramsAdapter extends RecyclerView.Adapter<SearchProgramsViewHold
         }
         mSelectedPosition = selectedPosition;
 
+
+
         notifyDataSetChanged();
+
+        return mSelectedPosition;
     }
 
     public List<ProgramData> getProgramData() {

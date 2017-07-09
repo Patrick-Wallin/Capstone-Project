@@ -124,6 +124,8 @@ public class StatesAdapter extends RecyclerView.Adapter<SearchLocationStatesView
                 selectedStateId = value.split(",",-1);
             }
         }
+        if(cursor != null)
+            cursor.close();
 
         if(mStatesData != null && mStatesData.size() > 0) {
             if(selectedStateId.length > 0) {

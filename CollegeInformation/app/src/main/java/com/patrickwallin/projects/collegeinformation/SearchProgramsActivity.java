@@ -10,7 +10,7 @@ import android.view.MenuItem;
  * Created by piwal on 6/22/2017.
  */
 
-public class SearchProgramsActivity extends AppCompatActivity {
+public class SearchProgramsActivity extends AppCompatActivity implements OnGoBackChangeListener  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,9 +19,9 @@ public class SearchProgramsActivity extends AppCompatActivity {
         if(getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if(!getResources().getBoolean(R.bool.is_this_tablet)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
+        //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //}
 
         if(savedInstanceState == null) {
             SearchProgramsActivityFragment searchProgramsActivityFragment = new SearchProgramsActivityFragment();
@@ -40,5 +40,10 @@ public class SearchProgramsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    @Override
+    public void OnGoBackChanged() {
+        onBackPressed();
     }
 }

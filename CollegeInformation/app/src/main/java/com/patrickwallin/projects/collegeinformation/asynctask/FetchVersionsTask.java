@@ -3,6 +3,7 @@ package com.patrickwallin.projects.collegeinformation.asynctask;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.widget.TextView;
@@ -15,7 +16,10 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageReference;
 import com.patrickwallin.projects.collegeinformation.BuildConfig;
 import com.patrickwallin.projects.collegeinformation.MainSearchActivity;
+import com.patrickwallin.projects.collegeinformation.ResultDetailActivity;
+import com.patrickwallin.projects.collegeinformation.ResultsActivity;
 import com.patrickwallin.projects.collegeinformation.data.DegreeContract;
+import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeContract;
 import com.patrickwallin.projects.collegeinformation.data.NameContract;
 import com.patrickwallin.projects.collegeinformation.data.ProgramContract;
 import com.patrickwallin.projects.collegeinformation.data.RegionsContract;
@@ -195,8 +199,10 @@ public class FetchVersionsTask extends AsyncTask<Void, Void, List<VersionData>> 
     protected void onPostExecute(final List<VersionData> versionDatas) {
         super.onPostExecute(versionDatas);
 
+        // check if there is any favorite record first!
         Intent intentSearchActivity = new Intent(mContext, MainSearchActivity.class);
         mContext.startActivity(intentSearchActivity);
+
 
         /*
         try {

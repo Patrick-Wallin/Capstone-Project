@@ -3,6 +3,7 @@
     package="com.patrickwallin.projects.collegeinformation">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -13,12 +14,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="com.patrickwallin.projects.widget.CollegeWidget.ACTION_WIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
         <activity
@@ -26,22 +28,23 @@
             android:launchMode="singleTop" />
         <activity
             android:name=".SearchDegreesActivity"
-            android:theme="@style/Theme.Show.ActionBar"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.Show.ActionBar" />
         <activity
             android:name=".SearchProgramsActivity"
-            android:theme="@style/Theme.Show.ActionBar"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.Show.ActionBar" />
 
         <provider
             android:name=".data.CollegeInfoContentProvider"
             android:authorities="com.patrickwallin.projects.collegeinformation"
-            android:exported="false" />
+            android:exported="true"
+            android:grantUriPermissions="true" />
 
         <activity
             android:name=".SearchLocationsActivity"
-            android:theme="@style/Theme.Show.ActionBar"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.Show.ActionBar" />
         <activity
             android:name=".SearchLocationsStatesActivity"
             android:parentActivityName=".SearchLocationsActivity" />
@@ -50,16 +53,38 @@
             android:parentActivityName=".SearchLocationsActivity" />
         <activity
             android:name=".SearchNamesActivity"
-            android:theme="@style/Theme.Show.ActionBar"
-            android:parentActivityName=".SearchLocationsActivity" />
+            android:parentActivityName=".SearchLocationsActivity"
+            android:theme="@style/Theme.Show.ActionBar" />
         <activity
             android:name=".ResultsActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.Show.ActionBar"
-            android:parentActivityName=".SearchLocationsActivity" />
-        <activity android:name=".ResultDetailActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:parentActivityName=".ResultsActivity"></activity>
+            android:parentActivityName=".SearchLocationsActivity"
+            android:theme="@style/Theme.Show.ActionBar" />
+        <activity
+            android:name=".ResultDetailActivity"
+            android:parentActivityName=".ResultsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <receiver
+            android:name=".widget.CollegeWidget"
+            android:enabled="true"
+            android:exported="true"
+            android:label="College Favorites">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/college_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".widget.CollegeWidgetService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
     </application>
 
 </manifest>
