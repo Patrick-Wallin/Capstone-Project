@@ -1,6 +1,8 @@
 package com.patrickwallin.projects.collegeinformation.widget;
 
 import android.annotation.TargetApi;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -11,7 +13,10 @@ import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.patrickwallin.projects.collegeinformation.MainActivity;
 import com.patrickwallin.projects.collegeinformation.R;
+
+import timber.log.Timber;
 
 /**
  * Implementation of App Widget functionality.
@@ -31,6 +36,7 @@ public class CollegeWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
+        Timber.d("It should be updated in Widget based on favorite records!");
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(),R.layout.college_widget);
 
@@ -38,6 +44,12 @@ public class CollegeWidget extends AppWidgetProvider {
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,appWidgetId);
 
             views.setRemoteAdapter(R.id.college_list_view,intent);
+
+            Intent clickIntentTemplate = new Intent(context, MainActivity.class);
+            PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
+                    .addNextIntentWithParentStack(clickIntentTemplate)
+                    .getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+            views.setPendingIntentTemplate(R.id.college_list_view,clickPendingIntentTemplate);
 
             appWidgetManager.updateAppWidget(appWidgetId,views);
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId,R.id.college_list_view);

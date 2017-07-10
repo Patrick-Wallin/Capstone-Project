@@ -38,16 +38,16 @@ public class CollegeWidgetRemoteViewsFactory implements RemoteViewsService.Remot
     public void onDataSetChanged() {
         if(mCursorFavoriteCollegeData != null)
             mCursorFavoriteCollegeData.close();
-
+/*
         String[] projection = new String[] {
                 FavoriteCollegeContract.FavoriteCollegeEntry._ID,
                 FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_NAME,
                 FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_CITY,
                 FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_STATE };
-
+*/
         final long identityToken = Binder.clearCallingIdentity();
 
-        mCursorFavoriteCollegeData = mContext.getContentResolver().query(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,projection, null, null, null);
+        mCursorFavoriteCollegeData = mContext.getContentResolver().query(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,null, null, null, null);
 
         Binder.restoreCallingIdentity(identityToken);
     }
@@ -68,15 +68,13 @@ public class CollegeWidgetRemoteViewsFactory implements RemoteViewsService.Remot
 
     @Override
     public RemoteViews getViewAt(int position) {
-        Timber.d("Check if we get record");
         if(position == AdapterView.INVALID_POSITION ||
                 mCursorFavoriteCollegeData == null || !mCursorFavoriteCollegeData.moveToPosition(position)) {
             return null;
         }
 
+        mCursorFavoriteCollegeData.moveToPosition(position);
         FavoriteCollegeData favoriteCollegeData = new FavoriteCollegeData(mCursorFavoriteCollegeData);
-
-        Timber.d("ready to update data into widget");
 
         RemoteViews view = new RemoteViews(mContext.getPackageName(), R.layout.college_widget_list_item);
         view.setTextViewText(R.id.college_name_text_view,favoriteCollegeData.getName());

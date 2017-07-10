@@ -138,28 +138,26 @@ public class MainSearchActivityFragment extends Fragment {
         find_college_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // check if any record first!
-                if(mTotalRecordsInResults == 0) {
-                    Snackbar.make(getView().findViewById(R.id.article_coordinator_layout), "No results based on search", Snackbar.LENGTH_LONG).show();
-                }else {
-                    Intent intentResultsActivity = new Intent(mContext, ResultsActivity.class);
-                    intentResultsActivity.putExtra("favoriteresults",false);
-                    mContext.startActivity(intentResultsActivity);
-                }
+            if(mTotalRecordsInResults == 0) {
+                Snackbar.make(getView().findViewById(R.id.article_coordinator_layout), "No results based on search", Snackbar.LENGTH_LONG).show();
+            }else {
+                Intent intentResultsActivity = new Intent(mContext, ResultsActivity.class);
+                intentResultsActivity.putExtra("favoriteresults",false);
+                mContext.startActivity(intentResultsActivity);
+            }
             }
         });
 
         go_favorite_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // check if any record first!
-                if(mTotalRecordsInFavorites == 0) {
-                    Snackbar.make(getView().findViewById(R.id.article_coordinator_layout),"Unable to show since there is no favorite.",Snackbar.LENGTH_LONG).show();
-                }else {
-                    Intent intentResultsActivity = new Intent(mContext, ResultsActivity.class);
-                    intentResultsActivity.putExtra("favoriteresults",true);
-                    mContext.startActivity(intentResultsActivity);
-                }
+            if(mTotalRecordsInFavorites == 0) {
+                Snackbar.make(getView().findViewById(R.id.article_coordinator_layout),"Unable to show since there is no favorite.",Snackbar.LENGTH_LONG).show();
+            }else {
+                Intent intentResultsActivity = new Intent(mContext, ResultsActivity.class);
+                intentResultsActivity.putExtra("favoriteresults",true);
+                mContext.startActivity(intentResultsActivity);
+            }
             }
         });
 

@@ -65,6 +65,16 @@
         <item name="android:textSize">30dp</item>
     </style>
 
+    <style name="TitleOnWidget" parent="@style/TitleOnTop">
+        <item name="android:textSize">15dp</item>
+    </style>
+
+    <style name="NameOnWidget" parent="@style/TitleOnWidget">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
     <style name="FindCollegeButton">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:background">@color/colorPrimary</item>

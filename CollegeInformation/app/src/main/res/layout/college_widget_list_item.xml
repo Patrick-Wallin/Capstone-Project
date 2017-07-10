@@ -8,18 +8,21 @@
 
     <TextView
         android:id="@+id/college_name_text_view"
+        style="@style/NameOnWidget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="start|center_vertical" />
 
     <LinearLayout
+        android:orientation="horizontal"
         android:id="@+id/widget_list_item"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="end">
+        style="@style/NameOnWidget">
         <TextView
             android:id="@+id/college_city_text_view"
+            android:paddingRight="5dp"
+            android:paddingEnd="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView

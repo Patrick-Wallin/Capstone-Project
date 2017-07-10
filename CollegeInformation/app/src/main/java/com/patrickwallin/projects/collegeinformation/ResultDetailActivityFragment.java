@@ -1,6 +1,8 @@
 package com.patrickwallin.projects.collegeinformation;
 
+import android.appwidget.AppWidgetManager;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeContract;
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeData;
+import com.patrickwallin.projects.collegeinformation.widget.CollegeWidget;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
@@ -217,14 +220,15 @@ public class ResultDetailActivityFragment extends Fragment {
                         // need to add it to table!
                         ContentValues cv = mFavoriteCollegeData.getFavoriteCollegeContentValues();
                         mContext.getContentResolver().insert(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,cv);
+
                     }else {
                         mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_black_24dp));
                         mLikesImageView.setTag(mContext.getString(R.string.not_favorite_college));
                         String sqlWhereDelete = FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_ID + " = " + String.valueOf(mFavoriteCollegeData.getId());
                         mContext.getContentResolver().delete(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,sqlWhereDelete,null);
                         // remove it from table!
-
                     }
+                    refreshWidget();
                         //mLikesImageView.getColorFilter()
                     //int color = Color.parseColor("#ff0000");
                     //mLikesImageView.setColorFilter(color);
@@ -281,6 +285,15 @@ public class ResultDetailActivityFragment extends Fragment {
         }
     }
 
+    private void refreshWidget() {
+        ComponentName name = new ComponentName(mContext, CollegeWidget.class);
+        int[] ids = AppWidgetManager.getInstance(mContext).getAppWidgetIds(name);
+
+        Intent intent = new Intent(mContext,CollegeWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        mContext.sendBroadcast(intent);
+    }
 
 
 

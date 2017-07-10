@@ -54,16 +54,26 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mSplashLoadingTextView;
 
+    private int idFromWidget = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSplashLoadingTextView = (TextView) findViewById(R.id.splash_loading_text_view);
-
         if(BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+
+        Intent intent = getIntent();
+        if(intent != null) {
+            if(intent.hasExtra(this.getString(R.string.id))) {
+                Timber.d("We got it from Widget!");
+                idFromWidget = intent.getIntExtra(this.getString(R.string.id),0);
+            }
+        }
+        mSplashLoadingTextView = (TextView) findViewById(R.id.splash_loading_text_view);
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -76,29 +86,34 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //signInAnonymously();
 
         NetworkUtils networkUtils = new NetworkUtils(MainActivity.this);
         if (networkUtils.isNetworkConnected()) {
-            try {
-                final File jsonFile = File.createTempFile(getResources().getString(R.string.temp_file_name), getResources().getString(R.string.json_ext));
-                StorageReference storageReference = networkUtils.getStorageReference(VersionContract.VersionEntry.TABLE_NAME);
-                storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        List<VersionData> versionDataList = OpenJsonUtils.getVersionDataFromJson(jsonFile);
-                        FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this, mSplashLoadingTextView, versionDataList);
-                        fetchVersionsTask.execute();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        mSplashLoadingTextView.setText(e.getMessage());
-                    }
-                });
+            if(idFromWidget > 0) {
+                try {
+                    final File jsonFile = File.createTempFile(getResources().getString(R.string.temp_file_name), getResources().getString(R.string.json_ext));
+                    StorageReference storageReference = networkUtils.getStorageReference(VersionContract.VersionEntry.TABLE_NAME);
+                    storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            List<VersionData> versionDataList = OpenJsonUtils.getVersionDataFromJson(jsonFile);
+                            FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this, mSplashLoadingTextView, versionDataList);
+                            fetchVersionsTask.execute();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            mSplashLoadingTextView.setText(e.getMessage());
+                        }
+                    });
 
-            } catch (IOException e) {
-                e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                Intent intentResultsActivity = new Intent(MainActivity.this, ResultsActivity.class);
+                intentResultsActivity.putExtra("favoriteresults",true);
+                MainActivity.this.startActivity(intentResultsActivity);
             }
         } else {
             networkUtils.showAlertMessageAboutNoInternetConnection(false);
@@ -106,54 +121,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    }
-
-    private void signInAnonymously() {
-        if(mAuth != null) {
-            mAuth.signInAnonymously()
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Timber.d("signInAnonymously:success");
-                                try {
-                                    final File jsonFile = File.createTempFile(getResources().getString(R.string.temp_file_name), getResources().getString(R.string.json_ext));
-                                    NetworkUtils networkUtils = new NetworkUtils(MainActivity.this);
-                                    StorageReference storageReference = networkUtils.getStorageReference(VersionContract.VersionEntry.TABLE_NAME);
-                                    com.google.firebase.storage.FileDownloadTask taskDownloadFile = storageReference.getFile(jsonFile);
-                                    synchronized (taskDownloadFile) {
-                                        taskDownloadFile.addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                                List<VersionData> versionDataList = OpenJsonUtils.getVersionDataFromJson(jsonFile);
-                                                FetchVersionsTask fetchVersionsTask = new FetchVersionsTask(MainActivity.this, mSplashLoadingTextView, versionDataList);
-                                                fetchVersionsTask.execute();
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                mSplashLoadingTextView.setText(e.getMessage());
-                                            }
-                                        });
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                Timber.d("singInAnonymously:failure");
-                                Timber.d(task.getException());
-                                mSplashLoadingTextView.setText("Authentication by Firebase failed.");
-                            }
-                        }
-
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            mSplashLoadingTextView.setText("Firebase Error:...\n "+e.getMessage());
-                        }
-                    });
-        }else {
-            mSplashLoadingTextView.setText("Authentication by Firebase failed.");
-        }
     }
 }

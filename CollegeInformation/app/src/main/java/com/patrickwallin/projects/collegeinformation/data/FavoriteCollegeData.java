@@ -39,14 +39,38 @@ public class FavoriteCollegeData {
 
     public FavoriteCollegeData(Cursor cursor) {
         if(cursor != null) {
-            setId(cursor.getInt(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_ID));
-            setName(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_NAME));
-            setState(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_STATE));
-            setCity(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_CITY));
-            setZip(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_ZIP));
-            setLatitude(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_LATITUDE));
-            setLongitude(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_LONGITUDE));
-            setWebsite(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_WEBSITE));
+            if(cursor.getColumnIndex(FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_ID) > -1)
+                setId(cursor.getInt(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_ID));
+            else
+                setId(0);
+            if(cursor.getColumnIndex(FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_NAME) > -1)
+                setName(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_NAME));
+            else
+                setName("");
+            if(cursor.getColumnIndex(FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_STATE) > -1)
+                setState(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_STATE));
+            else
+                setState("");
+            if(cursor.getColumnIndex(FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_CITY) > -1)
+                setCity(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_CITY));
+            else
+                setCity("");
+            if(cursor.getColumnIndex(FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_ZIP) > -1)
+                setZip(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_ZIP));
+            else
+                setZip("");
+            if(cursor.getColumnIndex(FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_LATITUDE) > -1)
+                setLatitude(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_LATITUDE));
+            else
+                setLatitude("");
+            if(cursor.getColumnIndex(FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_LONGITUDE) > -1)
+                setLongitude(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_LONGITUDE));
+            else
+                setLongitude("");
+            if(cursor.getColumnIndex(FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_WEBSITE) > -1)
+                setWebsite(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_WEBSITE));
+            else
+                setWebsite("");
             setImageLink(cursor.getString(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_IMAGE_LINK));
             setCostInState(cursor.getInt(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_COST_IN_STATE));
             setCostOutState(cursor.getInt(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_COST_OUT_STATE));
