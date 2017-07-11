@@ -12,11 +12,6 @@ import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeContract;
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeData;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import timber.log.Timber;
-
 /**
  * Created by piwal on 7/8/2017.
  */

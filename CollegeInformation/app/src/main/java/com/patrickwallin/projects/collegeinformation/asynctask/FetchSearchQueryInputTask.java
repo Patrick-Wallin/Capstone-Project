@@ -3,29 +3,10 @@ package com.patrickwallin.projects.collegeinformation.asynctask;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.StorageReference;
-import com.patrickwallin.projects.collegeinformation.data.DegreeContract;
-import com.patrickwallin.projects.collegeinformation.data.NameContract;
-import com.patrickwallin.projects.collegeinformation.data.ProgramContract;
-import com.patrickwallin.projects.collegeinformation.data.RegionsContract;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputContract;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputData;
-import com.patrickwallin.projects.collegeinformation.data.StatesContract;
-import com.patrickwallin.projects.collegeinformation.data.VersionContract;
-import com.patrickwallin.projects.collegeinformation.data.VersionData;
-import com.patrickwallin.projects.collegeinformation.firebasestorage.FirebaseStorageProcessor;
-import com.patrickwallin.projects.collegeinformation.utilities.NetworkUtils;
-import com.patrickwallin.projects.collegeinformation.utilities.OpenJsonUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 

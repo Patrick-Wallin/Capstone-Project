@@ -12,10 +12,8 @@ import com.patrickwallin.projects.collegeinformation.asynctask.FetchSearchQueryI
 import com.patrickwallin.projects.collegeinformation.data.RegionData;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputContract;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputData;
-import com.patrickwallin.projects.collegeinformation.data.StateData;
 import com.patrickwallin.projects.collegeinformation.utilities.CursorAndDataConverter;
 import com.patrickwallin.projects.collegeinformation.viewholder.SearchLocationRegionsViewHolder;
-import com.patrickwallin.projects.collegeinformation.viewholder.SearchLocationStatesViewHolder;
 
 import java.util.List;
 
@@ -135,8 +133,6 @@ public class RegionsAdapter extends RecyclerView.Adapter<SearchLocationRegionsVi
                 }
             }
         }
-
-
 
         notifyDataSetChanged();
     }

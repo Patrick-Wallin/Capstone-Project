@@ -5,8 +5,6 @@ import android.database.Cursor;
 
 import org.parceler.Parcel;
 
-import java.util.jar.Attributes;
-
 /**
  * Created by piwal on 6/25/2017.
  */
@@ -19,13 +17,6 @@ public class NameData {
     String mCity;
     String mZip;
     String mImageLink;
-    /*
-    String mLatitude;
-    String mLongitude;
-    int mRegionId;
-    int mDegreesAwardedHighest;
-    int mStateId;
-    */
 
     public NameData() {}
 
@@ -37,16 +28,9 @@ public class NameData {
             setCity(cursor.getString(NameContract.NameEntry.COL_NAME_CITY));
             setZip(cursor.getString(NameContract.NameEntry.COL_NAME_ZIP));
             setImageLink(cursor.getString(NameContract.NameEntry.COL_NAME_IMAGE_LINK));
-            /*
-            setLatitude(cursor.getString(NameContract.NameEntry.COL_NAME_LAT));
-            setLongitude(cursor.getString(NameContract.NameEntry.COL_NAME_LON));
-            setRegionId(cursor.getInt(NameContract.NameEntry.COL_NAME_REGION_ID));
-            setDegreesAwardedHighest(cursor.getInt(NameContract.NameEntry.COL_NAME_DEGREES_AWARDED_HIGHEST));
-            setStateId(cursor.getInt(NameContract.NameEntry.COL_NAME_STATE_ID));
-            */
         }
     }
-    //public NameData(int id, String name, String state, String city, String zip, String latitude, String longitude, int regionId, int degreesAwardedHighest, int stateId)
+
     public NameData(int id, String name, String state, String city, String zip, String imageLink) {
         mId = id;
         mName = name;
@@ -54,13 +38,6 @@ public class NameData {
         mCity = city;
         mZip = zip;
         mImageLink = imageLink;
-        /*
-        mLatitude = latitude;
-        mLongitude = longitude;
-        mRegionId = regionId;
-        mDegreesAwardedHighest = degreesAwardedHighest;
-        mStateId = stateId;
-        */
     }
 
     public int getId() { return mId; }

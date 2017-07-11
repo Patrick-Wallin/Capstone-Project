@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchSearchQueryInputTask;
+import com.patrickwallin.projects.collegeinformation.data.ProgramContract;
 import com.patrickwallin.projects.collegeinformation.data.ProgramData;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputContract;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputData;
@@ -53,7 +54,7 @@ public class ProgramsAdapter extends RecyclerView.Adapter<SearchProgramsViewHold
 
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 holder.mTitleTextView.setTextColor(Color.WHITE);
-                SearchQueryInputData searchQueryInputData = new SearchQueryInputData(FetchSearchQueryInputTask.SEARCH_QUERY_PROGRAMS_ID,"programs",String.valueOf(programData.getId()));
+                SearchQueryInputData searchQueryInputData = new SearchQueryInputData(FetchSearchQueryInputTask.SEARCH_QUERY_PROGRAMS_ID, ProgramContract.ProgramEntry.TABLE_NAME,String.valueOf(programData.getId()));
                 mContext.getContentResolver().update(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,searchQueryInputData.getSearchQueryInputContentValues(),
                         SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_ID + " = " + String.valueOf(FetchSearchQueryInputTask.SEARCH_QUERY_PROGRAMS_ID), null);
             }else {
@@ -69,18 +70,6 @@ public class ProgramsAdapter extends RecyclerView.Adapter<SearchProgramsViewHold
                     notifyItemChanged(mSelectedPosition);
                 }
             });
-
-            /*
-            holder.mSearchDegreeCardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notifyItemChanged(mSelectedPosition);
-                    mSelectedPosition = position;
-                    notifyItemChanged(mSelectedPosition);
-
-                }
-            });
-            */
         }
     }
 
@@ -92,7 +81,6 @@ public class ProgramsAdapter extends RecyclerView.Adapter<SearchProgramsViewHold
     public int setProgramData(List<ProgramData> programData) {
         mProgramData = programData;
 
-        // check default degree id!
         int selectedProgramId = -1;
         int selectedPosition = 0;
         Cursor cursor = mContext.getContentResolver().query(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,null,
@@ -102,7 +90,6 @@ public class ProgramsAdapter extends RecyclerView.Adapter<SearchProgramsViewHold
             if(searchQueryInputDataList != null && searchQueryInputDataList.size() > 0) {
                 String value = searchQueryInputDataList.get(0).getValue().trim();
                 selectedProgramId = Integer.valueOf((value.isEmpty() ? "0" : value));
-                Log.i("Position: ", String.valueOf(selectedProgramId));
             }
         }
         if(cursor != null)

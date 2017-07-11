@@ -4,9 +4,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
+import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.adapter.StatesAdapter;
 import com.patrickwallin.projects.collegeinformation.data.StateData;
 import com.patrickwallin.projects.collegeinformation.data.StatesContract;
+import com.patrickwallin.projects.collegeinformation.utilities.AsyncListener;
 import com.patrickwallin.projects.collegeinformation.utilities.CursorAndDataConverter;
 
 import java.util.List;
@@ -18,10 +20,12 @@ import java.util.List;
 public class FetchStatesTask extends AsyncTask<Void, Void, List<StateData>> {
     private Context mContext;
     private StatesAdapter mStatesAdapter;
+    private AsyncListener listener;
 
-    public FetchStatesTask(Context context, StatesAdapter statesAdapter) {
+    public FetchStatesTask(Context context, StatesAdapter statesAdapter, AsyncListener listener) {
         mContext = context;
         mStatesAdapter = statesAdapter;
+        this.listener = listener;
     }
 
     @Override
@@ -46,6 +50,7 @@ public class FetchStatesTask extends AsyncTask<Void, Void, List<StateData>> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        listener.returnString(mContext.getString(R.string.loadingandwait));
     }
 
     @Override
@@ -53,5 +58,6 @@ public class FetchStatesTask extends AsyncTask<Void, Void, List<StateData>> {
         if(stateDatas != null) {
             mStatesAdapter.setStateData(stateDatas);
         }
+        listener.closeScreen();
     }
 }

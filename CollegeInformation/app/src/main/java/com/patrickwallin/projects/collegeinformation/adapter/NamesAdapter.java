@@ -12,16 +12,14 @@ import android.view.ViewGroup;
 
 import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchSearchQueryInputTask;
+import com.patrickwallin.projects.collegeinformation.data.NameContract;
 import com.patrickwallin.projects.collegeinformation.data.NameData;
-import com.patrickwallin.projects.collegeinformation.data.ProgramData;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputContract;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputData;
 import com.patrickwallin.projects.collegeinformation.utilities.CursorAndDataConverter;
 import com.patrickwallin.projects.collegeinformation.viewholder.SearchNamesViewHolder;
-import com.patrickwallin.projects.collegeinformation.viewholder.SearchProgramsViewHolder;
 
 import java.util.List;
-import java.util.jar.Attributes;
 
 /**
  * Created by piwal on 6/22/2017.
@@ -65,7 +63,7 @@ public class NamesAdapter extends RecyclerView.Adapter<SearchNamesViewHolder> {
                 holder.mCityTextView.setTextColor(Color.WHITE);
                 holder.mStateTextView.setTextColor(Color.WHITE);
                 holder.mZipTextView.setTextColor(Color.WHITE);
-                SearchQueryInputData searchQueryInputData = new SearchQueryInputData(FetchSearchQueryInputTask.SEARCH_QUERY_NAMES_ID,"names",String.valueOf(nameData.getId()));
+                SearchQueryInputData searchQueryInputData = new SearchQueryInputData(FetchSearchQueryInputTask.SEARCH_QUERY_NAMES_ID, NameContract.NameEntry.TABLE_NAME,String.valueOf(nameData.getId()));
                 mContext.getContentResolver().update(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,searchQueryInputData.getSearchQueryInputContentValues(),
                         SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_ID + " = " + String.valueOf(FetchSearchQueryInputTask.SEARCH_QUERY_NAMES_ID), null);
             }else {
@@ -97,7 +95,6 @@ public class NamesAdapter extends RecyclerView.Adapter<SearchNamesViewHolder> {
     public int setNameData(List<NameData> nameData) {
         mNameData = nameData;
 
-        // check default degree id!
         int selectedNameId = -1;
         int selectedPosition = 0;
         Cursor cursor = mContext.getContentResolver().query(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,null,
@@ -107,7 +104,6 @@ public class NamesAdapter extends RecyclerView.Adapter<SearchNamesViewHolder> {
             if(searchQueryInputDataList != null && searchQueryInputDataList.size() > 0) {
                 String value = searchQueryInputDataList.get(0).getValue().trim();
                 selectedNameId = Integer.valueOf((value.isEmpty() ? "0" : value));
-                Log.i("Position: ", String.valueOf(selectedNameId));
             }
         }
         if(cursor != null)

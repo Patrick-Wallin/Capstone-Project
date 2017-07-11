@@ -6,16 +6,12 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.patrickwallin.projects.collegeinformation.OnGoBackChangeListener;
@@ -31,8 +27,6 @@ import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputData;
 import com.patrickwallin.projects.collegeinformation.data.StatesContract;
 import com.patrickwallin.projects.collegeinformation.data.VersionContract;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -68,9 +62,11 @@ public class NetworkUtils  {
                 }).setIcon(android.R.drawable.ic_dialog_alert).show();
     }
 
+    // in case we need this in future
+    /*
     public URL buildUrl(String jsonName) {
         String uriAddress = "";
-        /// /https://firebasestorage.googleapis.com/v0/b/college-information.appspot.com/o/degrees.json?alt=media&token=94a65e8d-81e5-43ae-b1fa-06d2303ec89d
+
         Uri builtUri;
 
         if(jsonName.equalsIgnoreCase(VersionContract.VersionEntry.TABLE_NAME)) {
@@ -89,119 +85,15 @@ public class NetworkUtils  {
 
         return url;
     }
+    */
 
-    public void insertAllNamesIntoTable() {
-        final StringBuilder uriAddress = new StringBuilder();
-        uriAddress.append(mContext.getString(R.string.url_data_gov));
-        uriAddress.append(mContext.getString(R.string.endpoint_get_all_data));
-        uriAddress.append("?");
-        uriAddress.append(mContext.getString(R.string.query_api_key));
-        uriAddress.append(mContext.getString(R.string.api_key));
-        uriAddress.append("&_sort=school.name:asc");
-        uriAddress.append("&");
-        uriAddress.append(mContext.getString(R.string.fields_for_names));
-        uriAddress.append("&");
-        uriAddress.append(mContext.getString(R.string.query_page_number));
-        uriAddress.append("{pageNumber}");
-
-        AndroidNetworking.get(uriAddress.toString())
-                .addPathParameter("pageNumber","0")
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsString(new StringRequestListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        if(response != null && !response.trim().isEmpty()) {
-                            mContext.getContentResolver().delete(NameContract.NameEntry.CONTENT_URI, null, null);
-
-                            int totalRecords = OpenJsonUtils.getTotalRecords(response);
-
-                            if(totalRecords > 0) {
-                                List<NameData> nameDataList = OpenJsonUtils.getNameDataFromJson(response);
-                                if (nameDataList != null && !nameDataList.isEmpty()) {
-                                    for (int i = 0; i < nameDataList.size(); i++) {
-                                        mContext.getContentResolver().insert(NameContract.NameEntry.CONTENT_URI, nameDataList.get(i).getNamesContentValues());
-                                    }
-                                }
-
-                                int pages = totalRecords/20;
-                                for(int i = 1; i <pages; i++) {
-                                    insertRecordIntoNameBasedOnPage(uriAddress.toString(),i);
-                                }
-                            }
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        int test = 1;
-
-                    }
-                });
-
-
-
-
-    }
-
-    public void insertRecordIntoNameBasedOnPage(String uriAddress, int pageNumber) {
-        AndroidNetworking.get(uriAddress.toString())
-                .addPathParameter("pageNumber",String.valueOf(pageNumber))
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsString(new StringRequestListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        if(response != null && !response.trim().isEmpty()) {
-                            List<NameData> nameDataList = OpenJsonUtils.getNameDataFromJson(response);
-                            if (nameDataList != null && !nameDataList.isEmpty()) {
-                                for (int i = 0; i < nameDataList.size(); i++) {
-                                    mContext.getContentResolver().insert(NameContract.NameEntry.CONTENT_URI, nameDataList.get(i).getNamesContentValues());
-                                }
-                            }
-
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        // fail!
-                    }
-                });
-    }
-
-
-    public String getResponseFromURLAddressString(String uriAddressValue) {
-        String uriAddress = uriAddressValue;
-        final String jsonValue = "";
-
-        AndroidNetworking.get(uriAddress)
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsString(new StringRequestListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        //jsonValue = response; ??? not working due to final??
-
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        // fail!
-                    }
-                });
-        return jsonValue;
-    }
 
     public StorageReference getStorageReference(String jsonName) {
         StringBuilder jsonFileName = new StringBuilder();
-        jsonFileName.append("gs://college-information.appspot.com/");
+        jsonFileName.append(mContext.getString(R.string.firebase_uri_address));
         jsonFileName.append(jsonName.trim());
-        jsonFileName.append(".json");
+        jsonFileName.append(".");
+        jsonFileName.append(mContext.getString(R.string.json_ext));
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReferenceFromUrl(jsonFileName.toString());
@@ -267,13 +159,13 @@ public class NetworkUtils  {
 
                                     String latestYearData = mContext.getString(R.string.latest_year_data);
 
-                                    String programPercentage = "academics.program_percentage.";
+                                    String programPercentage = mContext.getString(R.string.field_collegescorecard_percentage);
 
                                     sqlWhere.append(latestYearData);
                                     sqlWhere.append(".");
                                     sqlWhere.append(programPercentage);
                                     sqlWhere.append(programUrlAddress);
-                                    sqlWhere.append("__not=0.0");
+                                    sqlWhere.append(mContext.getString(R.string.field_collegescorecard_not_equal_to_zero));
                                 }
                             }
 
@@ -286,15 +178,67 @@ public class NetworkUtils  {
                                         if (!sqlNameWhere.toString().trim().isEmpty()) {
                                             sqlNameWhere.append("&");
                                         }
-                                        sqlNameWhere.append("id=");
+                                        sqlNameWhere.append(mContext.getString(R.string.query_school_id));
+                                        sqlNameWhere.append("=");
                                         sqlNameWhere.append(String.valueOf(nameId));
                                     }
                                 }
                             }else {
                                 if(searchQueryInputData.getName().equalsIgnoreCase(StatesContract.StateEntry.TABLE_NAME)) {
-
+                                    String value = searchQueryInputData.getValue().trim();
+                                    if (!value.isEmpty()) {
+                                        String[] splitValue = value.split(",");
+                                        boolean bAny = false;
+                                        for (int iStates = 0; iStates < splitValue.length; iStates++) {
+                                            if (splitValue[iStates].trim().equals("-1")) {
+                                                bAny = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!bAny) {
+                                            if (!sqlWhere.toString().trim().isEmpty()) {
+                                                sqlWhere.append("&");
+                                            }
+                                            sqlWhere.append(mContext.getString(R.string.query_school_states));
+                                            sqlWhere.append("=");
+                                            sqlWhere.append(value);
+                                        }
+                                    }
                                 }else {
                                     if(searchQueryInputData.getName().equalsIgnoreCase(RegionsContract.RegionEntry.TABLE_NAME)) {
+                                        String value = searchQueryInputData.getValue().trim();
+                                        if(!value.isEmpty()) {
+                                            String[] splitValue = value.split(",");
+                                            boolean bAny = false;
+                                            for (int iStates = 0; iStates < splitValue.length; iStates++) {
+                                                if (splitValue[iStates].trim().equals("-1")) {
+                                                    bAny = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (!bAny) {
+                                                if (!sqlWhere.toString().trim().isEmpty()) {
+                                                    sqlWhere.append("&");
+                                                }
+                                                sqlWhere.append(mContext.getString(R.string.query_school_regions));
+                                                sqlWhere.append("=");
+                                                sqlWhere.append(value);
+                                            }
+                                        }
+
+                                    }else {
+                                        if(searchQueryInputData.getName().equalsIgnoreCase("zips")) {
+                                            String value = searchQueryInputData.getValue().trim();
+                                            if(!value.isEmpty()) {
+                                                if (!sqlWhere.toString().trim().isEmpty()) {
+                                                    sqlWhere.append("&");
+                                                }
+                                                sqlWhere.append(mContext.getString(R.string.query_school_zips));
+                                                sqlWhere.append("=");
+                                                sqlWhere.append(value);
+                                            }
+
+                                        }
 
                                     }
                                 }
@@ -324,7 +268,7 @@ public class NetworkUtils  {
         if(!totalOnly)
             sqlSearch.append(mContext.getString(R.string.number_per_page));
         else
-            sqlSearch.append("_per_page=1");
+            sqlSearch.append(mContext.getString(R.string.number_per_page_one));
         sqlSearch.append("&");
         sqlSearch.append(mContext.getString(R.string.query_page_number));
         sqlSearch.append("0");

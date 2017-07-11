@@ -5,8 +5,6 @@ import android.database.Cursor;
 
 import org.parceler.Parcel;
 
-import java.util.jar.Attributes;
-
 /**
  * Created by piwal on 6/25/2017.
  */
@@ -86,7 +84,7 @@ public class FavoriteCollegeData {
             setACT75(cursor.getDouble(FavoriteCollegeContract.FavoriteCollegeEntry.COL_FAVORITE_ACT_75));
         }
     }
-    //public NameData(int id, String name, String state, String city, String zip, String latitude, String longitude, int regionId, int degreesAwardedHighest, int stateId)
+
     public FavoriteCollegeData(int id, String name, String state, String city, String zip, String latitude, String longitude, String website, String imageLink,
                                int costInState, int costOutState, double pctFedLoans, double pctPellGrants, double satCriticalReading25, double satCriticalReading75,
                                double satMath25, double satMath75, double satWriting25, double satWriting75, double act25, double act75) {
@@ -111,12 +109,6 @@ public class FavoriteCollegeData {
         mSATWriting75 = satWriting75;
         mACT25 = act25;
         mACT75 = act75;
-
-        /*
-        mRegionId = regionId;
-        mDegreesAwardedHighest = degreesAwardedHighest;
-        mStateId = stateId;
-        */
     }
 
     public int getId() { return mId; }

@@ -1,12 +1,9 @@
 package com.patrickwallin.projects.collegeinformation;
 
-import android.content.pm.ActivityInfo;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 
 public class ResultDetailActivity extends AppCompatActivity {
@@ -30,10 +27,10 @@ public class ResultDetailActivity extends AppCompatActivity {
 
         if(savedInstanceState == null) {
             ResultDetailActivityFragment resultDetailActivityFragment = new ResultDetailActivityFragment();
-            if(getIntent().hasExtra("resultdetailinfo")) {
-                Parcelable parcelable = getIntent().getParcelableExtra("resultdetailinfo");
+            if(getIntent().hasExtra(getString(R.string.resultdetailinfo))) {
+                Parcelable parcelable = getIntent().getParcelableExtra(getString(R.string.resultdetailinfo));
                 Bundle bundleResult = new Bundle();
-                bundleResult.putParcelable("resultdetailinfo",parcelable);
+                bundleResult.putParcelable(getString(R.string.resultdetailinfo),parcelable);
                 resultDetailActivityFragment.setArguments(bundleResult);
             }
             getSupportFragmentManager().beginTransaction().add(R.id.activity_result_detail_page_container,resultDetailActivityFragment).commit();

@@ -13,14 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -30,6 +26,25 @@ import java.util.Scanner;
  */
 
 public class OpenJsonUtils {
+    private static String JSON_ELEMENT_RESULT = "result";
+    private static String JSON_ELEMENT_METADATA = "metadata";
+    private static String JSON_ELEMENT_TOTAL = "total";
+    private static String JSON_ELEMENT_PAGE = "page";
+    private static String JSON_ELEMENT_VERSIONS = "versions";
+    private static String JSON_ELEMENT_VERSION = "version";
+    private static String JSON_ELEMENT_NAME = "name";
+    private static String JSON_ELEMENT_DEGREE = "degree";
+    private static String JSON_ELEMENT_PROGRAM = "program";
+    private static String JSON_ELEMENT_STATE = "state";
+    private static String JSON_ELEMENT_REGION = "region";
+    private static String JSON_ELEMENT_ID = "id";
+    private static String JSON_ELEMENT_TITLE = "title";
+    private static String JSON_ELEMENT_DESC = "description";
+    private static String JSON_ELEMENT_URL_NAME = "url_name";
+    private static String JSON_ELEMENT_CITY = "city";
+    private static String JSON_ELEMENT_ZIP = "zip";
+    private static String JSON_ELEMENT_IMAGE = "img";
+
     public static List<VersionData> getVersionDataFromJson(File fileName) {
         List<VersionData> versionDataList = null;
 
@@ -56,16 +71,16 @@ public class OpenJsonUtils {
         try {
             JSONObject jsonVersionData = new JSONObject(versionJson);
             if(jsonVersionData != null) {
-                if(jsonVersionData.has("versions")) {
-                    if(jsonVersionData.get("versions") instanceof JSONArray) {
-                        JSONArray arrayVersions = jsonVersionData.getJSONArray("versions");
+                if(jsonVersionData.has(JSON_ELEMENT_VERSIONS)) {
+                    if(jsonVersionData.get(JSON_ELEMENT_VERSIONS) instanceof JSONArray) {
+                        JSONArray arrayVersions = jsonVersionData.getJSONArray(JSON_ELEMENT_VERSIONS);
 
                         if(arrayVersions != null && arrayVersions.length() > 0) {
                             for(int i = 0; i < arrayVersions.length(); i++) {
                                 if(arrayVersions.get(i) instanceof JSONObject) {
                                     JSONObject jsonObject = (JSONObject) arrayVersions.get(i);
-                                    if(jsonObject.has("name") && jsonObject.has("version")) {
-                                        VersionData versionData = new VersionData(0, jsonObject.getString("name"), jsonObject.getInt("version"),-1);
+                                    if(jsonObject.has(JSON_ELEMENT_NAME) && jsonObject.has(JSON_ELEMENT_VERSION)) {
+                                        VersionData versionData = new VersionData(0, jsonObject.getString(JSON_ELEMENT_NAME), jsonObject.getInt(JSON_ELEMENT_VERSION),-1);
                                         parsedVersionsData.add(versionData);
                                     }
                                 }
@@ -107,16 +122,16 @@ public class OpenJsonUtils {
         try {
             JSONObject jsonDegreeData = new JSONObject(degreeJson);
             if(jsonDegreeData != null) {
-                if(jsonDegreeData.has("degree")) {
-                    if(jsonDegreeData.get("degree") instanceof JSONArray) {
-                        JSONArray arrayDegrees = jsonDegreeData.getJSONArray("degree");
+                if(jsonDegreeData.has(JSON_ELEMENT_DEGREE)) {
+                    if(jsonDegreeData.get(JSON_ELEMENT_DEGREE) instanceof JSONArray) {
+                        JSONArray arrayDegrees = jsonDegreeData.getJSONArray(JSON_ELEMENT_DEGREE);
 
                         if(arrayDegrees != null && arrayDegrees.length() > 0) {
                             for(int i = 0; i < arrayDegrees.length(); i++) {
                                 if(arrayDegrees.get(i) instanceof JSONObject) {
                                     JSONObject jsonObject = (JSONObject) arrayDegrees.get(i);
-                                    if(jsonObject.has("id") && jsonObject.has("title")) {
-                                        DegreesData degreesData = new DegreesData(jsonObject.getInt("id"), jsonObject.getString("title"));
+                                    if(jsonObject.has(JSON_ELEMENT_ID) && jsonObject.has(JSON_ELEMENT_TITLE)) {
+                                        DegreesData degreesData = new DegreesData(jsonObject.getInt(JSON_ELEMENT_ID), jsonObject.getString(JSON_ELEMENT_TITLE));
                                         parsedDegreesData.add(degreesData);
                                     }
                                 }
@@ -159,16 +174,16 @@ public class OpenJsonUtils {
         try {
             JSONObject jsonProgramData = new JSONObject(programJson);
             if(jsonProgramData != null) {
-                if(jsonProgramData.has("program")) {
-                    if(jsonProgramData.get("program") instanceof JSONArray) {
-                        JSONArray arrayPrograms = jsonProgramData.getJSONArray("program");
+                if(jsonProgramData.has(JSON_ELEMENT_PROGRAM)) {
+                    if(jsonProgramData.get(JSON_ELEMENT_PROGRAM) instanceof JSONArray) {
+                        JSONArray arrayPrograms = jsonProgramData.getJSONArray(JSON_ELEMENT_PROGRAM);
 
                         if(arrayPrograms != null && arrayPrograms.length() > 0) {
                             for(int i = 0; i < arrayPrograms.length(); i++) {
                                 if(arrayPrograms.get(i) instanceof JSONObject) {
                                     JSONObject jsonObject = (JSONObject) arrayPrograms.get(i);
-                                    if(jsonObject.has("id") && jsonObject.has("title") && jsonObject.has("url_name")) {
-                                        ProgramData programData = new ProgramData(jsonObject.getInt("id"), jsonObject.getString("title"), jsonObject.getString("url_name"));
+                                    if(jsonObject.has(JSON_ELEMENT_ID) && jsonObject.has(JSON_ELEMENT_TITLE) && jsonObject.has(JSON_ELEMENT_URL_NAME)) {
+                                        ProgramData programData = new ProgramData(jsonObject.getInt(JSON_ELEMENT_ID), jsonObject.getString(JSON_ELEMENT_TITLE), jsonObject.getString(JSON_ELEMENT_URL_NAME));
                                         parsedProgramData.add(programData);
                                     }
                                 }
@@ -211,16 +226,16 @@ public class OpenJsonUtils {
         try {
             JSONObject jsonStateData = new JSONObject(stateJson);
             if(jsonStateData != null) {
-                if(jsonStateData.has("state")) {
-                    if(jsonStateData.get("state") instanceof JSONArray) {
-                        JSONArray arrayStates = jsonStateData.getJSONArray("state");
+                if(jsonStateData.has(JSON_ELEMENT_STATE)) {
+                    if(jsonStateData.get(JSON_ELEMENT_STATE) instanceof JSONArray) {
+                        JSONArray arrayStates = jsonStateData.getJSONArray(JSON_ELEMENT_STATE);
 
                         if(arrayStates != null && arrayStates.length() > 0) {
                             for(int i = 0; i < arrayStates.length(); i++) {
                                 if(arrayStates.get(i) instanceof JSONObject) {
                                     JSONObject jsonObject = (JSONObject) arrayStates.get(i);
-                                    if(jsonObject.has("id") && jsonObject.has("name")) {
-                                        StateData stateData = new StateData(jsonObject.getInt("id"), jsonObject.getString("name"));
+                                    if(jsonObject.has(JSON_ELEMENT_ID) && jsonObject.has(JSON_ELEMENT_NAME)) {
+                                        StateData stateData = new StateData(jsonObject.getInt(JSON_ELEMENT_ID), jsonObject.getString(JSON_ELEMENT_NAME));
                                         parsedStateData.add(stateData);
                                     }
                                 }
@@ -263,16 +278,16 @@ public class OpenJsonUtils {
         try {
             JSONObject jsonRegionData = new JSONObject(regionJson);
             if(jsonRegionData != null) {
-                if(jsonRegionData.has("region")) {
-                    if(jsonRegionData.get("region") instanceof JSONArray) {
-                        JSONArray arrayRegions = jsonRegionData.getJSONArray("region");
+                if(jsonRegionData.has(JSON_ELEMENT_REGION)) {
+                    if(jsonRegionData.get(JSON_ELEMENT_REGION) instanceof JSONArray) {
+                        JSONArray arrayRegions = jsonRegionData.getJSONArray(JSON_ELEMENT_REGION);
 
                         if(arrayRegions != null && arrayRegions.length() > 0) {
                             for(int i = 0; i < arrayRegions.length(); i++) {
                                 if(arrayRegions.get(i) instanceof JSONObject) {
                                     JSONObject jsonObject = (JSONObject) arrayRegions.get(i);
-                                    if(jsonObject.has("id") && jsonObject.has("name") && jsonObject.has("description")) {
-                                        RegionData regionData = new RegionData(jsonObject.getInt("id"), jsonObject.getString("name"), jsonObject.getString("description"));
+                                    if(jsonObject.has(JSON_ELEMENT_ID) && jsonObject.has(JSON_ELEMENT_NAME) && jsonObject.has(JSON_ELEMENT_DESC)) {
+                                        RegionData regionData = new RegionData(jsonObject.getInt(JSON_ELEMENT_ID), jsonObject.getString(JSON_ELEMENT_NAME), jsonObject.getString(JSON_ELEMENT_DESC));
                                         parsedRegionData.add(regionData);
                                     }
                                 }
@@ -294,11 +309,11 @@ public class OpenJsonUtils {
         try {
             JSONObject jsonNameData = new JSONObject(nameJson);
             if(jsonNameData != null) {
-                if(jsonNameData.has("metadata")) {
-                    if(jsonNameData.get("metadata") instanceof JSONObject) {
-                        JSONObject jsonMetadata = jsonNameData.getJSONObject("metadata");
-                        if(jsonMetadata.has("total")) {
-                            totalRecords = jsonMetadata.getInt("total");
+                if(jsonNameData.has(JSON_ELEMENT_METADATA)) {
+                    if(jsonNameData.get(JSON_ELEMENT_METADATA) instanceof JSONObject) {
+                        JSONObject jsonMetadata = jsonNameData.getJSONObject(JSON_ELEMENT_METADATA);
+                        if(jsonMetadata.has(JSON_ELEMENT_TOTAL)) {
+                            totalRecords = jsonMetadata.getInt(JSON_ELEMENT_TOTAL);
                         }
                     }
                 }
@@ -318,11 +333,11 @@ public class OpenJsonUtils {
         try {
             JSONObject jsonNameData = new JSONObject(nameJson);
             if(jsonNameData != null) {
-                if(jsonNameData.has("metadata")) {
-                    if(jsonNameData.get("metadata") instanceof JSONObject) {
-                        JSONObject jsonMetadata = jsonNameData.getJSONObject("metadata");
-                        if(jsonMetadata.has("page")) {
-                            pageNumber = jsonMetadata.getInt("page");
+                if(jsonNameData.has(JSON_ELEMENT_METADATA)) {
+                    if(jsonNameData.get(JSON_ELEMENT_METADATA) instanceof JSONObject) {
+                        JSONObject jsonMetadata = jsonNameData.getJSONObject(JSON_ELEMENT_METADATA);
+                        if(jsonMetadata.has(JSON_ELEMENT_PAGE)) {
+                            pageNumber = jsonMetadata.getInt(JSON_ELEMENT_PAGE);
                         }
                     }
                 }
@@ -349,7 +364,7 @@ public class OpenJsonUtils {
             jsonReader.beginObject();
             while (jsonReader.hasNext()) {
                 String strname = jsonReader.nextName();
-                if(strname.equalsIgnoreCase("name")) {
+                if(strname.equalsIgnoreCase(JSON_ELEMENT_NAME)) {
                     jsonReader.beginArray();
 
                     int id = 0;
@@ -360,15 +375,15 @@ public class OpenJsonUtils {
 
                         while (jsonReader.hasNext()) {
                             String name = jsonReader.nextName();
-                            if(name.equals("id")) {
+                            if(name.equals(JSON_ELEMENT_ID)) {
                                 nd.setId(jsonReader.nextInt());
-                            } else if (name.equals("name")) {
+                            } else if (name.equals(JSON_ELEMENT_NAME)) {
                                 nd.setName(jsonReader.nextString());
-                            }else if (name.equals("city")) {
+                            }else if (name.equals(JSON_ELEMENT_CITY)) {
                                 nd.setCity(jsonReader.nextString());
-                            }else if(name.equals("state")) {
+                            }else if(name.equals(JSON_ELEMENT_STATE)) {
                                 nd.setState(jsonReader.nextString());
-                            }else if(name.equals("zip")) {
+                            }else if(name.equals(JSON_ELEMENT_ZIP)) {
                                 nd.setZip(String.valueOf(jsonReader.nextInt()));
                             }else
                                 jsonReader.skipValue();
@@ -391,24 +406,6 @@ public class OpenJsonUtils {
         } finally {
         }
 
-
-        /*
-        try {
-            StringBuilder result = new StringBuilder();
-            Scanner sc = new Scanner(fileName);
-            while(sc.hasNextLine()){
-                result.append(sc.nextLine());
-            }
-            sc.close();
-            nameDataList = getNameDataFromJson(result.toString());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
-
-
         return nameDataList;
     }
 
@@ -420,19 +417,19 @@ public class OpenJsonUtils {
         try {
             JSONObject jsonNameData = new JSONObject(nameJson);
             if(jsonNameData != null) {
-                if(jsonNameData.has("name")) {
-                    if(jsonNameData.get("name") instanceof JSONArray) {
-                        JSONArray arrayResults = jsonNameData.getJSONArray("name");
+                if(jsonNameData.has(JSON_ELEMENT_NAME)) {
+                    if(jsonNameData.get(JSON_ELEMENT_NAME) instanceof JSONArray) {
+                        JSONArray arrayResults = jsonNameData.getJSONArray(JSON_ELEMENT_NAME);
                         if(arrayResults != null && arrayResults.length() > 0) {
                             for(int i = 0; i < arrayResults.length(); i++) {
                                 if(arrayResults.get(i) instanceof JSONObject) {
                                     JSONObject jsonObject = (JSONObject) arrayResults.get(i);
-                                    if(jsonObject.has("id") && jsonObject.has("zip") &&
-                                            jsonObject.has("name") && jsonObject.has("state") &&
-                                            jsonObject.has("city")) {
-                                        NameData nameData = new NameData(jsonObject.getInt("id"), jsonObject.getString("name"),
-                                                jsonObject.getString("state"), jsonObject.getString("city"),
-                                                String.valueOf(jsonObject.getInt("zip")),"");
+                                    if(jsonObject.has(JSON_ELEMENT_ID) && jsonObject.has(JSON_ELEMENT_ZIP) &&
+                                            jsonObject.has(JSON_ELEMENT_NAME) && jsonObject.has(JSON_ELEMENT_STATE) &&
+                                            jsonObject.has(JSON_ELEMENT_CITY)) {
+                                        NameData nameData = new NameData(jsonObject.getInt(JSON_ELEMENT_ID), jsonObject.getString(JSON_ELEMENT_NAME),
+                                                jsonObject.getString(JSON_ELEMENT_STATE), jsonObject.getString(JSON_ELEMENT_CITY),
+                                                String.valueOf(jsonObject.getInt(JSON_ELEMENT_ZIP)),"");
                                         parsedNameData.add(nameData);
                                     }
                                 }
@@ -483,7 +480,7 @@ public class OpenJsonUtils {
                                 if(arrayResults.get(i) instanceof JSONObject) {
                                     JSONObject jsonObject = (JSONObject) arrayResults.get(i);
 
-                                    if(jsonObject.has("id") && jsonObject.has("school.name") &&
+                                    if(jsonObject.has(JSON_ELEMENT_ID) && jsonObject.has("school.name") &&
                                             jsonObject.has("school.state") && jsonObject.has("school.zip") && jsonObject.has("school.city") &&
                                             jsonObject.has("location.lat") && jsonObject.has("location.lon") && jsonObject.has("school.school_url") &&
                                             jsonObject.has("2014.admissions.sat_scores.25th_percentile.critical_reading") &&
@@ -501,7 +498,7 @@ public class OpenJsonUtils {
                                             ) {
 
                                         try {
-                                            id = jsonObject.getInt("id");
+                                            id = jsonObject.getInt(JSON_ELEMENT_ID);
                                         }catch(Exception e) {
                                             id = 0;
                                         }
@@ -646,12 +643,12 @@ public class OpenJsonUtils {
         try {
             JSONObject jsonData = new JSONObject(json);
             if(jsonData != null) {
-                if(jsonData.has("result")) {
-                    if(jsonData.get("result") instanceof JSONObject) {
-                        JSONObject objectResult = jsonData.getJSONObject("result");
+                if(jsonData.has(JSON_ELEMENT_RESULT)) {
+                    if(jsonData.get(JSON_ELEMENT_RESULT) instanceof JSONObject) {
+                        JSONObject objectResult = jsonData.getJSONObject(JSON_ELEMENT_RESULT);
                         if(objectResult != null) {
-                            if(objectResult.has("img")) {
-                                imageLink = objectResult.getString("img");
+                            if(objectResult.has(JSON_ELEMENT_IMAGE)) {
+                                imageLink = objectResult.getString(JSON_ELEMENT_IMAGE);
                             }
                         }
                     }

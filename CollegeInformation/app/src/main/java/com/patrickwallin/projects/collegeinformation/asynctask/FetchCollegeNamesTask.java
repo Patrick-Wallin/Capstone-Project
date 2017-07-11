@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
+import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.adapter.NamesAdapter;
 import com.patrickwallin.projects.collegeinformation.data.NameContract;
 import com.patrickwallin.projects.collegeinformation.data.NameData;
@@ -49,7 +50,7 @@ public class FetchCollegeNamesTask extends AsyncTask<Void, Void, List<NameData>>
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        listener.returnString("Loading data... Please wait.");
+        listener.returnString(mContext.getString(R.string.loadingandwait));
     }
 
     @Override
@@ -57,7 +58,6 @@ public class FetchCollegeNamesTask extends AsyncTask<Void, Void, List<NameData>>
         if(nameDatas != null) {
             mNamesAdapter.setNameData(nameDatas);
         }
-        listener.returnString("Finished!");
-        //listener.closeScreen();
+        listener.closeScreen();
     }
 }

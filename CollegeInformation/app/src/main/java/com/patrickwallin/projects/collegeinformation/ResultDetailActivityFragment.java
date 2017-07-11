@@ -6,12 +6,9 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -37,7 +34,6 @@ import java.text.NumberFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 /**
  * Created by piwal on 7/1/2017.
@@ -120,20 +116,10 @@ public class ResultDetailActivityFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       // if(!getResources().getBoolean(R.bool.is_this_tablet)){
-         //   getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //}
-
-
         Bundle bundleResult = getArguments();
         if(bundleResult != null) {
             mFavoriteCollegeData = Parcels.unwrap(bundleResult.getParcelable("resultdetailinfo"));
         }
-
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-         //  ActivityCompat.postponeEnterTransition();
-        //}
-
 
     }
 
@@ -146,20 +132,6 @@ public class ResultDetailActivityFragment extends Fragment {
 
         DecimalFormat format = new DecimalFormat("0.00");
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
-
-        /*
-        final ViewTreeObserver observer = rootView.getViewTreeObserver();
-        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            public boolean onPreDraw() {
-                observer.removeOnPreDrawListener(this);
-                getActivity().startPostponedEnterTransition();
-                return true;
-            }
-        });
-        */
-
-        //int color = Color.parseColor("#ffffff");
-        //mLikesImageView.setColorFilter(color);
 
         if(mFavoriteCollegeData != null) {
             if (mFavoriteCollegeData.getImageLink() != null && !mFavoriteCollegeData.getImageLink().trim().isEmpty()) {
@@ -201,7 +173,7 @@ public class ResultDetailActivityFragment extends Fragment {
             String sqlWhere = FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_ID + " = " + String.valueOf(mFavoriteCollegeData.getId());
             Cursor cursor = mContext.getContentResolver().query(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,null,sqlWhere,null,null);
             if(cursor != null && cursor.moveToFirst()) {
-                mLikesImageView.setTag("yes");
+                mLikesImageView.setTag(getString(R.string.favorite_college));
                 mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_red_24dp));
             }else {
                 mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_black_24dp));
@@ -212,26 +184,20 @@ public class ResultDetailActivityFragment extends Fragment {
 
             mLikesImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    //if(mLikesImageView.getTag().toString().trim().isEmpty())
-                    if(mLikesImageView.getTag().toString().trim().equalsIgnoreCase(mContext.getString(R.string.not_favorite_college))) {
-                        mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_red_24dp));
-                        mLikesImageView.setTag(mContext.getString(R.string.favorite_college));
-                        // need to add it to table!
-                        ContentValues cv = mFavoriteCollegeData.getFavoriteCollegeContentValues();
-                        mContext.getContentResolver().insert(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,cv);
+                public void onClick(View v) {//if(mLikesImageView.getTag().toString().trim().isEmpty())
+                if(mLikesImageView.getTag().toString().trim().equalsIgnoreCase(mContext.getString(R.string.not_favorite_college))) {
+                    mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_red_24dp));
+                    mLikesImageView.setTag(mContext.getString(R.string.favorite_college));
+                    ContentValues cv = mFavoriteCollegeData.getFavoriteCollegeContentValues();
+                    mContext.getContentResolver().insert(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,cv);
 
-                    }else {
-                        mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_black_24dp));
-                        mLikesImageView.setTag(mContext.getString(R.string.not_favorite_college));
-                        String sqlWhereDelete = FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_ID + " = " + String.valueOf(mFavoriteCollegeData.getId());
-                        mContext.getContentResolver().delete(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,sqlWhereDelete,null);
-                        // remove it from table!
-                    }
-                    refreshWidget();
-                        //mLikesImageView.getColorFilter()
-                    //int color = Color.parseColor("#ff0000");
-                    //mLikesImageView.setColorFilter(color);
+                }else {
+                    mLikesImageView.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_black_24dp));
+                    mLikesImageView.setTag(mContext.getString(R.string.not_favorite_college));
+                    String sqlWhereDelete = FavoriteCollegeContract.FavoriteCollegeEntry.COLUMN_FAVORITE_ID + " = " + String.valueOf(mFavoriteCollegeData.getId());
+                    mContext.getContentResolver().delete(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,sqlWhereDelete,null);
+                }
+                refreshWidget();
                 }
             });
 
@@ -258,9 +224,9 @@ public class ResultDetailActivityFragment extends Fragment {
                 public void onClick(View v) {
                     String location = v.getTag().toString();
 
-                    Uri gmmIntentUri = Uri.parse("geo:" + location);
+                    Uri gmmIntentUri = Uri.parse(getString(R.string.geo) + location);
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
+                    mapIntent.setPackage(getString(R.string.google_maps_url_address));
                     try {
                         startActivity(mapIntent);
                     } catch (ActivityNotFoundException ex) {
@@ -280,8 +246,7 @@ public class ResultDetailActivityFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            //mAppBarLayout.setExpanded(false,true);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {//mAppBarLayout.setExpanded(false,true);
         }
     }
 

@@ -3,8 +3,6 @@ package com.patrickwallin.projects.collegeinformation.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import java.util.jar.Attributes;
-
 /**
  * Created by piwal on 6/25/2017.
  */
@@ -27,27 +25,12 @@ public class NameContract {
         public static final String COLUMN_NAME_ZIP = "name_zip";
         public static final String COLUMN_NAME_IMAGE_LINK = "name_image_link";
 
-        /*
-        public static final String COLUMN_NAME_LAT = "name_latitude";
-        public static final String COLUMN_NAME_LON = "name_longitude";
-        public static final String COLUMN_NAME_REGION_ID = "name_region_id";
-        public static final String COLUMN_NAME_DEGREES_AWARDED_HIGHEST = "name_degrees_awarded_highest";
-        public static final String COLUMN_NAME_STATE_ID = "name_state_id";
-        */
-
         public static final int COL_NAME_ID = 1;
         public static final int COL_NAME_NAME = 2;
         public static final int COL_NAME_STATE = 3;
         public static final int COL_NAME_CITY = 4;
         public static final int COL_NAME_ZIP = 5;
         public static final int COL_NAME_IMAGE_LINK = 6;
-        /*
-        public static final int COL_NAME_LAT = 6;
-        public static final int COL_NAME_LON = 7;
-        public static final int COL_NAME_REGION_ID = 8;
-        public static final int COL_NAME_DEGREES_AWARDED_HIGHEST = 9;
-        public static final int COL_NAME_STATE_ID = 10;
-        */
     }
 
     public static String getCreateTableStatement() {

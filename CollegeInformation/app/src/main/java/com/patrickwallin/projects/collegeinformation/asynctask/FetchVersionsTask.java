@@ -3,40 +3,23 @@ package com.patrickwallin.projects.collegeinformation.asynctask;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.StorageReference;
 import com.patrickwallin.projects.collegeinformation.BuildConfig;
 import com.patrickwallin.projects.collegeinformation.MainSearchActivity;
-import com.patrickwallin.projects.collegeinformation.ResultDetailActivity;
-import com.patrickwallin.projects.collegeinformation.ResultsActivity;
+import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.data.DegreeContract;
-import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeContract;
 import com.patrickwallin.projects.collegeinformation.data.NameContract;
 import com.patrickwallin.projects.collegeinformation.data.ProgramContract;
 import com.patrickwallin.projects.collegeinformation.data.RegionsContract;
 import com.patrickwallin.projects.collegeinformation.data.StatesContract;
 import com.patrickwallin.projects.collegeinformation.data.VersionContract;
 import com.patrickwallin.projects.collegeinformation.data.VersionData;
-import com.patrickwallin.projects.collegeinformation.firebasestorage.FirebaseStorageProcessor;
 import com.patrickwallin.projects.collegeinformation.utilities.DebugInfo;
-import com.patrickwallin.projects.collegeinformation.utilities.NetworkUtils;
-import com.patrickwallin.projects.collegeinformation.utilities.OpenJsonUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import timber.log.Timber;
 
@@ -46,15 +29,13 @@ import timber.log.Timber;
 
 public class FetchVersionsTask extends AsyncTask<Void, Void, List<VersionData>> {
     Context mContext;
-    TextView mSplashLoadingTextView;
     List<VersionData> mVersionDataListFromFirebase;
 
     private List<String> VERSION_LIST_TABLE = new ArrayList<String>();
     private List<Integer> VERSION_LIST_ID = new ArrayList<Integer>();
 
-    public FetchVersionsTask(Context context, TextView splashLoadingTextView, List<VersionData> versionDataList) {
+    public FetchVersionsTask(Context context, List<VersionData> versionDataList) {
         mContext = context;
-        mSplashLoadingTextView = splashLoadingTextView;
         mVersionDataListFromFirebase = versionDataList;
 
         VERSION_LIST_TABLE.add(DegreeContract.PATH_DEGREES);
@@ -107,21 +88,13 @@ public class FetchVersionsTask extends AsyncTask<Void, Void, List<VersionData>> 
 
 
         if(mVersionDataListFromFirebase != null && !mVersionDataListFromFirebase.isEmpty() && versionDatas != null && !versionDatas.isEmpty()) {
-            // compare version and if it is difference, then download other json!
-
-            //mSplashLoadingTextView.setText("Loading 1 of " + String.valueOf(versionDatas.size()) + " data");
-
             for(int i = 0; i < versionDatas.size(); i++) {
                 for(int x = 0; x < mVersionDataListFromFirebase.size(); x++) {
-                    //mSplashLoadingTextView.setText("Loading " + String.valueOf(x+1) + " of " + String.valueOf(versionDatas.size()) + " data.");
                     if(versionDatas.get(i).getTableName().equalsIgnoreCase(mVersionDataListFromFirebase.get(x).getTableName())) {
                         if(versionDatas.get(i).getVersionNumber() != mVersionDataListFromFirebase.get(x).getVersionNumber()) {
-                            // need to update it!
                             ContentValues cv = versionDatas.get(i).getVersionContentValues();
                             cv.put(VersionContract.VersionEntry.COLUMN_VERSION_NUMBER, mVersionDataListFromFirebase.get(x).getVersionNumber());
                             mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, cv, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + versionDatas.get(i).getId(),null);
-                            //new FetchRecordIntoTableTask(mContext,versionDatas.get(i).getTableName(),versionDatas.get(i).getVersionNumber()).execute();
-                            //new FirebaseStorageProcessor(mContext,versionDatas.get(i).getTableName(),mVersionDataList.get(x).getVersionNumber(),mSplashLoadingTextView).execute();
                         }
                         break;
                     }
@@ -130,61 +103,9 @@ public class FetchVersionsTask extends AsyncTask<Void, Void, List<VersionData>> 
 
         }
 
-
-
-/*
-        try {
-            final File jsonFile = File.createTempFile("jsonFromStorage","json");
-            NetworkUtils networkUtils = new NetworkUtils(mContext);
-            StorageReference storageReference = networkUtils.getStorageReference(VersionContract.VersionEntry.TABLE_NAME);
-            com.google.firebase.storage.FileDownloadTask taskDownloadFile = storageReference.getFile(jsonFile);
-            Tasks.await(taskDownloadFile);
-
-            taskDownloadFile.addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    List<VersionData> versionDataList  = OpenJsonUtils.getVersionDataFromJson(jsonFile);
-                    if(versionDataList != null && !versionDataList.isEmpty() && versionDatas != null && !versionDatas.isEmpty()) {
-                        // compare version and if it is difference, then download other json!
-
-                        mSplashLoadingTextView.setText("Loading 1 of " + String.valueOf(versionDatas.size()) + " data");
-
-                        for(int i = 0; i < versionDatas.size(); i++) {
-                            for(int x = 0; x < versionDataList.size(); x++) {
-                                mSplashLoadingTextView.setText("Loading " + String.valueOf(x+1) + " of " + String.valueOf(versionDatas.size()) + " data.");
-                                if(versionDatas.get(i).getTableName().equalsIgnoreCase(versionDataList.get(x).getTableName())) {
-                                    if(versionDatas.get(i).getVersionNumber() != versionDataList.get(x).getVersionNumber()) {
-                                        //new FetchRecordIntoTableTask(mContext,versionDatas.get(i).getTableName(),versionDatas.get(i).getVersionNumber()).execute();
-                                        new FirebaseStorageProcessor(mContext,versionDatas.get(i).getTableName(),versionDataList.get(x).getVersionNumber(),mSplashLoadingTextView).execute();
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(mContext,"Fail",Toast.LENGTH_LONG);
-                }
-            });
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-*/
-
         if(BuildConfig.DEBUG) {
             di.end();
-            Timber.i("Time length for getting version data: %s", di.getMinAndSecElaspedTime());
+            Timber.i(mContext.getString(R.string.debugandtracktime), di.getMinAndSecElaspedTime());
         }
 
         return lVersionDataResult;
@@ -199,51 +120,7 @@ public class FetchVersionsTask extends AsyncTask<Void, Void, List<VersionData>> 
     protected void onPostExecute(final List<VersionData> versionDatas) {
         super.onPostExecute(versionDatas);
 
-        // check if there is any favorite record first!
         Intent intentSearchActivity = new Intent(mContext, MainSearchActivity.class);
         mContext.startActivity(intentSearchActivity);
-
-
-        /*
-        try {
-            final File jsonFile = File.createTempFile("jsonFromStorage","json");
-            NetworkUtils networkUtils = new NetworkUtils(mContext);
-            StorageReference storageReference = networkUtils.getStorageReference(VersionContract.VersionEntry.TABLE_NAME);
-            storageReference.getFile(jsonFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    List<VersionData> versionDataList  = OpenJsonUtils.getVersionDataFromJson(jsonFile);
-                    if(versionDataList != null && !versionDataList.isEmpty() && versionDatas != null && !versionDatas.isEmpty()) {
-                        // compare version and if it is difference, then download other json!
-
-                        mSplashLoadingTextView.setText("Loading 1 of " + String.valueOf(versionDatas.size()) + " data");
-
-                        for(int i = 0; i < versionDatas.size(); i++) {
-                            for(int x = 0; x < versionDataList.size(); x++) {
-                                mSplashLoadingTextView.setText("Loading " + String.valueOf(x+1) + " of " + String.valueOf(versionDatas.size()) + " data.");
-                                if(versionDatas.get(i).getTableName().equalsIgnoreCase(versionDataList.get(x).getTableName())) {
-                                    if(versionDatas.get(i).getVersionNumber() != versionDataList.get(x).getVersionNumber()) {
-                                        //new FetchRecordIntoTableTask(mContext,versionDatas.get(i).getTableName(),versionDatas.get(i).getVersionNumber()).execute();
-                                        new FirebaseStorageProcessor(mContext,versionDatas.get(i).getTableName(),versionDataList.get(x).getVersionNumber(),mSplashLoadingTextView).execute();
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(mContext,"Fail",Toast.LENGTH_LONG);
-                }
-            });
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
-
     }
 }

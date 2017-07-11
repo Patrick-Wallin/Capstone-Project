@@ -47,9 +47,11 @@
             android:theme="@style/Theme.Show.ActionBar" />
         <activity
             android:name=".SearchLocationsStatesActivity"
+            android:theme="@style/Theme.Show.ActionBar"
             android:parentActivityName=".SearchLocationsActivity" />
         <activity
             android:name=".SearchLocationsRegionsActivity"
+            android:theme="@style/Theme.Show.ActionBar"
             android:parentActivityName=".SearchLocationsActivity" />
         <activity
             android:name=".SearchNamesActivity"
@@ -73,7 +75,6 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/college_widget_info" />
@@ -86,5 +87,4 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
     </application>
-
 </manifest>

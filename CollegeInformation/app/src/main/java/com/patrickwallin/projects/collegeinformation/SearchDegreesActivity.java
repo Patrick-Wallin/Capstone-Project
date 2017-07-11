@@ -1,13 +1,8 @@
 package com.patrickwallin.projects.collegeinformation;
 
-import android.content.pm.ActivityInfo;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-
-import com.patrickwallin.projects.collegeinformation.utilities.AsyncListener;
 
 public class SearchDegreesActivity extends AppCompatActivity implements OnGoBackChangeListener {
     public SearchDegreesActivity() {}
@@ -20,10 +15,6 @@ public class SearchDegreesActivity extends AppCompatActivity implements OnGoBack
         if(getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
-        //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //}
-
         if(savedInstanceState == null) {
             SearchDegreesActivityFragment searchDegreesActivityFragment = new SearchDegreesActivityFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.activity_search_degrees_page_container,searchDegreesActivityFragment).commit();
@@ -33,10 +24,7 @@ public class SearchDegreesActivity extends AppCompatActivity implements OnGoBack
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
             case android.R.id.home:
-
-                //NavUtils.navigateUpFromSameTask(this);
                 finish();
                 return true;
         }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
+import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.adapter.ProgramsAdapter;
 import com.patrickwallin.projects.collegeinformation.data.ProgramContract;
 import com.patrickwallin.projects.collegeinformation.data.ProgramData;
@@ -49,14 +50,13 @@ public class FetchProgramsTask extends AsyncTask<Void, Void, List<ProgramData>> 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        listener.returnString("Loading data... Please wait.");
+        listener.returnString(mContext.getString(R.string.loadingandwait));
     }
 
     @Override
     protected void onPostExecute(List<ProgramData> programDatas) {
         if(programDatas != null) {
             mProgramsAdapter.setProgramData(programDatas);
-
         }
         listener.closeScreen();
     }

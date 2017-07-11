@@ -4,12 +4,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
+import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.adapter.RegionsAdapter;
-import com.patrickwallin.projects.collegeinformation.adapter.StatesAdapter;
 import com.patrickwallin.projects.collegeinformation.data.RegionData;
 import com.patrickwallin.projects.collegeinformation.data.RegionsContract;
-import com.patrickwallin.projects.collegeinformation.data.StateData;
-import com.patrickwallin.projects.collegeinformation.data.StatesContract;
+import com.patrickwallin.projects.collegeinformation.utilities.AsyncListener;
 import com.patrickwallin.projects.collegeinformation.utilities.CursorAndDataConverter;
 
 import java.util.List;
@@ -21,10 +20,12 @@ import java.util.List;
 public class FetchRegionsTask extends AsyncTask<Void, Void, List<RegionData>> {
     private Context mContext;
     private RegionsAdapter mRegionsAdapter;
+    private AsyncListener listener;
 
-    public FetchRegionsTask(Context context, RegionsAdapter regionsAdapter) {
+    public FetchRegionsTask(Context context, RegionsAdapter regionsAdapter, AsyncListener listener) {
         mContext = context;
         mRegionsAdapter = regionsAdapter;
+        this.listener = listener;
     }
 
     @Override
@@ -49,6 +50,7 @@ public class FetchRegionsTask extends AsyncTask<Void, Void, List<RegionData>> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        listener.returnString(mContext.getString(R.string.loadingandwait));
     }
 
     @Override
@@ -56,5 +58,6 @@ public class FetchRegionsTask extends AsyncTask<Void, Void, List<RegionData>> {
         if(regionDatas != null) {
             mRegionsAdapter.setRegionData(regionDatas);
         }
+        listener.closeScreen();
     }
 }

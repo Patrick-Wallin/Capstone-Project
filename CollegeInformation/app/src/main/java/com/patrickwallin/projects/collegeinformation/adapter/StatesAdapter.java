@@ -3,11 +3,9 @@ package com.patrickwallin.projects.collegeinformation.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchSearchQueryInputTask;
@@ -26,7 +24,6 @@ import java.util.List;
 public class StatesAdapter extends RecyclerView.Adapter<SearchLocationStatesViewHolder>  {
     private List<StateData> mStatesData;
     private int mSelectedId = -1;
-    private int mSelectedPosition = 0;
     private Context mContext;
 
     public StatesAdapter(List<StateData> statesData, Context context) {
@@ -91,17 +88,6 @@ public class StatesAdapter extends RecyclerView.Adapter<SearchLocationStatesView
                     holder.itemView.performClick();
                 }
             });
-            /*
-            holder.mSelectedLocationCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    //holder.mSelectedLocationCheckBox.setChecked(!stateData.getSelected());
-                    //stateData.setSelected(isChecked);
-                    //mSelectedId = stateData.getId();
-                }
-            });
-            */
-
         }
     }
 

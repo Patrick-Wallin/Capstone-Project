@@ -2,7 +2,6 @@ package com.patrickwallin.projects.collegeinformation;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,33 +9,26 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ActionProvider;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageReference;
 import com.patrickwallin.projects.collegeinformation.adapter.NamesAdapter;
-import com.patrickwallin.projects.collegeinformation.adapter.ProgramsAdapter;
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchCollegeNamesTask;
-import com.patrickwallin.projects.collegeinformation.asynctask.FetchProgramsTask;
 import com.patrickwallin.projects.collegeinformation.asynctask.InsertNamesTask;
 import com.patrickwallin.projects.collegeinformation.data.NameContract;
 import com.patrickwallin.projects.collegeinformation.data.NameData;
-import com.patrickwallin.projects.collegeinformation.data.ProgramData;
 import com.patrickwallin.projects.collegeinformation.data.VersionContract;
 import com.patrickwallin.projects.collegeinformation.data.VersionData;
 import com.patrickwallin.projects.collegeinformation.utilities.AsyncListener;
@@ -79,11 +71,6 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-       // if(!getResources().getBoolean(R.bool.is_this_tablet)){
-        //    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-       // }
-
     }
 
     @Nullable
@@ -142,12 +129,8 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-                        //mNamesAdapter.setNameData(mNameData);
-                        Timber.i("tap on up button " + mDisplayedItemPosition);
                         LinearLayoutManager llm = (LinearLayoutManager) names_recycler_view.getLayoutManager();
                         llm.scrollToPosition(mNamesAdapter.getSelectedPosition());
-                        //llm.scrollToPositionWithOffset(mDisplayedItemPosition , mNameData.size());
-                        //names_recycler_view.scrollToPosition(10);
                         return true; // Return true to collapse action view
                     }
 
@@ -185,7 +168,7 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                 returnString("Loading data... Please wait.");
-                                Snackbar.make(getView().findViewById(R.id.root_search_names), "Loading data...", Snackbar.LENGTH_INDEFINITE).show();
+                                Snackbar.make(getView().findViewById(R.id.root_search_names), getString(R.string.loading_data), Snackbar.LENGTH_INDEFINITE).show();
                                 List<NameData> nameDataList = OpenJsonUtils.getNameDataFromJson(jsonFile);
                                 nameDataList.add(new NameData(-1, "Any", "", "", "", ""));
 
@@ -194,17 +177,6 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
 
                                 new InsertNamesTask(mContext, nameDataList, mNamesAdapter).execute();
 
-                            /*
-                            if (nameDataList != null && !nameDataList.isEmpty()) {
-                                String message = "Loading data... 1 of " + String.valueOf(nameDataList.size());
-                                returnString(message);
-                                for (int i = 0; i < nameDataList.size(); i++) {
-                                    message = "Loading data... " + String.valueOf(i + 1) + " of " + String.valueOf(nameDataList.size());
-                                    returnString(message);
-                                    //mContext.getContentResolver().insert(NameContract.NameEntry.CONTENT_URI, nameDataList.get(i).getNamesContentValues());
-                                }
-                            }
-                            */
                                 VersionData versionData = new VersionData(VersionContract.VERSION_ID_NAMES, NameContract.PATH_NAMES, currentVersion, currentVersion);
                                 ContentValues contentValues = versionData.getVersionContentValues();
                                 mContext.getContentResolver().update(VersionContract.VersionEntry.CONTENT_URI, contentValues, VersionContract.VersionEntry.COLUMN_VERSION_ID + " = " + VersionContract.VERSION_ID_NAMES, null);
@@ -290,21 +262,22 @@ public class SearchNamesActivityFragment extends Fragment implements SearchView.
 
     @Override
     public void returnString(String message) {
-        //if(mSnackbar == null)
-        View view = getView().findViewById(R.id.root_search_names);
-            Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE).show();
-        //mSnackbar.show();
-       // else
-       //     mSnackbar.setText(message);
-       // if(!mSnackbar.isShown())
-        //    mSnackbar.show();
+        // spoke with a person over forum about this...  He could see snackbar showign up on his device.  But not here on my emulator.
+        // We tried to solve it but he said it worked fine on his emulator and device and told me to do not worry about that.
+        if(mSnackbar == null)
+            mSnackbar = Snackbar.make(getView().findViewById(R.id.root_search_names), message, Snackbar.LENGTH_INDEFINITE);
+        else
+            mSnackbar.setText(message);
+        if(!mSnackbar.isShown())
+            mSnackbar.show();
+
     }
 
     @Override
     public void closeScreen() {
-        //if(mSnackbar != null && mSnackbar.isShown()) {
-         //   mSnackbar.dismiss();
-        //}
+        if(mSnackbar != null && mSnackbar.isShown()) {
+            mSnackbar.dismiss();
+        }
     }
 
 

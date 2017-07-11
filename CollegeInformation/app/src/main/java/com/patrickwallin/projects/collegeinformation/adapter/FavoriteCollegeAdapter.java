@@ -2,11 +2,9 @@ package com.patrickwallin.projects.collegeinformation.adapter;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,22 +15,17 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.patrickwallin.projects.collegeinformation.OnResultOptionSelectionChangeListener;
 import com.patrickwallin.projects.collegeinformation.R;
-import com.patrickwallin.projects.collegeinformation.ResultDetailActivity;
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeData;
 import com.patrickwallin.projects.collegeinformation.data.NameContract;
 import com.patrickwallin.projects.collegeinformation.data.NameData;
-import com.patrickwallin.projects.collegeinformation.data.ProgramData;
 import com.patrickwallin.projects.collegeinformation.utilities.NetworkUtils;
 import com.patrickwallin.projects.collegeinformation.utilities.OpenJsonUtils;
 import com.patrickwallin.projects.collegeinformation.viewholder.FavoriteCollegeViewHolder;
-import com.patrickwallin.projects.collegeinformation.viewholder.SearchNamesViewHolder;
-import com.patrickwallin.projects.collegeinformation.viewholder.SearchProgramsViewHolder;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
 import java.util.List;
-import java.util.jar.Attributes;
 
 /**
  * Created by piwal on 6/22/2017.
@@ -57,8 +50,6 @@ public class FavoriteCollegeAdapter extends RecyclerView.Adapter<FavoriteCollege
             cv.put(NameContract.NameEntry.COLUMN_NAME_IMAGE_LINK,imageLink);
             mContext.getContentResolver().update(NameContract.NameEntry.CONTENT_URI,cv,sqlWhere,null);
         }
-
-
     }
 
     @Override
@@ -96,7 +87,7 @@ public class FavoriteCollegeAdapter extends RecyclerView.Adapter<FavoriteCollege
                     String urlString = networkUtils.buildSchoolQuery();
 
                     AndroidNetworking.get(urlString)
-                            .addPathParameter("unitid", String.valueOf(favoriteCollegeData.getId()))
+                            .addPathParameter(mContext.getString(R.string.unit_id_from_nearbycolleges), String.valueOf(favoriteCollegeData.getId()))
                             .setPriority(Priority.LOW)
                             .build()
                             .getAsString(new StringRequestListener() {
@@ -116,8 +107,6 @@ public class FavoriteCollegeAdapter extends RecyclerView.Adapter<FavoriteCollege
 
                                 @Override
                                 public void onError(ANError anError) {
-
-                                    // fail!  do nothing since it might not be existed!
                                 }
                             });
                 }else {
@@ -136,27 +125,11 @@ public class FavoriteCollegeAdapter extends RecyclerView.Adapter<FavoriteCollege
                 @Override
                 public void onClick(View v) {
                     Bundle bundleResult = new Bundle();
-                    bundleResult.putParcelable("resultdetailinfo", Parcels.wrap(favoriteCollegeData));
-
-                    //Intent intentResultDetailActivity = new Intent(mContext, ResultDetailActivity.class);
-                    //intentResultDetailActivity.putExtras(bundleResult);
-                    //mContext.startActivity(intentResultDetailActivity);
-
+                    bundleResult.putParcelable(mContext.getString(R.string.resultdetailinfo), Parcels.wrap(favoriteCollegeData));
                     OnResultOptionSelectionChangeListener listener = (OnResultOptionSelectionChangeListener) mContext;
                     listener.OnSelectionChanged(bundleResult,holder.mCollegeImageView);
                 }
             });
-            /*
-            holder.mSearchDegreeCardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notifyItemChanged(mSelectedPosition);
-                    mSelectedPosition = position;
-                    notifyItemChanged(mSelectedPosition);
-
-                }
-            });
-            */
         }
     }
 
@@ -168,9 +141,5 @@ public class FavoriteCollegeAdapter extends RecyclerView.Adapter<FavoriteCollege
     public void setFavoriteData(List<FavoriteCollegeData> favoriteData) {
         mFavoriteCollegeData = favoriteData;
         notifyDataSetChanged();
-    }
-
-    public List<FavoriteCollegeData> getFavoriteCollegeData() {
-        return mFavoriteCollegeData;
     }
 }

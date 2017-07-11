@@ -3,7 +3,6 @@ package com.patrickwallin.projects.collegeinformation.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.NetworkInfo;
 
 /**
  * Created by piwal on 6/7/2017.
@@ -13,7 +12,6 @@ public class CollegeInfoDBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "collegeinfo.db";
     private static int DATABASE_VERSION = 1;
 
-    //public CollegeInfoDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
     public CollegeInfoDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }

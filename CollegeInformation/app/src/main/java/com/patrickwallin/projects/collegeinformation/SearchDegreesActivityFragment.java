@@ -2,15 +2,11 @@ package com.patrickwallin.projects.collegeinformation;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,20 +16,15 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageReference;
 import com.patrickwallin.projects.collegeinformation.adapter.DegreesAdapter;
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchDegreesTask;
-import com.patrickwallin.projects.collegeinformation.asynctask.FetchVersionsTask;
 import com.patrickwallin.projects.collegeinformation.data.DegreeContract;
 import com.patrickwallin.projects.collegeinformation.data.DegreesData;
-import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputContract;
-import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputData;
 import com.patrickwallin.projects.collegeinformation.data.VersionContract;
 import com.patrickwallin.projects.collegeinformation.data.VersionData;
 import com.patrickwallin.projects.collegeinformation.utilities.AsyncListener;
-import com.patrickwallin.projects.collegeinformation.utilities.CursorAndDataConverter;
 import com.patrickwallin.projects.collegeinformation.utilities.NetworkUtils;
 import com.patrickwallin.projects.collegeinformation.utilities.OpenJsonUtils;
 
@@ -41,7 +32,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,11 +61,6 @@ public class SearchDegreesActivityFragment extends Fragment implements AsyncList
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
-        //    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //}
-
     }
 
     @Nullable
@@ -93,8 +78,6 @@ public class SearchDegreesActivityFragment extends Fragment implements AsyncList
         setUpData();
         setUpAdapter();
 
-
-        Log.i("oncreateview","oncreateview-searchdegreesactivityfragment");
         return rootView;
     }
 
@@ -107,8 +90,6 @@ public class SearchDegreesActivityFragment extends Fragment implements AsyncList
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("test","onresume-searchdegreesactivityfragment");
-
     }
 
     private void setUpData(){
@@ -137,10 +118,10 @@ public class SearchDegreesActivityFragment extends Fragment implements AsyncList
                                 List<DegreesData> degreesDataList = OpenJsonUtils.getDegreeDataFromJson(jsonFile);
                                 mContext.getContentResolver().delete(DegreeContract.DegreeEntry.CONTENT_URI, null, null);
                                 if (degreesDataList != null && !degreesDataList.isEmpty()) {
-                                    String message = "Loading data... 1 of " + String.valueOf(degreesDataList.size());
+                                    String message = getString(R.string.loading_data) + getString(R.string.one_of) + String.valueOf(degreesDataList.size());
                                     returnString(message);
                                     for (int i = 0; i < degreesDataList.size(); i++) {
-                                        message = "Loading data... " + String.valueOf(i + 1) + " of " + String.valueOf(degreesDataList.size());
+                                        message = getString(R.string.loading_data) + " " + String.valueOf(i + 1) + getString(R.string.of) + String.valueOf(degreesDataList.size());
                                         returnString(message);
                                         mContext.getContentResolver().insert(DegreeContract.DegreeEntry.CONTENT_URI, degreesDataList.get(i).getDegreesContentValues());
                                     }

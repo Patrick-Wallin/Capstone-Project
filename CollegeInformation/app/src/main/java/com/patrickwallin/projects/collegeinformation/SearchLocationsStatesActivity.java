@@ -1,9 +1,8 @@
 package com.patrickwallin.projects.collegeinformation;
 
-import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 
 public class SearchLocationsStatesActivity extends AppCompatActivity {
@@ -13,11 +12,8 @@ public class SearchLocationsStatesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_locations_states);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
-        //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-       // }
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(savedInstanceState == null) {
             SearchLocationsStatesActivityFragment searchLocationsStatesActivityFragment = new SearchLocationsStatesActivityFragment();

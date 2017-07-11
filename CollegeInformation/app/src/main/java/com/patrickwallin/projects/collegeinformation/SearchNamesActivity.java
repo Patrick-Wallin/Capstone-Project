@@ -2,14 +2,11 @@ package com.patrickwallin.projects.collegeinformation;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchSearchQueryInputTask;
 import com.patrickwallin.projects.collegeinformation.data.NameContract;
@@ -33,10 +30,6 @@ public class SearchNamesActivity extends AppCompatActivity implements OnGoBackCh
         if(getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-       // if(!getResources().getBoolean(R.bool.is_this_tablet)){
-       //     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-       // }
-
         if(savedInstanceState == null) {
             SearchNamesActivityFragment searchNamesActivityFragment = new SearchNamesActivityFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.activity_search_names_page_container,searchNamesActivityFragment).commit();
@@ -46,7 +39,6 @@ public class SearchNamesActivity extends AppCompatActivity implements OnGoBackCh
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 boolean bFinish = false;
                 final String sqlWhere = SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_ID + " = " + FetchSearchQueryInputTask.SEARCH_QUERY_NAMES_ID;
@@ -70,15 +62,15 @@ public class SearchNamesActivity extends AppCompatActivity implements OnGoBackCh
 
                                 bFinish = true;
                                 new AlertDialog.Builder(this)
-                                        .setTitle("Are you sure to select " + nameOfCollege + "?")
-                                        .setMessage("If you cancel, it will be any name in search result.")
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        .setTitle(getString(R.string.question_sure_to_select) + nameOfCollege + getString(R.string.question_mark))
+                                        .setMessage(getString(R.string.info_message_cancel_name))
+                                        .setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
                                                 finish();
                                             }
-                                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 SearchQueryInputData updateSearchQueryInputData = searchQueryInputData;
@@ -97,8 +89,6 @@ public class SearchNamesActivity extends AppCompatActivity implements OnGoBackCh
                 }
                 if(cursor != null)
                     cursor.close();
-                //Toast.makeText(this,"Hey",Toast.LENGTH_LONG).show();
-                //NavUtils.navigateUpFromSameTask(this);
                 if(!bFinish)
                     finish();
                 return true;

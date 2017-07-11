@@ -1,11 +1,8 @@
 package com.patrickwallin.projects.collegeinformation.adapter;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.os.Build;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,12 +12,10 @@ import android.view.ViewGroup;
 
 import com.patrickwallin.projects.collegeinformation.R;
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchSearchQueryInputTask;
-import com.patrickwallin.projects.collegeinformation.data.DegreeContract;
 import com.patrickwallin.projects.collegeinformation.data.DegreesData;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputContract;
 import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputData;
 import com.patrickwallin.projects.collegeinformation.utilities.CursorAndDataConverter;
-import com.patrickwallin.projects.collegeinformation.utilities.NetworkUtils;
 import com.patrickwallin.projects.collegeinformation.viewholder.SearchDegreesViewHolder;
 
 import java.util.List;
@@ -33,7 +28,6 @@ public class DegreesAdapter extends RecyclerView.Adapter<SearchDegreesViewHolder
     private List<DegreesData> mDegreesData;
     private Context mContext;
     private int mSelectedPosition = 0;
-    private int mSelectedDegreeId = -1;
 
     public DegreesAdapter(List<DegreesData> degreesData, Context context) {
         mDegreesData = degreesData;
@@ -71,11 +65,7 @@ public class DegreesAdapter extends RecyclerView.Adapter<SearchDegreesViewHolder
                 public void onClick(View v) {
                     notifyItemChanged(mSelectedPosition);
                     mSelectedPosition = position;
-                    mSelectedDegreeId = degreesData.getId();
                     notifyItemChanged(mSelectedPosition);
-
-
-
                 }
             });
         }
@@ -89,7 +79,6 @@ public class DegreesAdapter extends RecyclerView.Adapter<SearchDegreesViewHolder
     public void setDegreeData(List<DegreesData> degreeData) {
         mDegreesData = degreeData;
 
-        // check default degree id!
         int selectedDegreeId = -1;
         int selectedPosition = 0;
         Cursor cursor = mContext.getContentResolver().query(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,null,
@@ -99,7 +88,6 @@ public class DegreesAdapter extends RecyclerView.Adapter<SearchDegreesViewHolder
             if(searchQueryInputDataList != null && searchQueryInputDataList.size() > 0) {
                 String value = searchQueryInputDataList.get(0).getValue().trim();
                 selectedDegreeId = Integer.valueOf((value.isEmpty() ? "0" : value));
-                Log.i("Position: ", String.valueOf(selectedDegreeId));
             }
         }
         if(cursor != null)

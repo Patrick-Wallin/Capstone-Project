@@ -2,7 +2,6 @@ package com.patrickwallin.projects.collegeinformation;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,7 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -29,8 +27,6 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageReference;
 import com.patrickwallin.projects.collegeinformation.adapter.ProgramsAdapter;
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchProgramsTask;
-import com.patrickwallin.projects.collegeinformation.data.DegreeContract;
-import com.patrickwallin.projects.collegeinformation.data.DegreesData;
 import com.patrickwallin.projects.collegeinformation.data.ProgramContract;
 import com.patrickwallin.projects.collegeinformation.data.ProgramData;
 import com.patrickwallin.projects.collegeinformation.data.VersionContract;
@@ -72,11 +68,6 @@ public class SearchProgramsActivityFragment extends Fragment implements SearchVi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
-       //     getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-       // }
-
     }
 
     @Nullable
@@ -121,10 +112,10 @@ public class SearchProgramsActivityFragment extends Fragment implements SearchVi
                                 List<ProgramData> programDataList = OpenJsonUtils.getProgramDataFromJson(jsonFile);
                                 mContext.getContentResolver().delete(ProgramContract.ProgramEntry.CONTENT_URI, null, null);
                                 if (programDataList != null && !programDataList.isEmpty()) {
-                                    String message = "Loading data... 1 of " + String.valueOf(programDataList.size());
+                                    String message =  getString(R.string.loading_data) + getString(R.string.one_of) + String.valueOf(programDataList.size());
                                     returnString(message);
                                     for (int i = 0; i < programDataList.size(); i++) {
-                                        message = "Loading data... " + String.valueOf(i + 1) + " of " + String.valueOf(programDataList.size());
+                                        message = getString(R.string.loading_data) + String.valueOf(i + 1) + getString(R.string.of) + String.valueOf(programDataList.size());
                                         returnString(message);
                                         mContext.getContentResolver().insert(ProgramContract.ProgramEntry.CONTENT_URI, programDataList.get(i).getProgramContentValues());
                                     }
@@ -223,13 +214,10 @@ public class SearchProgramsActivityFragment extends Fragment implements SearchVi
 
         query = query.toLowerCase();
 
-        Log.i(SearchProgramsActivityFragment.class.getSimpleName(),"Query: " + query);
-
         for (ProgramData model : data) {
             final String text = model.getTitle().toLowerCase();
             Log.i(SearchProgramsActivityFragment.class.getSimpleName(),text);
             if (text.contains(query)) {
-                Log.i(SearchProgramsActivityFragment.class.getSimpleName(),"make it");
                 filteredModelList.add(model);
             }
         }

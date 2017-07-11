@@ -3,8 +3,6 @@ package com.patrickwallin.projects.collegeinformation.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import java.util.jar.Attributes;
-
 /**
  * Created by piwal on 6/25/2017.
  */
@@ -42,14 +40,6 @@ public class FavoriteCollegeContract {
         public static final String COLUMN_FAVORITE_ACT_25 = "favorite_act_25";
         public static final String COLUMN_FAVORITE_ACT_75 = "favorite_act_75";
 
-        /*
-        public static final String COLUMN_NAME_LAT = "name_latitude";
-        public static final String COLUMN_NAME_LON = "name_longitude";
-        public static final String COLUMN_NAME_REGION_ID = "name_region_id";
-        public static final String COLUMN_NAME_DEGREES_AWARDED_HIGHEST = "name_degrees_awarded_highest";
-        public static final String COLUMN_NAME_STATE_ID = "name_state_id";
-        */
-
         public static final int COL_FAVORITE_ID = 1;
         public static final int COL_FAVORITE_NAME = 2;
         public static final int COL_FAVORITE_STATE = 3;
@@ -71,13 +61,6 @@ public class FavoriteCollegeContract {
         public static final int COL_FAVORITE_SAT_WRITING_75 = 19;
         public static final int COL_FAVORITE_ACT_25 = 20;
         public static final int COL_FAVORITE_ACT_75 = 21;
-        /*
-        public static final int COL_NAME_LAT = 6;
-        public static final int COL_NAME_LON = 7;
-        public static final int COL_NAME_REGION_ID = 8;
-        public static final int COL_NAME_DEGREES_AWARDED_HIGHEST = 9;
-        public static final int COL_NAME_STATE_ID = 10;
-        */
     }
 
     public static String getCreateTableStatement() {

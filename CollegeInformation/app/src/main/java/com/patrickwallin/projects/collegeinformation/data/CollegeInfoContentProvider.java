@@ -166,8 +166,6 @@ public class CollegeInfoContentProvider extends ContentProvider {
                     throw new SQLException("Failed to insert row into " + uri);
                 }
                 break;
-            //case DEGREES_WITH_ID:
-              //  break;
             case PROGRAMS:
                 long programId = db.insert(ProgramContract.ProgramEntry.TABLE_NAME, null, values);
                 if(programId > 0) {
@@ -244,8 +242,6 @@ public class CollegeInfoContentProvider extends ContentProvider {
             case DEGREES:
                 rowsDeleted = db.delete(DegreeContract.DegreeEntry.TABLE_NAME, selection, selectionArgs);
                 break;
-            //case DEGREES_WITH_ID:
-            //  break;
             case PROGRAMS:
                 rowsDeleted = db.delete(ProgramContract.ProgramEntry.TABLE_NAME, selection, selectionArgs);
                 break;
@@ -288,8 +284,6 @@ public class CollegeInfoContentProvider extends ContentProvider {
             case DEGREES:
                 rowsUpdated = db.update(DegreeContract.DegreeEntry.TABLE_NAME, values, selection,selectionArgs);
                 break;
-            //case DEGREES_WITH_ID:
-            //  break;
             case PROGRAMS:
                 rowsUpdated = db.update(ProgramContract.ProgramEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;

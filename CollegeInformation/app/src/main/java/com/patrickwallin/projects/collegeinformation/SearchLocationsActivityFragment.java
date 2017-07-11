@@ -2,7 +2,6 @@ package com.patrickwallin.projects.collegeinformation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.patrickwallin.projects.collegeinformation.asynctask.FetchSearchQueryInputTask;
@@ -31,6 +31,7 @@ public class SearchLocationsActivityFragment extends Fragment {
     private Context mContext;
     @BindView(R.id.selected_state_text_view) TextView mSelectedStateTextView;
     @BindView(R.id.selected_region_text_view) TextView mSelectedRegionTextView;
+    @BindView(R.id.zip_code_edit_view) EditText mZipCodeEditView;
 
     public SearchLocationsActivityFragment() {}
 
@@ -43,10 +44,6 @@ public class SearchLocationsActivityFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //if(!getResources().getBoolean(R.bool.is_this_tablet)){
-          //  getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //}
     }
 
     @Nullable
@@ -56,8 +53,7 @@ public class SearchLocationsActivityFragment extends Fragment {
 
         ButterKnife.bind(this,rootView);
 
-        TextView selectedStateTextView = (TextView)rootView.findViewById(R.id.selected_state_text_view);
-        selectedStateTextView.setOnClickListener(new View.OnClickListener() {
+        mSelectedStateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentStatesActivity = new Intent(mContext, SearchLocationsStatesActivity.class);
@@ -65,14 +61,23 @@ public class SearchLocationsActivityFragment extends Fragment {
             }
         });
 
-        TextView selectedRegionTextView = (TextView)rootView.findViewById(R.id.selected_region_text_view);
-        selectedRegionTextView.setOnClickListener(new View.OnClickListener() {
+        mSelectedRegionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentRegionsActivity = new Intent(mContext, SearchLocationsRegionsActivity.class);
                 mContext.startActivity(intentRegionsActivity);
             }
         });
+
+        String sqlWhere = SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_ID + " = " + FetchSearchQueryInputTask.SEARCH_QUERY_ZIPS_ID;
+        Cursor cursor = mContext.getContentResolver().query(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,null,sqlWhere,null,null);
+        if(cursor != null && cursor.moveToFirst()) {
+            int columnIndex = cursor.getColumnIndex(SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_VALUE);
+            String zip = cursor.getString(columnIndex);
+            mZipCodeEditView.setText(zip);
+        }
+        if(cursor != null)
+            cursor.close();
 
         return rootView;
     }
@@ -107,17 +112,17 @@ public class SearchLocationsActivityFragment extends Fragment {
                 SearchQueryInputData searchQueryInputData = list.get(i);
                 if(searchQueryInputData.getId() == FetchSearchQueryInputTask.SEARCH_QUERY_STATES_ID) {
                     if(searchQueryInputData.getValue().trim().isEmpty()) {
-                        mSelectedStateTextView.setText("0 selected");
+                        mSelectedStateTextView.setText("0 " + getString(R.string.selected));
                     }else {
                         String[] selectedValues = searchQueryInputData.getValue().trim().split(",",-1);
-                        mSelectedStateTextView.setText(String.valueOf(selectedValues.length) + " selected");
+                        mSelectedStateTextView.setText(String.valueOf(selectedValues.length) + " " + getString(R.string.selected) );
                     }
                 }else {
                     if(searchQueryInputData.getValue().trim().isEmpty()) {
-                        mSelectedRegionTextView.setText("0 selected");
+                        mSelectedRegionTextView.setText("0 " + getString(R.string.selected));
                     }else {
                         String[] selectedValues = searchQueryInputData.getValue().trim().split(",",-1);
-                        mSelectedRegionTextView.setText(String.valueOf(selectedValues.length) + " selected");
+                        mSelectedRegionTextView.setText(String.valueOf(selectedValues.length) + " " + getString(R.string.selected));
                     }
 
                 }
@@ -128,7 +133,18 @@ public class SearchLocationsActivityFragment extends Fragment {
 
         if(queryInputCursor != null)
             queryInputCursor.close();
-        Log.i("SearchLocationsActiv","OnResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        String sqlWhere = SearchQueryInputContract.SearchQueryInputEntry.COLUMN_QUERY_ID + " = " + FetchSearchQueryInputTask.SEARCH_QUERY_ZIPS_ID;
+        SearchQueryInputData searchQueryInputData = new SearchQueryInputData(FetchSearchQueryInputTask.SEARCH_QUERY_ZIPS_ID,
+                getString(R.string.zips),mZipCodeEditView.getText().toString());
+        mContext.getContentResolver().update(SearchQueryInputContract.SearchQueryInputEntry.CONTENT_URI,searchQueryInputData.getSearchQueryInputContentValues(),
+                sqlWhere,null);
+
     }
 
 }
