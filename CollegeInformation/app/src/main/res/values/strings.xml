@@ -33,10 +33,10 @@
     <string name="url_specific_school_nearbycolleges">https://www.nearbycolleges.info/api/schools/{unitid}</string>
     <string name="unit_id_from_nearbycolleges">unitid</string>
     <string name="url_query_all_colleges">autocomplete?q=&amp;limit=100000000</string>
-    <string name="api_key_for_nearbycolleges">88ae0f34-84d6-4e6d-b3c6-a0877fdb1bce</string>
+    <string name="api_key_for_nearbycolleges"></string>
 
     <string name="query_api_key">api_key=</string>
-    <string name="api_key">8Kf2QRVxErc7cAJnMDsBngV7AogpKhF7RY4PBBFD</string>
+    <string name="api_key"></string>
 
     <string name="query_school_id">id</string>
     <string name="query_school_name">school.name</string>
