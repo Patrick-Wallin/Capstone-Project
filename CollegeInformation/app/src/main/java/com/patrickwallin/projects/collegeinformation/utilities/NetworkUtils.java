@@ -27,9 +27,13 @@ import com.patrickwallin.projects.collegeinformation.data.SearchQueryInputData;
 import com.patrickwallin.projects.collegeinformation.data.StatesContract;
 import com.patrickwallin.projects.collegeinformation.data.VersionContract;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by piwal on 6/4/2017.
@@ -62,16 +66,10 @@ public class NetworkUtils  {
                 }).setIcon(android.R.drawable.ic_dialog_alert).show();
     }
 
-    // in case we need this in future
-    /*
-    public URL buildUrl(String jsonName) {
-        String uriAddress = "";
+    public URL buildUrl(String inputAddress) {
+        String uriAddress = inputAddress;
 
         Uri builtUri;
-
-        if(jsonName.equalsIgnoreCase(VersionContract.VersionEntry.TABLE_NAME)) {
-            uriAddress =  "https://firebasestorage.googleapis.com/v0/b/college-information.appspot.com/o/versions.json?alt=media&token=ec657d0b-2d36-4eed-9ec4-470ee17b018e";
-        }
 
         builtUri = Uri.parse(uriAddress).buildUpon().build();
 
@@ -85,7 +83,24 @@ public class NetworkUtils  {
 
         return url;
     }
-    */
+
+    public String getResponseFromHttpUrl(URL url) throws IOException {
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
+            InputStream in = urlConnection.getInputStream();
+            Scanner scanner = new Scanner(in);
+            scanner.useDelimiter("\\A");
+
+            boolean hasInput = scanner.hasNext();
+            if(hasInput) {
+                return scanner.next();
+            }else {
+                return null;
+            }
+        }finally {
+            urlConnection.disconnect();
+        }
+    }
 
 
     public StorageReference getStorageReference(String jsonName) {

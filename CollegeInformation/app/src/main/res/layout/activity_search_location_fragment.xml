@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    tools:context="com.patrickwallin.projects.collegeinformation.SearchLocationActivity">
+    tools:context="com.patrickwallin.projects.collegeinformation.SearchLocationsActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -30,10 +30,10 @@
                     android:layout_alignParentLeft="true"
                     android:gravity="center_vertical"
                     android:layout_marginRight="6dp"
-                    android:text="Zip Code:" />
+                    android:text="@string/label_zip_code" />
 
                 <EditText
-                    android:hint="92562"
+                    android:hint="@string/hint_zip_code"
                     android:id="@+id/zip_code_edit_view"
                     android:layout_toRightOf="@id/zip_code_text_view"
                     android:layout_centerInParent="true"
@@ -74,14 +74,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="State:" />
+                    android:text="@string/label_state" />
 
                 <TextView
                     android:id="@+id/selected_state_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="0 selected" />
+                    android:text="@string/default_value_selected" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -115,14 +115,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="Region:" />
+                    android:text="@string/label_region" />
 
                 <TextView
                     android:id="@+id/selected_region_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="0 selected" />
+                    android:text="@string/default_value_selected" />
             </RelativeLayout>
         </LinearLayout>
 

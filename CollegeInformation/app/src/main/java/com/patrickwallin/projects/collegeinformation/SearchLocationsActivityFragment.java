@@ -112,14 +112,14 @@ public class SearchLocationsActivityFragment extends Fragment {
                 SearchQueryInputData searchQueryInputData = list.get(i);
                 if(searchQueryInputData.getId() == FetchSearchQueryInputTask.SEARCH_QUERY_STATES_ID) {
                     if(searchQueryInputData.getValue().trim().isEmpty()) {
-                        mSelectedStateTextView.setText("0 " + getString(R.string.selected));
+                        mSelectedStateTextView.setText(getString(R.string.default_value_selected));
                     }else {
                         String[] selectedValues = searchQueryInputData.getValue().trim().split(",",-1);
                         mSelectedStateTextView.setText(String.valueOf(selectedValues.length) + " " + getString(R.string.selected) );
                     }
                 }else {
                     if(searchQueryInputData.getValue().trim().isEmpty()) {
-                        mSelectedRegionTextView.setText("0 " + getString(R.string.selected));
+                        mSelectedRegionTextView.setText(getString(R.string.default_value_selected));
                     }else {
                         String[] selectedValues = searchQueryInputData.getValue().trim().split(",",-1);
                         mSelectedRegionTextView.setText(String.valueOf(selectedValues.length) + " " + getString(R.string.selected));

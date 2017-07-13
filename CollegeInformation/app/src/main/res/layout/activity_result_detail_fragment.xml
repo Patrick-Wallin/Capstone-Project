@@ -64,7 +64,7 @@
                             android:textColor="@android:color/white"
                             android:textStyle="bold"
                             android:textAppearance="?android:textAppearanceMedium"
-                            android:text="Website"
+                            android:text="@string/label_website"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
@@ -79,6 +79,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
                             android:layout_alignParentRight="true"
+                            android:contentDescription="@string/content_desc_likes"
                             android:gravity="right"/>
 
                     </RelativeLayout>
@@ -109,7 +110,7 @@
                     <TextView
                         android:id="@+id/website_label_text_view"
                         android:textColor="@color/colorPrimary"
-                        android:text="Website"
+                        android:text="@string/label_website"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true" />
@@ -132,7 +133,7 @@
                     <TextView
                         android:id="@+id/location_label_text_view"
                         android:textColor="@color/colorPrimary"
-                        android:text="Location"
+                        android:text="@string/label_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true" />
@@ -160,7 +161,7 @@
                     <TextView
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:text="Cost"
+                        android:text="@string/label_cost"
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold"
                         android:layout_width="match_parent"
@@ -174,7 +175,7 @@
                         <TextView
                             android:id="@+id/tuition_in_state_label_text_view"
                             android:textColor="@color/colorPrimary"
-                            android:text="Tuition - In-State"
+                            android:text="@string/label_tuition_in_state"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true" />
@@ -182,7 +183,7 @@
                         <TextView
                             android:id="@+id/tuition_in_state_value_text_view"
                             android:textColor="@color/colorPrimary"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/tuition_in_state_label_text_view"
@@ -198,7 +199,7 @@
                         <TextView
                             android:id="@+id/tuition_out_state_label_text_view"
                             android:textColor="@color/colorPrimary"
-                            android:text="Tuition - Out-State"
+                            android:text="@string/label_tuition_out_state"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true" />
@@ -206,7 +207,7 @@
                         <TextView
                             android:id="@+id/tuition_out_state_value_text_view"
                             android:textColor="@color/colorPrimary"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/tuition_out_state_label_text_view"
@@ -230,7 +231,7 @@
                         android:gravity="center"
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold"
-                        android:text="Aid"
+                        android:text="@string/label_aid"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
@@ -242,7 +243,7 @@
                         <TextView
                             android:id="@+id/aid_fed_loans_label_text_view"
                             android:textColor="@color/colorPrimary"
-                            android:text="% of undergraduates receiving fed loans"
+                            android:text="@string/label_undergraduates_receiving_fed_loans"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true" />
@@ -250,7 +251,7 @@
                         <TextView
                             android:id="@+id/aid_fed_loans_value_text_view"
                             android:textColor="@color/colorPrimary"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/aid_fed_loans_label_text_view"
@@ -266,7 +267,7 @@
                         <TextView
                             android:id="@+id/aid_pell_grants_label_text_view"
                             android:textColor="@color/colorPrimary"
-                            android:text="% of Pell Grants Recipients"
+                            android:text="@string/label_pell_grants_recipients"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true" />
@@ -274,7 +275,7 @@
                         <TextView
                             android:id="@+id/aid_pell_grants_value_text_view"
                             android:textColor="@color/colorPrimary"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/aid_pell_grants_label_text_view"
@@ -297,7 +298,7 @@
                         android:gravity="center"
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold"
-                        android:text="Admission"
+                        android:text="@string/label_admission"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
@@ -308,7 +309,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_reading_25_label_text_view"
-                            android:text="SAT Critical Reading 25th"
+                            android:text="@string/label_sat_critical_reading_25"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -316,7 +317,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_reading_25_value_text_view"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -332,7 +333,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_reading_75_label_text_view"
-                            android:text="SAT Critical Reading 75th"
+                            android:text="@string/label_sat_critical_reading_75"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -340,7 +341,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_reading_75_value_text_view"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -356,7 +357,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_math_25_label_text_view"
-                            android:text="SAT Math 25th"
+                            android:text="@string/label_sat_math_25"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -364,7 +365,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_math_25_value_text_view"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -380,7 +381,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_math_75_label_text_view"
-                            android:text="SAT Math 75th"
+                            android:text="@string/label_sat_math_75"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -388,7 +389,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_math_75_value_text_view"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -404,7 +405,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_writing_25_label_text_view"
-                            android:text="SAT Writing 25th"
+                            android:text="@string/label_sat_writing_25"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -412,7 +413,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_writing_25_value_text_view"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -428,7 +429,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_writing_75_label_text_view"
-                            android:text="SAT Writing 75th"
+                            android:text="@string/label_sat_writing_75"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -436,7 +437,7 @@
 
                         <TextView
                             android:id="@+id/admission_sat_writing_75_value_text_view"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -452,7 +453,7 @@
 
                         <TextView
                             android:id="@+id/admission_act_25_label_text_view"
-                            android:text="ACT 25th"
+                            android:text="@string/label_act_25"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -460,7 +461,7 @@
 
                         <TextView
                             android:id="@+id/admission_act_25_value_text_view"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -476,7 +477,7 @@
 
                         <TextView
                             android:id="@+id/admission_act_75_label_text_view"
-                            android:text="ACT 75th"
+                            android:text="@string/label_act_75"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -484,7 +485,7 @@
 
                         <TextView
                             android:id="@+id/admission_act_75_value_text_view"
-                            android:text="$15k"
+                            android:text="@string/default_value_of_number_on_college"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

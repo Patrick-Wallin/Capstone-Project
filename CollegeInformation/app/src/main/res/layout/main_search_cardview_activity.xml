@@ -20,7 +20,7 @@
             android:id="@+id/search_image_view"
             android:scaleType="fitCenter"
             android:elevation="2dp"
-
+            android:contentDescription="@string/content_desc_search_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

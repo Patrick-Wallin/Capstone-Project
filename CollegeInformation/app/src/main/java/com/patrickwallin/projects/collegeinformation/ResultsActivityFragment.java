@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -18,6 +21,7 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.patrickwallin.projects.collegeinformation.adapter.FavoriteCollegeAdapter;
+import com.patrickwallin.projects.collegeinformation.asynctask.CollegeDataLoader;
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeContract;
 import com.patrickwallin.projects.collegeinformation.data.FavoriteCollegeData;
 import com.patrickwallin.projects.collegeinformation.utilities.NetworkUtils;
@@ -33,7 +37,7 @@ import butterknife.ButterKnife;
  * Created by piwal on 6/27/2017.
  */
 
-public class ResultsActivityFragment extends Fragment implements StringRequestListener {
+public class ResultsActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<FavoriteCollegeData>> {
     @BindView(R.id.results_recycler_view)
     RecyclerView results_recycler_view;
 
@@ -47,6 +51,7 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
 
     private boolean mFavoriteResults = false;
     private int mIdFromWidget = 0;
+    private int LOADER_RESULTS_ACTIVITY_ID = 1;
 
     public ResultsActivityFragment() {}
 
@@ -101,7 +106,7 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadData();
+        //loadData();
     }
 
     private void setUpData(){
@@ -112,10 +117,13 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
         mFavoriteCollegeAdapter = new FavoriteCollegeAdapter(mFavoriteCollegeData,mContext);
         mIdFromWidget = 0;
         results_recycler_view.setAdapter(mFavoriteCollegeAdapter);
+        getLoaderManager().initLoader(LOADER_RESULTS_ACTIVITY_ID,null,this);
     }
 
+    // move the following to CollegeDataLoader!
+    /*
     private void loadData() {
-        setUpData();
+        //setUpData();
 
         if(mFavoriteResults) {
             Cursor cursorFavorites = mContext.getContentResolver().query(FavoriteCollegeContract.FavoriteCollegeEntry.CONTENT_URI,null,null,null,null);
@@ -125,6 +133,8 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
                     mFavoriteCollegeData.add(favoriteCollegeData);
                 }
                 mFavoriteCollegeAdapter.setFavoriteData(mFavoriteCollegeData);
+                getLoaderManager().restartLoader(LOADER_RESULTS_ACTIVITY_ID,null,this);
+
             }
             if(cursorFavorites != null)
                 cursorFavorites.close();
@@ -177,6 +187,7 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
                     loadData(++pageNumber);
                 }else {
                     mFavoriteCollegeAdapter.setFavoriteData(mFavoriteCollegeData);
+                    getLoaderManager().restartLoader(LOADER_RESULTS_ACTIVITY_ID,null,this);
 
                 }
 
@@ -190,6 +201,20 @@ public class ResultsActivityFragment extends Fragment implements StringRequestLi
     public void onError(ANError anError) {
         Log.i("onError",anError.getMessage());
     }
+    */
 
+    @Override
+    public Loader<List<FavoriteCollegeData>> onCreateLoader(int id, Bundle args) {
+        return new CollegeDataLoader(mContext,mFavoriteResults);
+    }
 
+    @Override
+    public void onLoadFinished(Loader<List<FavoriteCollegeData>> loader, List<FavoriteCollegeData> data) {
+        mFavoriteCollegeAdapter.setFavoriteData(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<FavoriteCollegeData>> loader) {
+        mFavoriteCollegeAdapter.setFavoriteData(new ArrayList<FavoriteCollegeData>());
+    }
 }

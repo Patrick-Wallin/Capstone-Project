@@ -58,8 +58,6 @@ public class OpenJsonUtils {
             versionDataList = getVersionDataFromJson(result.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return versionDataList;
@@ -109,10 +107,7 @@ public class OpenJsonUtils {
             degreesDataList = getDegreeDataFromJson(result.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
         return degreesDataList;
     }
 
@@ -160,10 +155,7 @@ public class OpenJsonUtils {
             programDataList = getProgramDataFromJson(result.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
 
         return programDataList;
     }
@@ -211,8 +203,6 @@ public class OpenJsonUtils {
             sc.close();
             stateDataList = getStateDataFromJson(result.toString());
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -263,8 +253,6 @@ public class OpenJsonUtils {
             sc.close();
             regionDataList = getRegionDataFromJson(result.toString());
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
 

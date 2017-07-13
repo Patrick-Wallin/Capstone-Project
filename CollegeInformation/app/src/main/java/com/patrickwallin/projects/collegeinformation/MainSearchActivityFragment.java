@@ -162,6 +162,9 @@ public class MainSearchActivityFragment extends Fragment {
                             queryAnswer += getString(R.string.info_message_total_favorites) + String.valueOf(cursor.getInt(0));
                             mTotalRecordsInFavorites = cursor.getInt(0);
                             search_query_text_view.setText(queryAnswer);
+                        }else {
+                            queryAnswer += "\n";
+                            queryAnswer +=  getString(R.string.info_message_total_favorites) + " 0";
                         }
                         if(cursor != null)
                             cursor.close();

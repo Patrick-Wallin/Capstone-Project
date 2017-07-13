@@ -58,7 +58,6 @@
 
                 <TextView
                     android:id="@+id/search_query_text_view"
-                    android:text="Query!"
                     android:layout_margin="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -88,6 +87,7 @@
         <Button
             android:id="@+id/find_college_button"
             style="@style/FindCollegeButton"
+            android:contentDescription="@string/content_desc_find_college"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
@@ -97,6 +97,7 @@
         <Button
             android:id="@+id/go_favorite_button"
             style="@style/GoFavoriteButton"
+            android:contentDescription="@string/content_desc_view_favorites"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />

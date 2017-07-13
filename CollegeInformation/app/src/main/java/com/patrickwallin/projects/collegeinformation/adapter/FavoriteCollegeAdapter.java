@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -142,4 +143,5 @@ public class FavoriteCollegeAdapter extends RecyclerView.Adapter<FavoriteCollege
         mFavoriteCollegeData = favoriteData;
         notifyDataSetChanged();
     }
+
 }
