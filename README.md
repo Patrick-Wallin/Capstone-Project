@@ -10,10 +10,10 @@ $ git clone https://github.com/Patrick-Wallin/Capstone-Project.git
 ## Usage
 
 Find strings.xml file and modify the following two lines with your API key:
-'
+```
 <string name="api_key_for_nearbycolleges"></string>
 <string name="api_key"></string> <-- College Scorecard
-'
+```
 
 ## Screenshot
 
